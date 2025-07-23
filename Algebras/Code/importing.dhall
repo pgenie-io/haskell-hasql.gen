@@ -13,9 +13,9 @@ let Result = ./Result.dhall
 let fromText = ./fromText.dhall
 
 let importing
-    : Namespace.Type -> (Code -> Code) -> Code
+    : Namespace.Type -> (Text -> Code) -> Code
     = \(namespace : Namespace.Type) ->
-      \(continuation : Code -> Code) ->
+      \(continuation : Text -> Code) ->
       \(env : Env) ->
         let registeredImports =
               Lude.Extensions.List.insertIntoDeduped
@@ -40,10 +40,6 @@ let importing
                 , Some = \(alias : Text) -> alias
                 }
                 aliasLookup
-
-        let reference
-            : Code
-            = fromText reference
 
         let importAliases = env.importAliases
 

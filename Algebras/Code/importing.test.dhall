@@ -65,22 +65,24 @@ in  { importingFunction =
           let result =
                 importing
                   testNamespace1
-                  ( \(reference : Code) ->
-                      concat [ reference, fromText " :: [a] -> Int" ]
+                  ( \(reference : Text) ->
+                      concat [ fromText reference, fromText " :: [a] -> Int" ]
                   )
 
           in  assert : toText result === "Data.List :: [a] -> Int"
       , importWithContinuation =
           let result =
-                importing testNamespace2 (\(reference : Code) -> reference)
+                importing
+                  testNamespace2
+                  (\(reference : Text) -> fromText reference)
 
           in  assert : toText result === "Control.Monad"
       , importWithComplexContinuation =
           let result =
                 importing
                   testNamespace1
-                  ( \(reference : Code) ->
-                      concat [ fromText "length ", reference ]
+                  ( \(reference : Text) ->
+                      concat [ fromText "length ", fromText reference ]
                   )
 
           in  assert : toText result === "length Data.List"
