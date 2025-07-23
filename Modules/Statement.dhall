@@ -19,10 +19,8 @@ let compile
 
         let namespace = "${projectNamespace}.Statements.${moduleName}"
 
-        let modulePath = "${projectNamespace}/Statements/${moduleName}.hs"
-
         in  { namespace
-            , path = modulePath
+            , path = "${projectNamespace}/Statements/${moduleName}.hs"
             , content =
                 ''
                 module ${namespace} where
