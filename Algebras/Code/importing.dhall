@@ -2,19 +2,21 @@ let Prelude = ../../Prelude.dhall
 
 let Lude = ../../Lude.dhall
 
-let Self = ./Type.dhall
+let Code = ./Type.dhall
 
 let Namespace = ../Namespace/package.dhall
 
+let Env = ./Env.dhall
+
+let Result = ./Result.dhall
+
+let fromText = ./fromText.dhall
+
 let importing
-    : Namespace.Type -> (Text -> Self) -> Self
+    : Namespace.Type -> (Code -> Code) -> Code
     = \(namespace : Namespace.Type) ->
-      \(continuation : Text -> Self) ->
-      \ ( env
-        : { importAliases : Prelude.Map.Type Namespace.Type Text
-          , registeredImports : List Namespace.Type
-          }
-        ) ->
+      \(continuation : Code -> Code) ->
+      \(env : Env) ->
         let registeredImports =
               Lude.Extensions.List.insertIntoDeduped
                 Namespace.Type
@@ -31,15 +33,20 @@ let importing
                 env.importAliases
                 namespace
 
-        let reference =
-              merge
+        let reference
+            : Text
+            = merge
                 { None = Namespace.toText namespace
                 , Some = \(alias : Text) -> alias
                 }
                 aliasLookup
 
+        let reference
+            : Code
+            = fromText reference
+
         let importAliases = env.importAliases
 
-        in  continuation reference { registeredImports, importAliases }
+        in  continuation reference { registeredImports, importAliases } : Result
 
 in  importing

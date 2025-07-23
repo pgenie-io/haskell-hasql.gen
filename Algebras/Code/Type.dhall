@@ -1,8 +1,1 @@
-let Prelude = ../../Prelude.dhall
-
-let Namespace = ../Namespace/package.dhall
-
-in  { importAliases : Prelude.Map.Type Namespace.Type Text
-    , registeredImports : List Namespace.Type
-    } ->
-      { registeredImports : List Namespace.Type, rendering : Text }
+let Env = ./Env.dhall let Result = ./Result.dhall in Env -> Result

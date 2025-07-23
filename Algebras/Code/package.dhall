@@ -1,1 +1,1 @@
-{ Type = ./Type.dhall, importing = ./importing.dhall }
+{ Type = ./Type.dhall, fromText = ./fromText.dhall, importing = ./importing.dhall }
