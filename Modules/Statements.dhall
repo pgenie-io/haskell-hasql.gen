@@ -1,5 +1,9 @@
 let Prelude = ../Prelude.dhall
 
+let Lude = ../Lude.dhall
+
+let Prelude = Prelude // { Text = Prelude.Text // Lude.Extensions.Text }
+
 let Sdk = ../Sdk.dhall
 
 let CodegenKit = ../CodegenKit.dhall
@@ -9,6 +13,8 @@ let Project = Sdk.Project
 let Name = CodegenKit.Name
 
 let Statement = ./Statement.dhall
+
+let Snippets = ../Snippets/package.dhall
 
 let Input =
       { projectNamespace : Text
@@ -26,37 +32,18 @@ let compile
 
         let modulePath = "${projectNamespace}/Statements.hs"
 
-        let imports =
-              Prelude.Text.concatMapSep
-                "\n"
-                Statement.Output
-                ( \(statement : Statement.Output) ->
-                    "import ${statement.namespace}"
-                )
-                input.compiledStatementModules
-
-        let exports =
-              Prelude.Text.concatMapSep
-                ''
-                ,
-                ''
-                Statement.Output
-                ( \(statement : Statement.Output) ->
-                    "module ${statement.namespace}"
-                )
-                input.compiledStatementModules
-
         in  { namespace
             , path = modulePath
             , content =
-                ''
-                module ${namespace} 
-                  ( ${exports}
-                  )
-                where
-
-                ${imports}
-                ''
+                Snippets.reexportModule
+                  { namespace
+                  , reexportedModules =
+                      Prelude.List.map
+                        Statement.Output
+                        Text
+                        (\(statement : Statement.Output) -> statement.namespace)
+                        input.compiledStatementModules
+                  }
             }
 
 in  { Input, Output, compile }

@@ -1,8 +1,8 @@
-let Prelude = ./../Prelude.dhall
+let Prelude = ../Prelude.dhall
 
-let CodegenKit = ./../CodegenKit.dhall
+let CodegenKit = ../CodegenKit.dhall
 
-let Sdk = ./../Sdk.dhall
+let Sdk = ../Sdk.dhall
 
 let Modules = ../Modules/package.dhall
 
@@ -13,8 +13,6 @@ let Algebras = ../Algebras/package.dhall
 let Name = CodegenKit.Name
 
 let Project = Sdk.Project
-
-let Algebras = ../Algebras/package.dhall
 
 let Module = Algebras.Module.Type
 
@@ -82,7 +80,13 @@ let compile
                             (\(x : Module) -> x.namespace)
                             statementModules
 
-                    let version = "0"
+                    let version =
+                              "0."
+                          ++  Prelude.Natural.show project.version.major
+                          ++  "."
+                          ++  Prelude.Natural.show project.version.minor
+                          ++  "."
+                          ++  Prelude.Natural.show project.version.patch
 
                     let input =
                           { packageName
