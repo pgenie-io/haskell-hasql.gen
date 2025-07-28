@@ -7,4 +7,8 @@ let reexportModule
     : { namespace : Text, reexportedModules : List Text } -> Text
     = ./reexportModule.dhall
 
-in  { recordDataDecl, reexportModule }
+let stringLiteral
+    : Text -> Text
+    = ./stringLiteral.dhall
+
+in  { recordDataDecl, reexportModule, stringLiteral }
