@@ -1,1 +1,0 @@
-{ hasqlVersionOverride : Optional Text }

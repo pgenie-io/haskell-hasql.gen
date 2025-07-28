@@ -18,47 +18,49 @@ let Output = { namespace : Text, path : Text, content : Text }
 
 let Snippets = ../Snippets/package.dhall
 
+let Result = Lude.Structures.Result
+
 let primitiveSig
-    : Model.Primitive -> Text
+    : Model.Primitive -> Optional Text
     = \(primitive : Model.Primitive) ->
         merge
-          { Bool = "Bool"
-          , Bytea = "ByteString"
-          , Char = "Char"
-          , Cidr = "Unknown"
-          , Date = "Day"
-          , Datemultirange = "Unknown"
-          , Daterange = "Unknown"
-          , Float4 = "Float"
-          , Float8 = "Double"
-          , Inet = "Unknown"
-          , Int2 = "Int16"
-          , Int4 = "Int32"
-          , Int4multirange = "Unknown"
-          , Int4range = "Unknown"
-          , Int8 = "Int64"
-          , Int8multirange = "Unknown"
-          , Int8range = "Unknown"
-          , Interval = "DiffTime"
-          , Json = "Data.Aeson.Value"
-          , Jsonb = "Data.Aeson.Value"
-          , Macaddr = "Unknown"
-          , Macaddr8 = "Unknown"
-          , Money = "Unknown"
-          , Numeric = "Scientific"
-          , Nummultirange = "Unknown"
-          , Numrange = "Unknown"
-          , Text = "Text"
-          , Time = "TimeOfDay"
-          , Timestamp = "LocalTime"
-          , Timestamptz = "UTCTime"
-          , Timetz = "Unknown"
-          , Tsmultirange = "Unknown"
-          , Tsrange = "Unknown"
-          , Tstzmultirange = "Unknown"
-          , Tstzrange = "Unknown"
-          , Uuid = "UUID"
-          , Xml = "Unknown"
+          { Bool = Some "Bool"
+          , Bytea = Some "ByteString"
+          , Char = Some "Char"
+          , Cidr = None Text
+          , Date = Some "Day"
+          , Datemultirange = None Text
+          , Daterange = None Text
+          , Float4 = Some "Float"
+          , Float8 = Some "Double"
+          , Inet = None Text
+          , Int2 = Some "Int16"
+          , Int4 = Some "Int32"
+          , Int4multirange = None Text
+          , Int4range = None Text
+          , Int8 = Some "Int64"
+          , Int8multirange = None Text
+          , Int8range = None Text
+          , Interval = Some "DiffTime"
+          , Json = Some "Data.Aeson.Value"
+          , Jsonb = Some "Data.Aeson.Value"
+          , Macaddr = None Text
+          , Macaddr8 = None Text
+          , Money = None Text
+          , Numeric = Some "Scientific"
+          , Nummultirange = None Text
+          , Numrange = None Text
+          , Text = Some "Text"
+          , Time = Some "TimeOfDay"
+          , Timestamp = Some "LocalTime"
+          , Timestamptz = Some "UTCTime"
+          , Timetz = None Text
+          , Tsmultirange = None Text
+          , Tsrange = None Text
+          , Tstzmultirange = None Text
+          , Tstzrange = None Text
+          , Uuid = Some "UUID"
+          , Xml = None Text
           }
           primitive
 
@@ -67,12 +69,25 @@ let customSig
     = \(name : Name.Type) -> "CustomTypes." ++ Name.toTextInPascal name
 
 let scalarSig
-    : Model.Scalar -> Text
-    = \(scalar : Model.Scalar) ->
-        merge { Primitive = primitiveSig, Custom = customSig } scalar
+    : Model.Scalar -> Result.Type Model.Primitive Text
+    = let AdaptedResult = Result.Type Model.Primitive Text
+
+      in  \(scalar : Model.Scalar) ->
+            merge
+              { Primitive =
+                  \(primitive : Model.Primitive) ->
+                    merge
+                      { None = AdaptedResult.Failure primitive
+                      , Some = AdaptedResult.Success
+                      }
+                      (primitiveSig primitive)
+              , Custom =
+                  \(name : Name.Type) -> AdaptedResult.Success (customSig name)
+              }
+              scalar
 
 let dimensionalSig
-    : Model.Dimensional -> Text
+    : Model.Dimensional -> Result.Type Model.Primitive Text
     = \(dimensional : Model.Dimensional) ->
         let prefix =
               Prelude.Text.replicate dimensional.dimensionality "Vector ("
@@ -81,70 +96,128 @@ let dimensionalSig
 
         let sig = scalarSig dimensional.scalar
 
-        in  Prelude.Text.concat [ prefix, sig, suffix ]
+        in  Lude.Structures.Result.mapSuccess
+              Model.Primitive
+              Text
+              Text
+              (\(sig : Text) -> Prelude.Text.concat [ prefix, sig, suffix ])
+              sig
 
 let valueSig
-    : Model.Value -> Text
+    : Model.Value -> Result.Type Sdk.Gen.ValueError Text
     = \(value : Model.Value) ->
         let applyOptionality =
               if    value.isNullable
               then  \(sig : Text) -> "Maybe (" ++ sig ++ ")"
               else  Prelude.Function.identity Text
 
-        in  applyOptionality (dimensionalSig value.dimensional)
+        in  Lude.Structures.Result.mapBoth
+              Model.Primitive
+              Sdk.Gen.ValueError
+              Text
+              Text
+              ( \(error : Model.Primitive) ->
+                  Sdk.Gen.ValueError.UnsupportedPrimitive error
+              )
+              applyOptionality
+              (dimensionalSig value.dimensional)
+
+let fieldSig
+    : Model.Field -> Result.Type Sdk.Gen.FieldError Text
+    = \(field : Model.Field) ->
+        Result.mapError
+          Sdk.Gen.ValueError
+          Sdk.Gen.FieldError
+          Text
+          ( \(error : Sdk.Gen.ValueError) ->
+              { name = field.name, dueTo = error }
+          )
+          (valueSig field.value)
 
 let resultRowDecl
-    : Text -> Prelude.NonEmpty.Type Model.Field -> Text
+    : Text ->
+      Prelude.NonEmpty.Type Model.Field ->
+        Result.Type Sdk.Gen.FieldError Text
     = \(moduleName : Text) ->
       \(fields : Prelude.NonEmpty.Type Model.Field) ->
-        ''
-        data ${moduleName}ResultRow = ${moduleName}ResultRow
-          { ${Prelude.Text.indent
-                4
-                ( Prelude.Text.concatMapSep
-                    ''
-                    ,
-                    ''
-                    Model.Field
-                    ( \(field : Model.Field) ->
-                        "${Name.toTextInCamel field.name} :: ${valueSig
-                                                                 field.value}"
-                    )
-                    (Prelude.NonEmpty.toList Model.Field fields)
-                )}
-          }
-          deriving stock (Eq, Show)
-        ''
+        Result.mapSuccess
+          Sdk.Gen.FieldError
+          (List Text)
+          Text
+          ( \(renderedFieldDecls : List Text) ->
+              ''
+              data ${moduleName}ResultRow = ${moduleName}ResultRow
+                { ${Prelude.Text.indent
+                      4
+                      ( Prelude.Text.concatSep
+                          ''
+                          ,
+                          ''
+                          renderedFieldDecls
+                      )}
+                }
+                deriving stock (Eq, Show)''
+          )
+          (   Result.traverseList
+                Sdk.Gen.FieldError
+                Model.Field
+                Text
+                ( \(field : Model.Field) ->
+                    Result.mapBoth
+                      Sdk.Gen.ValueError
+                      Sdk.Gen.FieldError
+                      Text
+                      Text
+                      ( \(dueTo : Sdk.Gen.ValueError) ->
+                          { name = field.name, dueTo }
+                      )
+                      ( \(sig : Text) ->
+                          "${Name.toTextInCamel field.name} :: ${sig}"
+                      )
+                      (valueSig field.value)
+                )
+                (Prelude.NonEmpty.toList Model.Field fields)
+            : Result.Type Sdk.Gen.FieldError (List Text)
+          )
 
 let resultDecls
-    : Text -> Optional Model.ResultRows -> Text
+    : Text -> Optional Model.ResultRows -> Result.Type Sdk.Gen.FieldError Text
     = \(moduleName : Text) ->
       \(optional : Optional Model.ResultRows) ->
         merge
-          { None = "type ${moduleName}Result = ()"
+          { None =
+              (Result.Type Sdk.Gen.FieldError Text).Success
+                "type ${moduleName}Result = ()"
           , Some =
               \(resultRows : Model.ResultRows) ->
-                merge
-                  { Optional =
-                      ''
-                      type ${moduleName}Result = Maybe ${moduleName}ResultRow
+                Result.mapSuccess
+                  Sdk.Gen.FieldError
+                  Text
+                  Text
+                  ( \(resultRowDecls : Text) ->
+                      merge
+                        { Optional =
+                            ''
+                            type ${moduleName}Result = Maybe ${moduleName}ResultRow
 
-                      ${resultRowDecl moduleName resultRows.row}
-                      ''
-                  , Single =
-                      ''
-                      type ${moduleName}Result = ${moduleName}ResultRow
+                            ${resultRowDecls}
+                            ''
+                        , Single =
+                            ''
+                            type ${moduleName}Result = ${moduleName}ResultRow
 
-                      ${resultRowDecl moduleName resultRows.row}
-                      ''
-                  , Multiple =
-                      ''
-                      type ${moduleName}Result = Vector ${moduleName}ResultRow
+                            ${resultRowDecls}
+                            ''
+                        , Multiple =
+                            ''
+                            type ${moduleName}Result = Vector ${moduleName}ResultRow
 
-                      ${resultRowDecl moduleName resultRows.row}
-                      ''
-                  }
-                  resultRows.category
+                            ${resultRowDecls}
+                            ''
+                        }
+                        resultRows.category
+                  )
+                  (resultRowDecl moduleName resultRows.row)
           }
           optional
 
@@ -158,7 +231,7 @@ let resultDecoder
           optional
 
 let compile
-    : Input -> Output
+    : Input -> Result.Type Sdk.Gen.QueryError Output
     = \(input : Input) ->
         let projectNamespace = input.projectNamespace
 
@@ -166,41 +239,81 @@ let compile
 
         let namespace = "${projectNamespace}.Statements.${moduleName}"
 
-        in  { namespace
-            , path = "${projectNamespace}/Statements/${moduleName}.hs"
-            , content =
-                ''
-                module ${namespace} 
-                  ( ${moduleName} (..),
-                    ${moduleName}Result (..),
-                  )
-                where
-
-                import Prelude
-                import Data.Text (Text)
-                import Data.UUID (UUID)
-                import Data.Vector (Vector)
-
-                import qualified Hasql.Decoders as Decoders
-                import qualified Hasql.Mapping as Mapping
-
-                ${Snippets.recordDataDecl
-                    { name = moduleName
-                    , fields =
-                        Prelude.List.map
-                          Model.Field
+        let paramsDecls
+            : Result.Type Sdk.Gen.QueryError Text
+            = Result.mapBoth
+                Sdk.Gen.FieldError
+                Sdk.Gen.QueryError
+                (List { name : Text, sig : Text })
+                Text
+                Sdk.Gen.QueryError.Param
+                ( \(fields : List { name : Text, sig : Text }) ->
+                    ''
+                    ${Snippets.recordDataDecl { name = moduleName, fields }}
+                      deriving stock (Eq, Show)''
+                )
+                ( Result.traverseList
+                    Sdk.Gen.FieldError
+                    Model.Field
+                    { name : Text, sig : Text }
+                    ( \(field : Model.Field) ->
+                        Result.mapBoth
+                          Sdk.Gen.ValueError
+                          Sdk.Gen.FieldError
+                          Text
                           { name : Text, sig : Text }
-                          ( \(field : Model.Field) ->
-                              { name = Name.toTextInCamel field.name
-                              , sig = valueSig field.value
-                              }
+                          ( \(dueTo : Sdk.Gen.ValueError) ->
+                              { name = field.name, dueTo }
                           )
-                          input.query.params
-                    }}
-                  deriving stock (Eq, Show)
+                          ( \(sig : Text) ->
+                              { name = Name.toTextInCamel field.name, sig }
+                          )
+                          (valueSig field.value)
+                    )
+                    input.query.params
+                )
 
-                ${resultDecls moduleName input.query.result}
-                ''
-            }
+        let resultDecls
+            : Result.Type Sdk.Gen.QueryError Text
+            = Result.mapError
+                Sdk.Gen.FieldError
+                Sdk.Gen.QueryError
+                Text
+                Sdk.Gen.QueryError.ResultColumn
+                (resultDecls moduleName input.query.result)
+
+        in  Result.mapSuccess2
+              Sdk.Gen.QueryError
+              Text
+              Text
+              Output
+              ( \(paramsDecls : Text) ->
+                \(resultDecls : Text) ->
+                  { namespace
+                  , path = "${projectNamespace}/Statements/${moduleName}.hs"
+                  , content =
+                      ''
+                      module ${namespace} 
+                        ( ${moduleName} (..),
+                          ${moduleName}Result (..),
+                        )
+                      where
+
+                      import Prelude
+                      import Data.Text (Text)
+                      import Data.UUID (UUID)
+                      import Data.Vector (Vector)
+
+                      import qualified Hasql.Decoders as Decoders
+                      import qualified Hasql.Mapping as Mapping
+
+                      ${paramsDecls}
+
+                      ${resultDecls}
+                      ''
+                  }
+              )
+              paramsDecls
+              resultDecls
 
 in  { Input, Output, compile }

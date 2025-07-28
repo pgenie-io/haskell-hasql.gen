@@ -1,8 +1,12 @@
 let Prelude = ../Prelude.dhall
 
+let Lude = ../Lude.dhall
+
 let CodegenKit = ../CodegenKit.dhall
 
 let Sdk = ../Sdk.dhall
+
+let Gen = Sdk.Gen
 
 let Modules = ../Modules/package.dhall
 
@@ -18,7 +22,50 @@ let Module = Algebras.Module.Type
 
 let Input = Sdk.Project.Project
 
-let Output = List Sdk.Gen.File
+let Output = Sdk.Gen.Result
+
+let Result = Lude.Structures.Result
+
+let compileStatementModules
+    : Text ->
+      List Sdk.Project.Query ->
+        { warnings : List Gen.Warning
+        , statementModules : List Modules.Statement.Output
+        }
+    = let State =
+            { warnings : List Gen.Warning
+            , statementModules : List Modules.Statement.Output
+            }
+
+      in  \(projectNamespace : Text) ->
+          \(queries : List Sdk.Project.Query) ->
+            Prelude.List.foldLeft
+              Sdk.Project.Query
+              queries
+              State
+              ( \(state : State) ->
+                \(query : Sdk.Project.Query) ->
+                  merge
+                    { Failure =
+                        \(dueTo : Gen.QueryError) ->
+                              state
+                          //  { warnings =
+                                    [ Gen.Warning.QuerySkipped { query, dueTo }
+                                    ]
+                                  # state.warnings
+                              }
+                    , Success =
+                        \(compiledStatement : Modules.Statement.Output) ->
+                              state
+                          //  { statementModules =
+                                  [ compiledStatement ] # state.statementModules
+                              }
+                    }
+                    (Modules.Statement.compile { projectNamespace, query })
+              )
+              { warnings = [] : List Gen.Warning
+              , statementModules = [] : List Modules.Statement.Output
+              }
 
 let compile
     : Input -> Output
@@ -27,14 +74,10 @@ let compile
 
         let projectNamespace = Name.toTextInPascal project.name
 
-        let statementModules =
-              Prelude.List.map
-                Sdk.Project.Query
-                Modules.Statement.Output
-                ( \(query : Sdk.Project.Query) ->
-                    Modules.Statement.compile { projectNamespace, query }
-                )
-                project.queries
+        let compiledStatementModules =
+              compileStatementModules projectNamespace project.queries
+
+        let statementModules = compiledStatementModules.statementModules
 
         let statementsModule =
               Modules.Statements.compile
@@ -42,10 +85,12 @@ let compile
                 , compiledStatementModules = statementModules
                 }
 
+        let warnings = compiledStatementModules.warnings
+
         let files
-            : List Sdk.Gen.File
+            : List Gen.File
             = let moduleFiles
-                  : List Sdk.Gen.File
+                  : List Gen.File
                   = let moduleFile =
                           \(x : Module) ->
                             { path = x.path, content = x.content }
@@ -55,22 +100,22 @@ let compile
                     let statementFiles =
                           Prelude.List.map
                             Module
-                            Sdk.Gen.File
+                            Gen.File
                             moduleFile
                             statementModules
 
                     let unprefixed = [ statementsFile ] # statementFiles
 
                     in  Prelude.List.map
-                          Sdk.Gen.File
-                          Sdk.Gen.File
-                          ( \(x : Sdk.Gen.File) ->
+                          Gen.File
+                          Gen.File
+                          ( \(x : Gen.File) ->
                               x // { path = "library/${x.path}" }
                           )
                           unprefixed
 
               let cabalFile
-                  : Sdk.Gen.File
+                  : Gen.File
                   = let publicModules = [ statementsModule.namespace ]
 
                     let privateModules =
@@ -99,6 +144,6 @@ let compile
 
               in  [ cabalFile ] # moduleFiles
 
-        in  files
+        in  { warnings, files }
 
 in  { Input, compile }
