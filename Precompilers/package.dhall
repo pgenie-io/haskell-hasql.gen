@@ -1,3 +1,4 @@
+-- Collection of precompilers structured after the model components.
 let CodegenKit = ../CodegenKit.dhall
 
 let Name = CodegenKit.Name
@@ -11,4 +12,20 @@ let queryFragments
         { stringLiteral : Text, names : List Name.Type }
     = ./queryFragments.dhall
 
-in  { queryFragments }
+let primitive
+    : Model.Primitive ->
+        { sig : Optional Text
+        , encoder : Optional Text
+        , decoder : Optional Text
+        }
+    = ./primitive.dhall
+
+let scalar
+    : Model.Scalar ->
+        { sig : Optional Text
+        , encoder : Optional Text
+        , decoder : Optional Text
+        }
+    = ./scalar.dhall
+
+in  { queryFragments, primitive, scalar }
