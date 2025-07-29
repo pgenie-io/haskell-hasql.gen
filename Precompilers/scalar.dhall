@@ -16,22 +16,39 @@ let Result = Lude.Structures.Result
 
 let primitive = ./primitive.dhall
 
+let Rendering = Result.Type Text Text
+
 in  \(model : Model.Scalar) ->
       merge
-        { Primitive = primitive
+        { Primitive =
+            \(model : Model.Primitive) ->
+              let liftPrimitiveRendering =
+                    \(rendering : Optional Text) ->
+                      merge
+                        { None =
+                            Rendering.Failure
+                              "Unsupported type: ${Model.Primitive/toText
+                                                     model}"
+                        , Some = Rendering.Success
+                        }
+                        rendering
+
+              let primitive = primitive model
+
+              in  { encoder = liftPrimitiveRendering primitive.encoder
+                  , decoder = liftPrimitiveRendering primitive.decoder
+                  , sig = liftPrimitiveRendering primitive.sig
+                  }
         , Custom =
             \(name : Name.Type) ->
               let name = Name.toTextInPascal name
 
               let sig = "CustomTypes.${name}"
 
-              in  { encoder = Some "Mapping.valueEncoder @${sig}"
-                  , decoder = Some "Mapping.valueDecoder @${sig}"
-                  , sig = Some sig
+              in  { encoder = Rendering.Success "Mapping.valueEncoder @${sig}"
+                  , decoder = Rendering.Success "Mapping.valueDecoder @${sig}"
+                  , sig = Rendering.Success sig
                   }
         }
         model
-      : { sig : Optional Text
-        , encoder : Optional Text
-        , decoder : Optional Text
-        }
+      : { sig : Rendering, encoder : Rendering, decoder : Rendering }

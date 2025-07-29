@@ -1,11 +1,15 @@
 -- Collection of precompilers structured after the model components.
 let CodegenKit = ../CodegenKit.dhall
 
+let Lude = ../Lude.dhall
+
 let Name = CodegenKit.Name
 
 let Sdk = ../Sdk.dhall
 
 let Model = Sdk.Project
+
+let Result = Lude.Structures.Result
 
 let queryFragments
     : List Model.QueryFragment ->
@@ -22,10 +26,12 @@ let primitive
 
 let scalar
     : Model.Scalar ->
-        { sig : Optional Text
-        , encoder : Optional Text
-        , decoder : Optional Text
+        { sig : Result.Type Text Text
+        , encoder : Result.Type Text Text
+        , decoder : Result.Type Text Text
         }
     = ./scalar.dhall
 
-in  { queryFragments, primitive, scalar }
+let dimensional = ./dimensional.dhall
+
+in  { queryFragments, primitive, scalar, dimensional }
