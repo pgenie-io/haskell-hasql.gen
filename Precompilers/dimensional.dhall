@@ -27,6 +27,20 @@ let applyDimensionalityToSig
 
         in  \(sig : Text) -> "${prefix}${sig}${suffix}"
 
+let applyDimensionalityToEncoder
+    : Natural -> Text -> Text
+    = \(dimensionality : Natural) ->
+        if    Prelude.Natural.equal 0 dimensionality
+        then  Prelude.Function.identity Text
+        else  let prefix =
+                    Prelude.Text.replicate
+                      dimensionality
+                      "Encoders.dimension Vector.foldl' ("
+
+              let suffix = Prelude.Text.replicate dimensionality ")"
+
+              in  \(sig : Text) -> "Encoders.array ${prefix}${sig}${suffix}"
+
 in  \(model : Model.Dimensional) ->
       let scalar = scalar model.scalar
 
@@ -39,4 +53,13 @@ in  \(model : Model.Dimensional) ->
               (applyDimensionalityToSig model.dimensionality)
               scalar.sig
 
-      in  { sig }
+      let encoder
+          : Rendering
+          = Result.mapSuccess
+              Text
+              Text
+              Text
+              (applyDimensionalityToEncoder model.dimensionality)
+              scalar.sig
+
+      in  { sig, encoder }
