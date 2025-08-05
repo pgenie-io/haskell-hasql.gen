@@ -1,0 +1,10 @@
+
+flowchart TD
+
+
+SourceFiles --Compile--> CompilationResult
+CompilationResult --> Error
+CompilationResult --> RenderingParams
+RenderingParams --Render--> GeneratedFiles
+
+
