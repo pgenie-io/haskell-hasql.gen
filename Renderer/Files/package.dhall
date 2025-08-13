@@ -1,1 +1,1 @@
-{ StatementModule = ./StatementModule.dhall }
+{ StatementModule = ./StatementModule/package.dhall }
