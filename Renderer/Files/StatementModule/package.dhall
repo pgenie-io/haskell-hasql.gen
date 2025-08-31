@@ -46,29 +46,7 @@
 
   let ResultCardinality = < ZeroOrOne | StrictlyOne | ZeroOrMore >
 
-  let ResultPrimitive =
-        < Bool
-        | Int2
-        | Int4
-        | Int8
-        | Float4
-        | Float8
-        | Numeric
-        | Text
-        | Bytea
-        | Date
-        | Timestamp
-        | Timestamptz
-        | Time
-        | Timetz
-        | Interval
-        | Uuid
-        | Inet
-        | Macaddr
-        | Json
-        | Jsonb
-        | Hstore
-        >
+  let ResultPrimitive = (./ResultPrimitive.dhall).Input
 
   let ResultArrayElement = < Primitive : ResultPrimitive | Custom : Text >
 
