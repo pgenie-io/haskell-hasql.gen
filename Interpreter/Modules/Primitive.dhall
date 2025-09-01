@@ -10,51 +10,53 @@ let Input = Model.Primitive
 
 let Output = { sig : Text, decoderName : Text }
 
-let Error = < UnsupportedType >
+let Result = Lude.Structures.Result.Type Algebra.Error Output
 
-let Result = Lude.Structures.Result.Type Error Output
+let Result/unsupportedType =
+      \(type : Text) ->
+        Result.Failure { path = [ type ], message = "Unsupported type" }
 
 let run =
       \(input : Input) ->
         merge
           { Bool = Result.Success { sig = "Bool", decoderName = "bool" }
-          , Bytea = Result.Failure Error.UnsupportedType
-          , Char = Result.Failure Error.UnsupportedType
-          , Cidr = Result.Failure Error.UnsupportedType
-          , Date = Result.Failure Error.UnsupportedType
-          , Datemultirange = Result.Failure Error.UnsupportedType
-          , Daterange = Result.Failure Error.UnsupportedType
-          , Float4 = Result.Failure Error.UnsupportedType
-          , Float8 = Result.Failure Error.UnsupportedType
-          , Inet = Result.Failure Error.UnsupportedType
-          , Int2 = Result.Failure Error.UnsupportedType
-          , Int4 = Result.Failure Error.UnsupportedType
-          , Int4multirange = Result.Failure Error.UnsupportedType
-          , Int4range = Result.Failure Error.UnsupportedType
-          , Int8 = Result.Failure Error.UnsupportedType
-          , Int8multirange = Result.Failure Error.UnsupportedType
-          , Int8range = Result.Failure Error.UnsupportedType
-          , Interval = Result.Failure Error.UnsupportedType
-          , Json = Result.Failure Error.UnsupportedType
-          , Jsonb = Result.Failure Error.UnsupportedType
-          , Macaddr = Result.Failure Error.UnsupportedType
-          , Macaddr8 = Result.Failure Error.UnsupportedType
-          , Money = Result.Failure Error.UnsupportedType
-          , Numeric = Result.Failure Error.UnsupportedType
-          , Nummultirange = Result.Failure Error.UnsupportedType
-          , Numrange = Result.Failure Error.UnsupportedType
-          , Text = Result.Failure Error.UnsupportedType
-          , Time = Result.Failure Error.UnsupportedType
-          , Timestamp = Result.Failure Error.UnsupportedType
-          , Timestamptz = Result.Failure Error.UnsupportedType
-          , Timetz = Result.Failure Error.UnsupportedType
-          , Tsmultirange = Result.Failure Error.UnsupportedType
-          , Tsrange = Result.Failure Error.UnsupportedType
-          , Tstzmultirange = Result.Failure Error.UnsupportedType
-          , Tstzrange = Result.Failure Error.UnsupportedType
-          , Uuid = Result.Failure Error.UnsupportedType
-          , Xml = Result.Failure Error.UnsupportedType
+          , Bytea = Result/unsupportedType "bytea"
+          , Char = Result/unsupportedType "char"
+          , Cidr = Result/unsupportedType "cidr"
+          , Date = Result/unsupportedType "date"
+          , Datemultirange = Result/unsupportedType "datemultirange"
+          , Daterange = Result/unsupportedType "daterange"
+          , Float4 = Result/unsupportedType "float4"
+          , Float8 = Result/unsupportedType "float8"
+          , Inet = Result/unsupportedType "inet"
+          , Int2 = Result/unsupportedType "int2"
+          , Int4 = Result/unsupportedType "int4"
+          , Int4multirange = Result/unsupportedType "int4multirange"
+          , Int4range = Result/unsupportedType "int4range"
+          , Int8 = Result/unsupportedType "int8"
+          , Int8multirange = Result/unsupportedType "int8multirange"
+          , Int8range = Result/unsupportedType "int8range"
+          , Interval = Result/unsupportedType "interval"
+          , Json = Result/unsupportedType "json"
+          , Jsonb = Result/unsupportedType "jsonb"
+          , Macaddr = Result/unsupportedType "macaddr"
+          , Macaddr8 = Result/unsupportedType "macaddr8"
+          , Money = Result/unsupportedType "money"
+          , Numeric = Result/unsupportedType "numeric"
+          , Nummultirange = Result/unsupportedType "nummultirange"
+          , Numrange = Result/unsupportedType "numrange"
+          , Text = Result/unsupportedType "text"
+          , Time = Result/unsupportedType "time"
+          , Timestamp = Result/unsupportedType "timestamp"
+          , Timestamptz = Result/unsupportedType "timestamptz"
+          , Timetz = Result/unsupportedType "timetz"
+          , Tsmultirange = Result/unsupportedType "tsmultirange"
+          , Tsrange = Result/unsupportedType "tsrange"
+          , Tstzmultirange = Result/unsupportedType "tstzmultirange"
+          , Tstzrange = Result/unsupportedType "tstzrange"
+          , Uuid = Result/unsupportedType "uuid"
+          , Xml = Result/unsupportedType "xml"
           }
           input
 
-in  Algebra.module Input Output Error run
+in  Algebra.module Input Output run

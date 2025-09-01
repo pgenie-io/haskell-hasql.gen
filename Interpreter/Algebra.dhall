@@ -1,7 +1,5 @@
 let Lude = ../Lude.dhall
 
-let Result = Lude.Structures.Result
-
 let Sdk = ../Sdk.dhall
 
 let Model = Sdk.Project
@@ -12,26 +10,64 @@ let Prelude = ../Prelude.dhall
 
 let Snippets = ../Snippets/package.dhall
 
+let Error = { path : List Text, message : Text }
+
+let Error/nest =
+      \(pathSegment : Text) ->
+      \(error : Error) ->
+        error // { path = [ pathSegment ] # error.path }
+
+let Error/message =
+      \(message : Text) -> { path = [] : List Text, message } : Error
+
+let Result = Lude.Structures.Result.Type Error
+
+let Result/nest =
+      \(A : Type) ->
+      \(context : Text) ->
+      \(result : Result A) ->
+          Lude.Structures.Result.mapError
+            Error
+            Error
+            A
+            (Error/nest context)
+            result
+        : Result A
+
+let Result/message =
+      \(A : Type) ->
+      \(message : Text) ->
+        (Result A).Failure (Error/message message) : Result A
+
+let Result/map =
+      \(A : Type) ->
+      \(B : Type) ->
+      \(f : A -> B) ->
+      \(result : Result A) ->
+        Lude.Structures.Result.mapSuccess Error A B f result : Result B
+
+let Result/flatMap =
+      \(A : Type) ->
+      \(B : Type) ->
+      \(f : A -> Result B) ->
+      \(result : Result A) ->
+        Lude.Structures.Result.flatMap Error A B f result : Result B
+
+let Result/traverseList =
+      \(A : Type) ->
+      \(B : Type) ->
+      \(f : A -> Result B) ->
+      \(list : List A) ->
+        Lude.Structures.Result.traverseList Error A B f list : Result (List B)
+
 let module =
       \(Input : Type) ->
       \(Output : Type) ->
-      \(Error : Type) ->
-        let Result = Result.Type Error Output
+        let Result = Result Output
 
         let Run = Input -> Result
 
-        in  \(run : Run) -> { Input, Output, Error, Result, Run, run }
-
-let parametricModule =
-      \(Input : Type) ->
-      \(Params : Type) ->
-      \(Output : Type) ->
-      \(Error : Type) ->
-        let Result = Result.Type Error Output
-
-        let Run = Input -> Params -> Result
-
-        in  \(run : Run) -> { Input, Params, Output, Error, Result, Run, run }
+        in  \(run : Run) -> { Input, Output, Result, Run, run }
 
 let Name = CodegenKit.Name
 
@@ -72,8 +108,16 @@ in  { Lude
     , Name
     , Model
     , Snippets
+    , Error
+    , Error/nest
+    , Error/message
+    , Result
+    , Result/nest
+    , Result/message
+    , Result/map
+    , Result/flatMap
+    , Result/traverseList
     , module
-    , parametricModule
     , Import
     , Import/render
     , Imports

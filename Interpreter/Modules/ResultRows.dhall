@@ -7,33 +7,22 @@ let Input = Algebra.Model.ResultRows
 let Output =
       Text -> { decoderExp : Text, rowTypeDecl : Text, resultTypeDecl : Text }
 
-let Error = < Column : Member.Error | Todo >
-
-let Result = Algebra.Lude.Structures.Result.Type Error Output
+let Result = Algebra.Result Output
 
 let run
     : Input -> Result
     = \(input : Input) ->
         let compiledColumns =
-              Algebra.Lude.Structures.Result.traverseList
-                Error
+              Algebra.Result/traverseList
                 Algebra.Model.Member
                 Member.Output
-                ( \(column : Algebra.Model.Member) ->
-                    Algebra.Lude.Structures.Result.mapError
-                      Member.Error
-                      Error
-                      Member.Output
-                      (\(error : Member.Error) -> Error.Column error)
-                      (Member.run column)
-                )
+                Member.run
                 ( Algebra.Prelude.NonEmpty.toList
                     Algebra.Model.Member
                     input.columns
                 )
 
-        in  Algebra.Lude.Structures.Result.flatMap
-              Error
+        in  Algebra.Result/flatMap
               (List Member.Output)
               Output
               ( \(columns : List Member.Output) ->
@@ -101,4 +90,4 @@ let run
               )
               compiledColumns
 
-in  Algebra.module Input Output Error run
+in  Algebra.module Input Output run

@@ -6,9 +6,7 @@ let Input = Algebra.Model.Result
 
 let Output = Text -> { typeDecls : List Text, decoderExp : Text }
 
-let Error = < ResultRows : ResultRows.Error | Todo >
-
-let Result = Algebra.Lude.Structures.Result.Type Error Output
+let Result = Algebra.Result Output
 
 let run
     : Input -> Result
@@ -18,26 +16,20 @@ let run
           input
           Result
           ( \(resultRows : ResultRows.Input) ->
-              merge
-                { Success =
-                    \(resultRows : ResultRows.Output) ->
-                      Result.Success
-                        ( \(typeNameBase : Text) ->
-                            let resultRows = resultRows typeNameBase
+              Algebra.Result/map
+                ResultRows.Output
+                Output
+                ( \(resultRows : ResultRows.Output) ->
+                  \(typeNameBase : Text) ->
+                    let resultRows = resultRows typeNameBase
 
-                            in  { typeDecls =
-                                  [ resultRows.resultTypeDecl
-                                  , resultRows.rowTypeDecl
-                                  ]
-                                , decoderExp = ""
-                                }
-                        )
-                , Failure =
-                    \(error : ResultRows.Error) ->
-                      Result.Failure (Error.ResultRows error)
-                }
+                    in  { typeDecls =
+                          [ resultRows.resultTypeDecl, resultRows.rowTypeDecl ]
+                        , decoderExp = ""
+                        }
+                )
                 (ResultRows.run resultRows)
           )
-          (Result.Failure Error.Todo)
+          (Result.Failure (Algebra.Error/message "TODO"))
 
-in  Algebra.module Input Output Error run
+in  Algebra.module Input Output run

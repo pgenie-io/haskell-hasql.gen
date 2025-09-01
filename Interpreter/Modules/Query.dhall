@@ -10,12 +10,10 @@ let Output =
       , statementModuleContents : Text
       }
 
-let Error = < Column : ResultRows.Error | Todo >
-
-let Result = Algebra.Lude.Structures.Result.Type Error Output
+let Result = Algebra.Result Output
 
 let run
     : Input -> Result
-    = \(input : Input) -> Result.Failure Error.Todo
+    = \(input : Input) -> Result.Failure (Algebra.Error/message "TODO")
 
-in  Algebra.module Input Output Error run
+in  Algebra.module Input Output run

@@ -12,17 +12,14 @@ let Input = Model.Scalar
 
 let Output = { sig : Text, decoderExp : Text }
 
-let Error = Primitive.Error
-
-let Result = Lude.Structures.Result.Type Error Output
+let Result = Algebra.Result Output
 
 let run =
       \(input : Input) ->
         merge
           { Primitive =
               \(primitive : Model.Primitive) ->
-                Lude.Structures.Result.mapSuccess
-                  Error
+                Algebra.Result/map
                   Primitive.Output
                   Output
                   ( \(primitive : Primitive.Output) ->
@@ -43,4 +40,4 @@ let run =
           }
           input
 
-in  Algebra.module Input Output Error run
+in  Algebra.module Input Output run
