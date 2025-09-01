@@ -6,7 +6,7 @@ let Input = Algebra.Model.Result
 
 let Output = Text -> { typeDecls : List Text, decoderExp : Text }
 
-let Result = Algebra.Result Output
+let Result = Algebra.Sdk.Compiled.Type Output
 
 let run
     : Input -> Result
@@ -16,7 +16,7 @@ let run
           input
           Result
           ( \(resultRows : ResultRows.Input) ->
-              Algebra.Result/map
+              Algebra.Sdk.Compiled.map
                 ResultRows.Output
                 Output
                 ( \(resultRows : ResultRows.Output) ->
@@ -25,11 +25,11 @@ let run
 
                     in  { typeDecls =
                           [ resultRows.resultTypeDecl, resultRows.rowTypeDecl ]
-                        , decoderExp = ""
+                        , decoderExp = resultRows.decoderExp
                         }
                 )
                 (ResultRows.run resultRows)
           )
-          (Result.Failure (Algebra.Error/message "TODO"))
+          (Algebra.Sdk.Compiled.message Output "TODO: Result")
 
 in  Algebra.module Input Output run

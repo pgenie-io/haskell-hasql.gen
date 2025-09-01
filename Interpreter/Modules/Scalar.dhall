@@ -12,14 +12,14 @@ let Input = Model.Scalar
 
 let Output = { sig : Text, decoderExp : Text }
 
-let Result = Algebra.Result Output
+let Result = Sdk.Compiled.Type Output
 
 let run =
       \(input : Input) ->
         merge
           { Primitive =
               \(primitive : Model.Primitive) ->
-                Algebra.Result/map
+                Sdk.Compiled.map
                   Primitive.Output
                   Output
                   ( \(primitive : Primitive.Output) ->
@@ -32,7 +32,8 @@ let run =
               \(name : Model.Name) ->
                 let nameText = Algebra.Name.toTextInCamel name
 
-                in  Result.Success
+                in  Sdk.Compiled.ok
+                      Output
                       { sig = "CustomTypes.${Algebra.Name.toTextInPascal name}"
                       , decoderExp =
                           "CustomTypes.${Algebra.Name.toTextInCamel name}"

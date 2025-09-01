@@ -7,13 +7,15 @@ let Input = Algebra.Model.ResultRows
 let Output =
       Text -> { decoderExp : Text, rowTypeDecl : Text, resultTypeDecl : Text }
 
-let Result = Algebra.Result Output
+let Result = Algebra.Sdk.Compiled.Type Output
 
 let run
     : Input -> Result
     = \(input : Input) ->
         let compiledColumns =
-              Algebra.Result/traverseList
+              Algebra.Lude.Algebras.Applicative.traverseList
+                Algebra.Sdk.Compiled.Type
+                Algebra.Sdk.Compiled.applicative
                 Algebra.Model.Member
                 Member.Output
                 Member.run
@@ -22,11 +24,12 @@ let run
                     input.columns
                 )
 
-        in  Algebra.Result/flatMap
+        in  Algebra.Sdk.Compiled.flatMap
               (List Member.Output)
               Output
               ( \(columns : List Member.Output) ->
-                  Result.Success
+                  Algebra.Sdk.Compiled.ok
+                    Output
                     ( \(typeNameBase : Text) ->
                         let rowTypeName = "${typeNameBase}ResultRow"
 
@@ -48,36 +51,37 @@ let run
                         let rowDecoderExp =
                               ''
                               do
-                              ${Algebra.Lude.Extensions.Text.indent
-                                  2
-                                  ( Algebra.Prelude.Text.concatMap
-                                      Member.Output
-                                      ( \(column : Member.Output) ->
-                                          "${column.fieldName} <- ${column.decoderExp}"
-                                      )
-                                      columns
-                                  )}                           
-                                pure ${rowTypeName} {..}''
+                                ${Algebra.Lude.Extensions.Text.indent
+                                    2
+                                    ( Algebra.Prelude.Text.concatMap
+                                        Member.Output
+                                        ( \(column : Member.Output) ->
+                                            ''
+                                            ${column.fieldName} <- Decoders.column (${column.decoderExp})
+                                            ''
+                                        )
+                                        columns
+                                    )}pure ${rowTypeName} {..}''
 
                         let output =
                               merge
                                 { Optional =
                                   { decoderExp =
-                                      "Decoder.rowMaybe ${rowDecoderExp}"
+                                      "Decoders.rowMaybe ${rowDecoderExp}"
                                   , rowTypeDecl
                                   , resultTypeDecl =
                                       "type ${typeNameBase}Result = Maybe ${rowTypeName}"
                                   }
                                 , Single =
                                   { decoderExp =
-                                      "Decoder.singleRow ${rowDecoderExp}"
+                                      "Decoders.singleRow ${rowDecoderExp}"
                                   , rowTypeDecl
                                   , resultTypeDecl =
                                       "type ${typeNameBase}Result = ${rowTypeName}"
                                   }
                                 , Multiple =
                                   { decoderExp =
-                                      "Decoder.rowVector ${rowDecoderExp}"
+                                      "Decoders.rowVector ${rowDecoderExp}"
                                   , rowTypeDecl
                                   , resultTypeDecl =
                                       "type ${typeNameBase}Result = Vector.Vector ${rowTypeName}"

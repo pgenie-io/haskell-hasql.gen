@@ -12,11 +12,11 @@ let Input = Model.Value
 
 let Output = { sig : Text, decoderExp : Text }
 
-let Result = Algebra.Result Output
+let Result = Sdk.Compiled.Type Output
 
 let run =
       \(input : Input) ->
-        Algebra.Result/flatMap
+        Sdk.Compiled.flatMap
           Scalar.Output
           Output
           ( \(scalar : Scalar.Output) ->
@@ -25,9 +25,10 @@ let run =
                 input.arraySettings
                 Result
                 ( \(arraySettings : Model.ArraySettings) ->
-                    Result.Failure (Algebra.Error/message "TODO")
+                    Sdk.Compiled.message Output "TODO"
                 )
-                ( Result.Success
+                ( Sdk.Compiled.ok
+                    Output
                     { sig = scalar.sig, decoderExp = scalar.decoderExp }
                 )
           )
