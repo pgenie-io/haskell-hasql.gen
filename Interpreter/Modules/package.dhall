@@ -5,4 +5,7 @@
 , Result = ./Result.dhall
 , ResultRows = ./ResultRows.dhall
 , Query = ./Query.dhall
+, CustomType = ./CustomType.dhall
+, Project = ./Project.dhall
+, Version = ./Version.dhall
 }
