@@ -2,6 +2,7 @@
 , Primitive = ./Primitive.dhall
 , Scalar = ./Scalar.dhall
 , Value = ./Value.dhall
+, Result = ./Result.dhall
 , ResultRows = ./ResultRows.dhall
 , Query = ./Query.dhall
 }

@@ -4,8 +4,9 @@ let Modules = ./Modules/package.dhall
 
 let fixture1 = Algebra.Sdk.Fixtures._1
 
-in  Algebra.Prelude.List.map
+in  Algebra.Lude.Structures.Result.traverseList
+      Modules.Result.Error
       Algebra.Model.Query
-      Modules.Query.Result
-      (\(query : Algebra.Model.Query) -> Modules.Query.run query)
+      Modules.Result.Output
+      (\(query : Algebra.Model.Query) -> Modules.Result.run query.result)
       fixture1.queries

@@ -12,7 +12,7 @@ let Input = Model.Member
 
 let Output = { fieldName : Text, sig : Text, decoderExp : Text }
 
-let Error = { name : Algebra.Name.Type, error : Value.Error }
+let Error = { name : Text, error : Value.Error }
 
 let Result = Lude.Structures.Result.Type Error Output
 
@@ -21,7 +21,7 @@ let run =
         merge
           { Failure =
               \(error : Value.Error) ->
-                Result.Failure { name = input.name, error }
+                Result.Failure { name = input.rawName, error }
           , Success =
               \(value : Value.Output) ->
                 let fieldName = Algebra.Name.toTextInCamel input.name
