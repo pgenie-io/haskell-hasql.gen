@@ -1,12 +1,14 @@
 let Algebra = ./Algebra.dhall
 
-let ProjectGen = ./Modules/Project.dhall
+let Modules = ./Modules/package.dhall
+
+let ProjectModule = Modules.Project
 
 let fixture1 = Algebra.Sdk.Fixtures._1
 
 in  Algebra.Sdk.Compiled.toPlainText
       ( Algebra.Sdk.Compiled.map
-          ProjectGen.Output
+          ProjectModule.Output
           Text
           ( \(files : List Algebra.Sdk.File.Type) ->
               Algebra.Prelude.Text.concatMapSep
@@ -15,5 +17,5 @@ in  Algebra.Sdk.Compiled.toPlainText
                 Algebra.Sdk.File.toPlainText
                 files
           )
-          (ProjectGen.run fixture1)
+          (ProjectModule.run fixture1)
       )

@@ -8,4 +8,5 @@
 , CustomType = ./CustomType.dhall
 , Project = ./Project.dhall
 , Version = ./Version.dhall
+, QueryFragments = ./QueryFragments.dhall
 }
