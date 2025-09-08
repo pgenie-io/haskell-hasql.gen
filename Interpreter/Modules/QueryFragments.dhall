@@ -12,7 +12,7 @@ let Input = Algebra.Model.QueryFragments
 
 let Output
     : Type
-    = forall (varOrder : List Algebra.Model.Name) -> Text
+    = { exp : Text }
 
 let renderSql
     : Text -> Text
