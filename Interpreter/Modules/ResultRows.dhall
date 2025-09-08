@@ -13,7 +13,7 @@ let run
     : Input -> Result
     = \(input : Input) ->
         let compiledColumns =
-              Algebra.Lude.Algebras.Applicative.traverseList
+              Algebra.Typeclasses.Classes.Applicative.traverseList
                 Algebra.Sdk.Compiled.Type
                 Algebra.Sdk.Compiled.applicative
                 Algebra.Model.Member

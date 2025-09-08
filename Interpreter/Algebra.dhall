@@ -2,6 +2,8 @@ let Lude = ../Lude.dhall
 
 let Sdk = ../Sdk.dhall
 
+let Typeclasses = ../Typeclasses.dhall
+
 let Model = Sdk.Project
 
 let CodegenKit = ../CodegenKit.dhall
@@ -52,7 +54,8 @@ let Imports =
 
       in  { Type = Self, default, render }
 
-in  { Lude
+in  { Typeclasses
+    , Lude
     , Sdk
     , Prelude
     , Name

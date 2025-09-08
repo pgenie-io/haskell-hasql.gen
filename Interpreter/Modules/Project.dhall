@@ -87,7 +87,7 @@ let run
                 Algebra.Model.Query
                 (Optional QueryGen.Output)
                 ( \(query : Algebra.Model.Query) ->
-                    Algebra.Lude.Algebras.Alternative.optional
+                    Algebra.Typeclasses.Classes.Alternative.optional
                       Sdk.Compiled.Type
                       Sdk.Compiled.alternative
                       QueryGen.Output

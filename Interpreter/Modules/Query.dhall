@@ -2,6 +2,8 @@ let Algebra = ../Algebra.dhall
 
 let Lude = Algebra.Lude
 
+let Typeclasses = Algebra.Typeclasses
+
 let Sdk = Algebra.Sdk
 
 let ResultModule = ./Result.dhall
@@ -77,7 +79,7 @@ let run
         Sdk.Compiled.nest
           Output
           input.srcPath
-          ( Lude.Algebras.Applicative.map2
+          ( Typeclasses.Classes.Applicative.map2
               Sdk.Compiled.Type
               Sdk.Compiled.applicative
               ResultModule.Output

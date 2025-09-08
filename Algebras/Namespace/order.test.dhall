@@ -64,30 +64,30 @@ in  { singleElementNamespaces =
       { sameNamespace =
             assert
           :     order.compare singleNamespace singleNamespace
-            ===  Lude.Algebras.Order.Comparison.Equal
+            ===  Typeclasses.Classes.Order.Comparison.Equal
       , differentNamespaces =
           let namespace4 =
                 word LatinChar.M [ LatinChar.A, LatinChar.I, LatinChar.N ]
 
           in    assert
               :     order.compare singleNamespace namespace4
-                ===  Lude.Algebras.Order.Comparison.Greater
+                ===  Typeclasses.Classes.Order.Comparison.Greater
       }
     , multiElementNamespaces =
       { sameNamespaces =
             assert
           :     order.compare namespace1 namespace1
-            ===  Lude.Algebras.Order.Comparison.Equal
+            ===  Typeclasses.Classes.Order.Comparison.Equal
       , differentByHead =
           -- "Control" < "Data"
             assert
           :     order.compare namespace2 namespace1
-            ===  Lude.Algebras.Order.Comparison.Smaller
+            ===  Typeclasses.Classes.Order.Comparison.Smaller
       , sameHeadDifferentTail =
           -- Data.List vs Data.Map
             assert
           :     order.compare namespace1 namespace3
-            ===  Lude.Algebras.Order.Comparison.Smaller
+            ===  Typeclasses.Classes.Order.Comparison.Smaller
       }
     , differentLengths =
       { shorterVsLonger =
@@ -96,7 +96,7 @@ in  { singleElementNamespaces =
 
           in    assert
               :     order.compare shortNamespace namespace1
-                ===  Lude.Algebras.Order.Comparison.Smaller
+                ===  Typeclasses.Classes.Order.Comparison.Smaller
       , longerVsShorter =
           let longNamespace =
                 separate
@@ -125,6 +125,6 @@ in  { singleElementNamespaces =
 
           in    assert
               :     order.compare longNamespace namespace2
-                ===  Lude.Algebras.Order.Comparison.Greater
+                ===  Typeclasses.Classes.Order.Comparison.Greater
       }
     }
