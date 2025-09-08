@@ -12,15 +12,39 @@ let Input = Algebra.Model.QueryFragments
 
 let Output
     : Type
-    = { exp : Text }
+    = { exp : Text, haddock : Text }
 
-let renderSql
+let escapeText
     : Text -> Text
-    = \(text : Text) ->
-        Prelude.Text.replace "\\" "\\\\" (Prelude.Text.replace "\"" "\\\"" text)
+    = Prelude.Function.composeList
+        Text
+        [ Prelude.Text.replace "\"" "\\\""
+        , Prelude.Text.replace "\\" "\\\\"
+        , Prelude.Text.replace "\n" ("\\n\\" ++ "\n" ++ "\\")
+        ]
+
+let renderExp
+    : Algebra.Model.QueryFragments -> Text
+    = \(fragments : Algebra.Model.QueryFragments) ->
+            "\""
+        ++  Prelude.Text.concatMap
+              Algebra.Model.QueryFragment
+              ( \(queryFragment : Algebra.Model.QueryFragment) ->
+                  merge
+                    { Sql = escapeText
+                    , Var =
+                        \(var : Algebra.Model.QueryFragmentVar) ->
+                              "\$"
+                          ++  Algebra.Prelude.Natural.show (var.paramIndex + 1)
+                    }
+                    queryFragment
+              )
+              fragments
+        ++  "\""
 
 let run
     : Input -> Compiled.Type Output
-    = \(input : Input) -> Compiled.message Output "TODO"
+    = \(input : Input) ->
+        Compiled.ok Output { exp = renderExp input, haddock = "TODO" }
 
 in  Algebra.module Input Output run

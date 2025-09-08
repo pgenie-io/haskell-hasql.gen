@@ -58,7 +58,7 @@ let render =
                 Statement sql encoder decoder True
                 where
                   sql =
-                    ${fragments.exp}
+                    ${Algebra.Lude.Extensions.Text.indent 6 fragments.exp}
 
                   encoder =
                     error "TODO"
