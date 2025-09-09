@@ -10,6 +10,8 @@ let ResultModule = ./Result.dhall
 
 let QueryFragmentsModule = ./QueryFragments.dhall
 
+let MemberModule = ./Member.dhall
+
 let Input = Algebra.Model.Query
 
 let Output =
@@ -19,10 +21,48 @@ let Output =
         , statementModuleContents : Text
         }
 
+let renderParamsTypeDecl
+    : Algebra.Model.Query -> Text -> List MemberModule.Output -> Text
+    = \(query : Algebra.Model.Query) ->
+      \(sqlForDocs : Text) ->
+      \(members : List MemberModule.Output) ->
+        let paramsTypeName = Algebra.Name.toTextInPascal query.name ++ "Params"
+
+        let fieldDecls =
+              Algebra.Prelude.Text.concatMapSep
+                ("\n" ++ ",")
+                MemberModule.Output
+                ( \(member : MemberModule.Output) ->
+                    member.fieldName ++ " :: " ++ member.sig
+                )
+                members
+
+        in  ''
+            -- |
+            -- Parameters for the @${Algebra.Name.toTextInSnake
+                                       query.name}@ query.
+            --
+            -- == SQL Template
+            --
+            -- > ${Algebra.Lude.Extensions.Text.prefixEachLine
+                     "-- > "
+                     sqlForDocs}
+            --
+            -- == Source Path
+            --
+            -- > ${query.srcPath}
+            --
+            data ${paramsTypeName} = ${paramsTypeName}
+              { ${Algebra.Lude.Extensions.Text.indent 4 fieldDecls}
+              }
+              deriving stock (Eq, Show)
+            ''
+
 let render =
       \(input : Input) ->
       \(result : ResultModule.Output) ->
       \(fragments : QueryFragmentsModule.Output) ->
+      \(paramsMembers : List MemberModule.Output) ->
       \(projectNamespace : List Text) ->
         let statementModuleName = Algebra.Name.toTextInPascal input.name
 
@@ -66,6 +106,12 @@ let render =
                   decoder = ${Algebra.Lude.Extensions.Text.indent
                                 4
                                 result.decoderExp}
+
+              ${renderParamsTypeDecl input fragments.haddock paramsMembers}
+
+              sql :: Text.Text
+              sql =
+                ${Algebra.Lude.Extensions.Text.indent 2 fragments.exp}
               ''
 
         in  { statementModuleNamespace
@@ -79,11 +125,12 @@ let run
         Sdk.Compiled.nest
           Output
           input.srcPath
-          ( Typeclasses.Classes.Applicative.map2
+          ( Typeclasses.Classes.Applicative.map3
               Sdk.Compiled.Type
               Sdk.Compiled.applicative
               ResultModule.Output
               QueryFragmentsModule.Output
+              (List MemberModule.Output)
               Output
               (render input)
               ( Sdk.Compiled.nest
@@ -95,6 +142,18 @@ let run
                   QueryFragmentsModule.Output
                   "sql"
                   (QueryFragmentsModule.run input.fragments)
+              )
+              ( Sdk.Compiled.nest
+                  (List MemberModule.Output)
+                  "params"
+                  ( Typeclasses.Classes.Applicative.traverseList
+                      Sdk.Compiled.Type
+                      Sdk.Compiled.applicative
+                      Algebra.Model.Member
+                      MemberModule.Output
+                      MemberModule.run
+                      input.params
+                  )
               )
           )
 
