@@ -42,9 +42,24 @@ let renderExp
               fragments
         ++  "\""
 
+let renderHaddock
+    : Algebra.Model.QueryFragments -> Text
+    = Prelude.Text.concatMap
+        Algebra.Model.QueryFragment
+        ( \(queryFragment : Algebra.Model.QueryFragment) ->
+            merge
+              { Sql = Prelude.Function.identity Text
+              , Var =
+                  \(var : Algebra.Model.QueryFragmentVar) -> "\$" ++ var.rawName
+              }
+              queryFragment
+        )
+
 let run
     : Input -> Compiled.Type Output
     = \(input : Input) ->
-        Compiled.ok Output { exp = renderExp input, haddock = "TODO" }
+        Compiled.ok
+          Output
+          { exp = renderExp input, haddock = renderHaddock input }
 
 in  Algebra.module Input Output run
