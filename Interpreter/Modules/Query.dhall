@@ -6,6 +6,8 @@ let Typeclasses = Algebra.Typeclasses
 
 let Sdk = Algebra.Sdk
 
+let Templates = ./Query/Templates/package.dhall
+
 let ResultModule = ./Result.dhall
 
 let QueryFragmentsModule = ./QueryFragments.dhall
@@ -21,43 +23,6 @@ let Output =
         , statementModuleContents : Text
         }
 
-let renderParamsTypeDecl
-    : Algebra.Model.Query -> Text -> List MemberModule.Output -> Text
-    = \(query : Algebra.Model.Query) ->
-      \(sqlForDocs : Text) ->
-      \(members : List MemberModule.Output) ->
-        let paramsTypeName = Algebra.Name.toTextInPascal query.name ++ "Params"
-
-        let fieldDecls =
-              Algebra.Prelude.Text.concatMapSep
-                ("\n" ++ ",")
-                MemberModule.Output
-                ( \(member : MemberModule.Output) ->
-                    member.fieldName ++ " :: " ++ member.sig
-                )
-                members
-
-        in  ''
-            -- |
-            -- Parameters for the @${Algebra.Name.toTextInSnake
-                                       query.name}@ query.
-            --
-            -- == SQL Template
-            --
-            -- > ${Algebra.Lude.Extensions.Text.prefixEachLine
-                     "-- > "
-                     sqlForDocs}
-            --
-            -- == Source Path
-            --
-            -- > ${query.srcPath}
-            --
-            data ${paramsTypeName} = ${paramsTypeName}
-              { ${Algebra.Lude.Extensions.Text.indent 4 fieldDecls}
-              }
-              deriving stock (Eq, Show)
-            ''
-
 let render =
       \(input : Input) ->
       \(result : ResultModule.Output) ->
@@ -69,13 +34,17 @@ let render =
         let statementModuleNamespace =
               Algebra.Prelude.Text.concatSep
                 "."
-                (projectNamespace # [ statementModuleName ])
+                (projectNamespace # [ "Statements", statementModuleName ])
 
         let statementModulePath =
                   Algebra.Prelude.Text.concatSep
                     "/"
-                    (projectNamespace # [ statementModuleName ])
+                    (projectNamespace # [ "Statements", statementModuleName ])
               ++  ".hs"
+
+        let statementTypeName = statementModuleName
+
+        let statementResultTypeName = statementModuleName ++ "Result"
 
         let result = result statementModuleName
 
@@ -83,7 +52,7 @@ let render =
               ''
               module ${statementModuleNamespace} where
 
-              import Hasql.Statement (Statement (..))
+              import qualified Hasql.Statement as Statement
               import qualified Hasql.Decoders as Decoders
               import qualified Hasql.Encoders as Encoders
               import qualified Data.ByteString as ByteString
@@ -91,27 +60,37 @@ let render =
               import qualified Data.Text as Text
               import qualified Data.Vector as Vector
 
+              ${Templates.ParamsTypeDecl.run
+                  { queryName = Algebra.Name.toTextInSnake input.name
+                  , sqlForDocs = fragments.haddock
+                  , srcPath = input.srcPath
+                  , typeName = statementTypeName
+                  , members =
+                      Algebra.Prelude.List.map
+                        MemberModule.Output
+                        { fieldName : Text, sig : Text }
+                        ( \(member : MemberModule.Output) ->
+                            { fieldName = member.fieldName, sig = member.sig }
+                        )
+                        paramsMembers
+                  }}
+
               ${Algebra.Prelude.Text.concatSep "\n\n" result.typeDecls}
 
-              statement : Statement ${statementModuleName}Params ${statementModuleName} Result
-              statement =
-                Statement sql encoder decoder True
-                where
-                  sql =
-                    ${Algebra.Lude.Extensions.Text.indent 6 fragments.exp}
+              instance IsStatement ${statementTypeName} where
+                type ResultOf ${statementTypeName} = ${statementResultTypeName}
 
-                  encoder =
-                    error "TODO"
+                statementOf = Statement.prepared sql encoder decoder
+                  where
+                    sql =
+                      ${Algebra.Lude.Extensions.Text.indent 8 fragments.exp}
 
-                  decoder = ${Algebra.Lude.Extensions.Text.indent
-                                4
-                                result.decoderExp}
+                    encoder =
+                      error "TODO"
 
-              ${renderParamsTypeDecl input fragments.haddock paramsMembers}
+                    decoder =
+                      ${Algebra.Lude.Extensions.Text.indent 8 result.decoderExp}
 
-              sql :: Text.Text
-              sql =
-                ${Algebra.Lude.Extensions.Text.indent 2 fragments.exp}
               ''
 
         in  { statementModuleNamespace

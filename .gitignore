@@ -4,19 +4,20 @@
 # More on the approach: https://jasonstitt.com/gitignore-whitelisting-patterns.
 
 # Ignore everything in the root folder:
-/*
+# /*
 
-# Unignore a specific list of files in the root folder:
-!/.gitignore
-!/LICENSE
-!/README.md
-!/CHANGELOG.md
-!*.dhall
+# # Unignore a specific list of files in the root folder:
+# !/.gitignore
+# !/LICENSE
+# !/README.md
+# !/CHANGELOG.md
 
-# Unignore subtrees:
-!/.github/
-!/design/
-!/src/
+# # Unignore subtrees:
+# !/.github/
+# !/design/
+# !/src/
 
-# Ignore noise:
-.DS_Store
+# # Ignore noise:
+# .DS_Store
+
+*.md

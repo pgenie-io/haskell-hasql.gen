@@ -21,6 +21,10 @@ let module =
 
         in  \(run : Run) -> { Input, Output, Result, Run, run }
 
+let templateModule =
+      \(Params : Type) ->
+        let Run = Params -> Text in \(run : Run) -> { Params, Run, run }
+
 let Name = CodegenKit.Name
 
 let Import = < HasqlDecoders | HasqlEncoders | HasqlStatement >
@@ -61,8 +65,9 @@ in  { Typeclasses
     , Name
     , Model
     , Snippets
-    , module
     , Import
     , Import/render
     , Imports
+    , module
+    , templateModule
     }

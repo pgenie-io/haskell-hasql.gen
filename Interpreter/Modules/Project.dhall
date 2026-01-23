@@ -6,6 +6,8 @@ let Lude = Algebra.Lude
 
 let Model = Algebra.Model
 
+let Templates = ../../Templates/package.dhall
+
 let QueryGen = ./Query.dhall
 
 let Input = Model.Project
@@ -15,10 +17,13 @@ let Output = List Sdk.File.Type
 let combineOutputs =
       \(input : Input) ->
       \(compiledQueries : List QueryGen.Output) ->
-        let rootNamespace =
+        let rootNamespaceAsList =
               [ Algebra.Name.toTextInPascal input.owner
               , Algebra.Name.toTextInPascal input.name
               ]
+
+        let rootNamespace =
+              Algebra.Prelude.Text.concatSep "." rootNamespaceAsList
 
         let Query =
               { statementModuleNamespace : Text
@@ -30,12 +35,11 @@ let combineOutputs =
               Algebra.Prelude.List.map
                 QueryGen.Output
                 Query
-                (\(query : QueryGen.Output) -> query rootNamespace)
+                (\(query : QueryGen.Output) -> query rootNamespaceAsList)
                 compiledQueries
 
-        let statementModuleNames
-            : List Text
-            = Algebra.Prelude.List.map
+        let statementModuleNamespacesAsList =
+              Algebra.Prelude.List.map
                 Query
                 Text
                 (\(query : Query) -> query.statementModuleNamespace)
@@ -68,10 +72,16 @@ let combineOutputs =
                     version: 0
 
                     library
+                      exposed-modules:
+                        ${rootNamespace}
+                        ${rootNamespace}.DeclaredTypes
+                        
                       other-modules:
+                        ${rootNamespace}.Algebras.Statement
+                        ${rootNamespace}.Statements
                         ${Algebra.Prelude.Text.concatSep
                             ("\n" ++ "    ")
-                            statementModuleNames}
+                            statementModuleNamespacesAsList}
                     ''
 
               in  { path, content }
