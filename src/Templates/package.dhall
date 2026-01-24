@@ -1,1 +1,1 @@
-{ RootModule = ./RootModule.dhall }
+{ RootModule = ./RootModule.dhall, ModulePath = ./ModulePath.dhall }

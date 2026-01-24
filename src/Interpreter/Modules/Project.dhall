@@ -42,8 +42,7 @@ let combineOutputs =
         let rootModuleFile
             : Sdk.File.Type
             = let path =
-                        Algebra.Prelude.Text.concatSep "/" rootNamespaceAsList
-                    ++  ".hs"
+                    Templates.ModulePath.run { namespace = rootNamespaceAsList }
 
               let content =
                     Templates.RootModule.run
