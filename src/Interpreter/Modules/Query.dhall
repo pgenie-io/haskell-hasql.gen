@@ -18,7 +18,8 @@ let Input = Algebra.Model.Query
 
 let Output =
       forall (projectNamespace : List Text) ->
-        { statementModuleNamespace : Text
+        { statementModuleName : Text
+        , statementModuleNamespace : Text
         , statementModulePath : Text
         , statementModuleContents : Text
         }
@@ -93,7 +94,8 @@ let render =
 
               ''
 
-        in  { statementModuleNamespace
+        in  { statementModuleName
+            , statementModuleNamespace
             , statementModulePath
             , statementModuleContents
             }

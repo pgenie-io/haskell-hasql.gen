@@ -26,7 +26,8 @@ let combineOutputs =
               Algebra.Prelude.Text.concatSep "." rootNamespaceAsList
 
         let Query =
-              { statementModuleNamespace : Text
+              { statementModuleName : Text
+              , statementModuleNamespace : Text
               , statementModulePath : Text
               , statementModuleContents : Text
               }
@@ -38,8 +39,29 @@ let combineOutputs =
                 (\(query : QueryGen.Output) -> query rootNamespaceAsList)
                 compiledQueries
 
-        let statementModuleNamespacesAsList =
-              Algebra.Prelude.List.map
+        let rootModuleFile
+            : Sdk.File.Type
+            = let path =
+                        Algebra.Prelude.Text.concatSep "/" rootNamespaceAsList
+                    ++  ".hs"
+
+              let content =
+                    Templates.RootModule.run
+                      { projectNamespace =
+                          Algebra.Prelude.Text.concatSep "." rootNamespaceAsList
+                      , statementNames =
+                          Algebra.Prelude.List.map
+                            Query
+                            Text
+                            (\(query : Query) -> query.statementModuleName)
+                            compiledQueries
+                      }
+
+              in  { path, content }
+
+        let statementModuleNamespacesAsList
+            : List Text
+            = Algebra.Prelude.List.map
                 Query
                 Text
                 (\(query : Query) -> query.statementModuleNamespace)
@@ -86,7 +108,7 @@ let combineOutputs =
 
               in  { path, content }
 
-        in  [ cabalFile ] # statementFiles : List Sdk.File.Type
+        in  [ cabalFile, rootModuleFile ] # statementFiles : List Sdk.File.Type
 
 let run
     : Input -> Sdk.Compiled.Type Output

@@ -3,6 +3,8 @@ let Algebra = ../Algebras/Template/package.dhall
 
 let Prelude = ../Prelude.dhall
 
+let Lude = ../Lude.dhall
+
 let Params = { projectNamespace : Text, statementNames : List Text }
 
 in  Algebra.module
@@ -26,26 +28,28 @@ in  Algebra.module
               IsStatement,
               
               -- * Statements
-              ${Prelude.Text.concatMapSep
-                  ''
-                  ,
-                  ''
-                  Text
-                  ( \(statementName : Text) ->
-                      "module ${params.projectNamespace}.Statements.${statementName}"
-                  )
-                  params.statementNames}
+              ${Lude.Extensions.Text.indent
+                  4
+                  ( Prelude.Text.concatMapSep
+                      ''
+                      ,
+                      ''
+                      Text
+                      ( \(statementName : Text) ->
+                          ''
+                          -- ** ${statementName} statement
+                          module ${params.projectNamespace}.Statements.${statementName}''
+                      )
+                      params.statementNames
+                  )}
             )
           where
 
-          import 
           ${Prelude.Text.concatMapSep
-              "\n\n"
+              "\n"
               Text
               ( \(statementName : Text) ->
-                  ''
-                  import ${params.projectNamespace}.Statements.${statementName}
-                  ''
+                  "import ${params.projectNamespace}.Statements.${statementName}"
               )
               params.statementNames}
 
