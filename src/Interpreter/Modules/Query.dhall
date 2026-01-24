@@ -6,7 +6,7 @@ let Typeclasses = Algebra.Typeclasses
 
 let Sdk = Algebra.Sdk
 
-let Templates = ./Query/Templates/package.dhall
+let Templates = ../../Templates/package.dhall
 
 let ResultModule = ./Result.dhall
 
@@ -32,16 +32,15 @@ let render =
       \(projectNamespace : List Text) ->
         let statementModuleName = Algebra.Name.toTextInPascal input.name
 
+        let statementModuleNamespaceAsList =
+              projectNamespace # [ "Statements", statementModuleName ]
+
         let statementModuleNamespace =
-              Algebra.Prelude.Text.concatSep
-                "."
-                (projectNamespace # [ "Statements", statementModuleName ])
+              Algebra.Prelude.Text.concatSep "." statementModuleNamespaceAsList
 
         let statementModulePath =
-                  Algebra.Prelude.Text.concatSep
-                    "/"
-                    (projectNamespace # [ "Statements", statementModuleName ])
-              ++  ".hs"
+              Templates.ModulePath.run
+                { namespace = statementModuleNamespaceAsList }
 
         let statementTypeName = statementModuleName
 

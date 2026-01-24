@@ -1,8 +1,8 @@
-let Algebra = ../../../../Algebras/Template/package.dhall
+let Algebra = ../Algebras/Template/package.dhall
 
-let Prelude = ../../../../Prelude.dhall
+let Prelude = ../Prelude.dhall
 
-let Lude = ../../../../Lude.dhall
+let Lude = ../Lude.dhall
 
 let Member = { fieldName : Text, sig : Text }
 
