@@ -58,14 +58,6 @@ let combineOutputs =
 
               in  { path, content }
 
-        let statementModuleNamespacesAsList
-            : List Text
-            = Algebra.Prelude.List.map
-                Query
-                Text
-                (\(query : Query) -> query.statementModuleNamespace)
-                compiledQueries
-
         let statementFiles
             : List Sdk.File.Type
             = Algebra.Prelude.List.map
@@ -87,23 +79,19 @@ let combineOutputs =
               let path = packageName ++ ".cabal"
 
               let content =
-                    ''
-                    cabal-version: 3.4
-                    name: ${packageName}
-                    version: 0
-
-                    library
-                      exposed-modules:
-                        ${rootNamespace}
-                        ${rootNamespace}.DeclaredTypes
-                        
-                      other-modules:
-                        ${rootNamespace}.Algebras.Statement
-                        ${rootNamespace}.Statements
-                        ${Algebra.Prelude.Text.concatSep
-                            ("\n" ++ "    ")
-                            statementModuleNamespacesAsList}
-                    ''
+                    Templates.CabalFile.run
+                      { packageName
+                      , rootNamespace =
+                          Algebra.Prelude.Text.concatSep "." rootNamespaceAsList
+                      , statementModuleNames =
+                          Algebra.Prelude.List.map
+                            Query
+                            Text
+                            (\(query : Query) -> query.statementModuleName)
+                            compiledQueries
+                      , declaredTypeNames = [] : List Text
+                      , version = "0"
+                      }
 
               in  { path, content }
 
