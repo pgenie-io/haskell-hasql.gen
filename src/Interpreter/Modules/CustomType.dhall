@@ -36,6 +36,11 @@ in  Algebra.module
           let modulePath =
                 Templates.ModulePath.run { namespace = moduleNamespaceAsList }
 
+          let preludeModuleName =
+                Algebra.Prelude.Text.concatSep
+                  "."
+                  (config.rootNamespace # [ "Preludes", "CustomType" ])
+
           in  merge
                 { Composite =
                     \(members : List Model.Member) ->
@@ -58,7 +63,8 @@ in  Algebra.module
                                   , modulePath
                                   , moduleContent =
                                       Templates.CustomCompositeTypeModule.run
-                                        { moduleName = moduleNamespace
+                                        { preludeModuleName
+                                        , moduleName = moduleNamespace
                                         , typeName = moduleName
                                         , pgSchemaName = input.pgSchemaName
                                         , pgTypeName = input.pgName
@@ -85,7 +91,8 @@ in  Algebra.module
                         , modulePath
                         , moduleContent =
                             Templates.CustomEnumTypeModule.run
-                              { moduleName = moduleNamespace
+                              { preludeModuleName
+                              , moduleName = moduleNamespace
                               , typeName = moduleName
                               , pgSchemaName = input.pgSchemaName
                               , pgTypeName = input.pgName

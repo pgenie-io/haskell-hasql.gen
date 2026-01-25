@@ -36,8 +36,8 @@ in  Algebra.module
               ${params.rootNamespace}.Statements
               
             other-modules:
-              ${params.rootNamespace}.Algebras.Scalar
-              ${params.rootNamespace}.Algebras.Statement
+              ${params.rootNamespace}.Preludes.CustomType
+              ${params.rootNamespace}.Preludes.Statement
               ${Prelude.Text.concatMapSep
                   ("\n" ++ "    ")
                   Text

@@ -1,0 +1,38 @@
+let Algebra = ../Algebras/Template/package.dhall
+
+let Prelude = ../Prelude.dhall
+
+let Lude = ../Lude.dhall
+
+let DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
+
+let DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
+
+let Field =
+      { name : Text, sig : Text, nullable : Bool, dimensionality : Natural }
+
+let Params =
+      { projectNamespace : Text
+      }
+
+let run =
+      \(params : Params) ->
+        ''
+        module ${params.projectNamespace}.Prelude
+          ( module Exports,
+          )
+        where
+
+        import Prelude as Exports
+        import Data.UUID as Exports (UUID)
+        import Data.Text as Exports (Text)
+        import Data.Int as Exports (Int16, Int32, Int64)
+        import Data.Word as Exports (Word16, Word32, Word64)
+        import Data.Scientific as Exports (Scientific)
+        import Data.ByteString as Exports (ByteString)
+        import Data.Time as Exports (Day, TimeOfDay, LocalTime, UTCTime)
+        import Data.Vector as Exports (Vector)
+          
+        ''
+
+in  { Params, Field, run }

@@ -7,7 +7,8 @@ let Lude = ../Lude.dhall
 let Variant = { name : Text, pgValue : Text }
 
 let Params =
-      { moduleName : Text
+      { preludeModuleName : Text
+      , moduleName : Text
       , typeName : Text
       , pgSchemaName : Text
       , pgTypeName : Text
@@ -18,6 +19,9 @@ let run =
       \(params : Params) ->
         ''
         module ${params.moduleName} where
+
+        import ${params.preludeModuleName}
+        import Hasql.Mapping.Scalar
 
         -- |
         -- Representation of the @${params.pgTypeName}@ user-declared PostgreSQL enumeration type.

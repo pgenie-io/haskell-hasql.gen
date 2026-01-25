@@ -111,7 +111,8 @@ let combineOutputs =
 
               in  { path, content }
 
-        in  [ cabalFile, rootModuleFile ] # customTypeFiles # statementFiles : List Sdk.File.Type
+        in    [ cabalFile, rootModuleFile ] # customTypeFiles # statementFiles
+            : List Sdk.File.Type
 
 let run =
       \(config : Algebra.Config) ->
