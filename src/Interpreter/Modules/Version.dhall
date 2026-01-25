@@ -10,6 +10,9 @@ let Input = Model.Project
 
 let Output = List Sdk.Gen.File
 
-let run = \(input : Input) -> Sdk.Compiled.ok Output ([] : Output)
+let run =
+      \(config : Algebra.Config) ->
+      \(input : Input) ->
+        Sdk.Compiled.ok Output ([] : Output)
 
 in  Algebra.module Input Output run

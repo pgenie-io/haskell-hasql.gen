@@ -55,9 +55,9 @@ let renderHaddock
               queryFragment
         )
 
-let run
-    : Input -> Compiled.Type Output
-    = \(input : Input) ->
+let run =
+      \(config : Algebra.Config) ->
+      \(input : Input) ->
         Compiled.ok
           Output
           { exp = renderExp input, haddock = renderHaddock input }

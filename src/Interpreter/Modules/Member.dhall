@@ -13,6 +13,7 @@ let Input = Model.Member
 let Output = { fieldName : Text, sig : Text, decoderExp : Text }
 
 let run =
+      \(config : Algebra.Config) ->
       \(input : Input) ->
         Sdk.Compiled.flatMap
           Value.Output
@@ -35,6 +36,10 @@ let run =
                               "Decoders.nonNullable ${value.decoderExp}"
                           }
           )
-          (Sdk.Compiled.nest Value.Output input.rawName (Value.run input.value))
+          ( Sdk.Compiled.nest
+              Value.Output
+              input.pgName
+              (Value.run config input.value)
+          )
 
 in  Algebra.module Input Output run

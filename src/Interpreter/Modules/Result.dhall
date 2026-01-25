@@ -8,9 +8,9 @@ let Output = Text -> { typeDecls : List Text, decoderExp : Text }
 
 let Result = Algebra.Sdk.Compiled.Type Output
 
-let run
-    : Input -> Result
-    = \(input : Input) ->
+let run =
+      \(config : Algebra.Config) ->
+      \(input : Input) ->
         Algebra.Prelude.Optional.fold
           ResultRows.Input
           input
@@ -28,7 +28,7 @@ let run
                         , decoderExp = resultRows.decoderExp
                         }
                 )
-                (ResultRows.run resultRows)
+                (ResultRows.run config resultRows)
           )
           (Algebra.Sdk.Compiled.message Output "TODO: Result")
 

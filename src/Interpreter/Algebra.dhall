@@ -12,18 +12,16 @@ let Prelude = ../Prelude.dhall
 
 let Snippets = ../Snippets/package.dhall
 
+let Config = { rootNamespace : List Text }
+
 let module =
       \(Input : Type) ->
       \(Output : Type) ->
         let Result = Sdk.Compiled.Type Output
 
-        let Run = Input -> Result
+        let Run = Config -> Input -> Result
 
         in  \(run : Run) -> { Input, Output, Result, Run, run }
-
-let templateModule =
-      \(Params : Type) ->
-        let Run = Params -> Text in \(run : Run) -> { Params, Run, run }
 
 let Name = CodegenKit.Name
 
@@ -68,6 +66,6 @@ in  { Typeclasses
     , Import
     , Import/render
     , Imports
+    , Config
     , module
-    , templateModule
     }

@@ -1,0 +1,23 @@
+let Algebra = ../Algebras/Template/package.dhall
+
+let Prelude = ../Prelude.dhall
+
+let Lude = ../Lude.dhall
+
+let Member = { fieldName : Text, sig : Text }
+
+let Params = Text
+
+in  Algebra.module
+      Params
+      ( \(params : Params) ->
+              "\""
+          ++  Prelude.Function.composeList
+                Text
+                [ Prelude.Text.replace "\"" "\\\""
+                , Prelude.Text.replace "\\" "\\\\"
+                , Prelude.Text.replace "\n" ("\\n\\" ++ "\n" ++ "\\")
+                ]
+                params
+          ++  "\""
+      )

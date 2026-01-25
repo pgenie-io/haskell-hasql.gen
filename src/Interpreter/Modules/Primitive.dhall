@@ -21,6 +21,7 @@ let ok =
         Sdk.Compiled.ok Output { sig, codecName }
 
 let run =
+      \(config : Algebra.Config) ->
       \(input : Input) ->
         merge
           { Bool = ok "Bool" "bool"

@@ -4,35 +4,109 @@ let Prelude = ../Prelude.dhall
 
 let Lude = ../Lude.dhall
 
-let Field = { name : Text, sig : Text }
+let DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
+
+let DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
+
+let Field =
+      { name : Text, sig : Text, nullable : Bool, dimensionality : Natural }
 
 let Params =
       { moduleName : Text
       , typeName : Text
+      , pgSchemaName : Text
       , pgTypeName : Text
       , fields : List Field
       }
 
-in  Algebra.module
-      Params
-      ( \(params : Params) ->
-          ''
-          module ${params.moduleName} where
+let run =
+      \(params : Params) ->
+        ''
+        module ${params.moduleName} where
 
-          -- |
-          -- Representation of the @${params.pgTypeName}@ user-declared PostgreSQL record type.
-          data ${params.typeName} = ${params.typeName}
-            { ${Lude.Extensions.Text.indent
-                  4
-                  ( Prelude.Text.concatMapSep
-                      ''
-                      ,
-                      ''
-                      Field
-                      (\(field : Field) -> field.name ++ " :: " ++ field.sig)
-                      params.fields
-                  )}
-            }
-            deriving stock (Eq, Show)
-          ''
-      )
+        -- |
+        -- Representation of the @${params.pgTypeName}@ user-declared PostgreSQL record type.
+        data ${params.typeName} = ${params.typeName}
+          { ${Lude.Extensions.Text.indent
+                4
+                ( Prelude.Text.concatMapSep
+                    ''
+                    ,
+                    ''
+                    Field
+                    (\(field : Field) -> field.name ++ " :: " ++ field.sig)
+                    params.fields
+                )}
+          }
+          deriving stock (Show, Eq, Ord)
+
+        instance IsScalar ${params.typeName} where
+          valueEncoder :: Encoders.Value ${params.typeName}
+          valueEncoder =
+            Encoders.composite
+              (Just "${params.pgSchemaName}")
+              "${params.pgTypeName}"
+              ( mconcat
+                  [ ${Lude.Extensions.Text.indent
+                        12
+                        ( Prelude.Text.concatMapSep
+                            ''
+                            ,
+                            ''
+                            Field
+                            ( \(field : Field) ->
+                                    "Encoders.field ("
+                                ++  "(."
+                                ++  field.name
+                                ++  ") >\$< "
+                                ++  ( if    field.nullable
+                                      then  "Encoders.nullable"
+                                      else  "Encoders.nonNullable"
+                                    )
+                                ++  " ("
+                                ++  DimensionalityEncoderExp.run
+                                      { dimensionality = field.dimensionality
+                                      , elementIsNullable = True
+                                      , elementExp = "valueEncoder"
+                                      }
+                                ++  "))"
+                            )
+                            params.fields
+                        )}
+                  ]
+              )
+          
+          valueDecoder :: Decoders.Value ${params.typeName}
+          valueDecoder =
+            Decoders.composite
+              (Just "${params.pgSchemaName}")
+              "${params.pgTypeName}"
+              ( ${params.typeName}
+                  <$> ${Lude.Extensions.Text.indent
+                          10
+                          ( Prelude.Text.concatMapSep
+                              ''
+
+                              <*> ''
+                              Field
+                              ( \(field : Field) ->
+                                      "Decoders.field ("
+                                  ++  ( if    field.nullable
+                                        then  "Decoders.nullable"
+                                        else  "Decoders.nonNullable"
+                                      )
+                                  ++  " ("
+                                  ++  DimensionalityDecoderExp.run
+                                        { dimensionality = field.dimensionality
+                                        , elementIsNullable = True
+                                        , elementExp = "valueDecoder"
+                                        }
+                                  ++  "))"
+                              )
+                              params.fields
+                          )}
+              )
+          
+        ''
+
+in  { Params, Field, run }

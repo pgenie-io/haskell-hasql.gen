@@ -4,7 +4,15 @@ let Modules = ./Modules/package.dhall
 
 let ProjectModule = Modules.Project
 
-let fixture1 = Algebra.Sdk.Fixtures._1
+let fixture = Algebra.Sdk.Fixtures._1
+
+let config
+    : Algebra.Config
+    = { rootNamespace =
+        [ Algebra.Name.toTextInPascal fixture.owner
+        , Algebra.Name.toTextInPascal fixture.name
+        ]
+      }
 
 in  Algebra.Sdk.Compiled.toPlainText
       ( Algebra.Sdk.Compiled.map
@@ -17,5 +25,5 @@ in  Algebra.Sdk.Compiled.toPlainText
                 Algebra.Sdk.File.toPlainText
                 files
           )
-          (ProjectModule.run fixture1)
+          (ProjectModule.run config fixture)
       )

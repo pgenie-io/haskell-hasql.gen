@@ -15,6 +15,7 @@ let Output = { sig : Text, encoderExp : Text, decoderExp : Text }
 let Result = Sdk.Compiled.Type Output
 
 let run =
+      \(config : Algebra.Config) ->
       \(input : Input) ->
         merge
           { Primitive =
@@ -28,7 +29,7 @@ let run =
                       , decoderExp = "Decoders.${primitive.codecName}"
                       }
                   )
-                  (Primitive.run primitive)
+                  (Primitive.run config primitive)
           , Custom =
               \(name : Model.Name) ->
                 let nameText = Algebra.Name.toTextInCamel name

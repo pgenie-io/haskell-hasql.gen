@@ -17,23 +17,22 @@ let MemberModule = ./Member.dhall
 let Input = Algebra.Model.Query
 
 let Output =
-      forall (projectNamespace : List Text) ->
-        { statementModuleName : Text
-        , statementModuleNamespace : Text
-        , statementModulePath : Text
-        , statementModuleContents : Text
-        }
+      { statementModuleName : Text
+      , statementModuleNamespace : Text
+      , statementModulePath : Text
+      , statementModuleContents : Text
+      }
 
 let render =
+      \(config : Algebra.Config) ->
       \(input : Input) ->
       \(result : ResultModule.Output) ->
       \(fragments : QueryFragmentsModule.Output) ->
       \(paramsMembers : List MemberModule.Output) ->
-      \(projectNamespace : List Text) ->
         let statementModuleName = Algebra.Name.toTextInPascal input.name
 
         let statementModuleNamespaceAsList =
-              projectNamespace # [ "Statements", statementModuleName ]
+              config.rootNamespace # [ "Statements", statementModuleName ]
 
         let statementModuleNamespace =
               Algebra.Prelude.Text.concatSep "." statementModuleNamespaceAsList
@@ -99,9 +98,9 @@ let render =
             , statementModuleContents
             }
 
-let run
-    : Input -> Sdk.Compiled.Type Output
-    = \(input : Input) ->
+let run =
+      \(config : Algebra.Config) ->
+      \(input : Input) ->
         Sdk.Compiled.nest
           Output
           input.srcPath
@@ -112,16 +111,16 @@ let run
               QueryFragmentsModule.Output
               (List MemberModule.Output)
               Output
-              (render input)
+              (render config input)
               ( Sdk.Compiled.nest
                   ResultModule.Output
                   "result"
-                  (ResultModule.run input.result)
+                  (ResultModule.run config input.result)
               )
               ( Sdk.Compiled.nest
                   QueryFragmentsModule.Output
                   "sql"
-                  (QueryFragmentsModule.run input.fragments)
+                  (QueryFragmentsModule.run config input.fragments)
               )
               ( Sdk.Compiled.nest
                   (List MemberModule.Output)
@@ -131,7 +130,7 @@ let run
                       Sdk.Compiled.applicative
                       Algebra.Model.Member
                       MemberModule.Output
-                      MemberModule.run
+                      (MemberModule.run config)
                       input.params
                   )
               )

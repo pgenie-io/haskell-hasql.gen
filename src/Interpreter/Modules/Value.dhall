@@ -15,6 +15,7 @@ let Output = { sig : Text, decoderExp : Text }
 let Result = Sdk.Compiled.Type Output
 
 let run =
+      \(config : Algebra.Config) ->
       \(input : Input) ->
         Sdk.Compiled.flatMap
           Scalar.Output
@@ -32,6 +33,6 @@ let run =
                     { sig = scalar.sig, decoderExp = scalar.decoderExp }
                 )
           )
-          (Scalar.run input.scalar)
+          (Scalar.run config input.scalar)
 
 in  Algebra.module Input Output run

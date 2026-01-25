@@ -1,3 +1,5 @@
+We generate code for the Hasql v1.10.1 library for Haskell. Derive its API from [its docs](https://hackage-content.haskell.org/package/hasql-1.10.1).
+
 # Loaded files
 
 Assume the following contents for the according imports.
@@ -61,15 +63,15 @@ let ArraySettings = { dimensionality : Natural, elementIsNullable : Bool }
 
 let Value = { arraySettings : Optional ArraySettings, scalar : Scalar }
 
-let Member = { name : Name, rawName : Text, isNullable : Bool, value : Value }
+let Member = { name : Name, pgName : Text, isNullable : Bool, value : Value }
 
-let EnumVariant = { name : Name, rawName : Text }
+let EnumVariant = { name : Name, pgName : Text }
 
 let CustomTypeDefinition =
       < Composite : List Member | Enum : List EnumVariant | Domain : Value >
 
 let CustomType =
-      { name : Name, rawName : Text, definition : CustomTypeDefinition }
+      { name : Name, pgName : Text, definition : CustomTypeDefinition }
 
 let ResultRowsCardinality = < Optional | Single | Multiple >
 
@@ -155,3 +157,4 @@ in  { Project
     , Query
     }
 ```
+

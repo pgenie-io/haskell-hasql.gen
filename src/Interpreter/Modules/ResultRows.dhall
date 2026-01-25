@@ -9,16 +9,16 @@ let Output =
 
 let Result = Algebra.Sdk.Compiled.Type Output
 
-let run
-    : Input -> Result
-    = \(input : Input) ->
+let run =
+      \(config : Algebra.Config) ->
+      \(input : Input) ->
         let compiledColumns =
               Algebra.Typeclasses.Classes.Applicative.traverseList
                 Algebra.Sdk.Compiled.Type
                 Algebra.Sdk.Compiled.applicative
                 Algebra.Model.Member
                 Member.Output
-                Member.run
+                (Member.run config)
                 ( Algebra.Prelude.NonEmpty.toList
                     Algebra.Model.Member
                     input.columns
