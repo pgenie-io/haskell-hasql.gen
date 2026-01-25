@@ -8,4 +8,5 @@
 , DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
 , DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
 , DimensionalityType = ./DimensionalityType.dhall
+, FieldEncoder = ./FieldEncoder.dhall
 }

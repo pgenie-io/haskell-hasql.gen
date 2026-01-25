@@ -8,6 +8,8 @@ let DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
 
 let DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
 
+let FieldEncoder = ./FieldEncoder.dhall
+
 let Field =
       { name : Text, sig : Text, nullable : Bool, dimensionality : Natural }
 
@@ -60,20 +62,13 @@ let run =
                             Field
                             ( \(field : Field) ->
                                     "Encoders.field ("
-                                ++  "(."
-                                ++  field.name
-                                ++  ") >\$< "
-                                ++  ( if    field.nullable
-                                      then  "Encoders.nullable"
-                                      else  "Encoders.nonNullable"
-                                    )
-                                ++  " ("
-                                ++  DimensionalityEncoderExp.run
-                                      { dimensionality = field.dimensionality
+                                ++  FieldEncoder.run
+                                      { name = field.name
+                                      , nullable = field.nullable
+                                      , dimensionality = field.dimensionality
                                       , elementIsNullable = True
-                                      , elementExp = "valueEncoder"
                                       }
-                                ++  "))"
+                                ++  ")"
                             )
                             params.fields
                         )}
