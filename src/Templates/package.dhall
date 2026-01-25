@@ -7,4 +7,5 @@
 , StringLiteral = ./StringLiteral.dhall
 , DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
 , DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
+, DimensionalityType = ./DimensionalityType.dhall
 }
