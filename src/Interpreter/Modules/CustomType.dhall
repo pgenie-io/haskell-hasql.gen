@@ -8,6 +8,8 @@ let Model = Algebra.Model
 
 let Templates = ../../Templates/package.dhall
 
+let MemberGen = ./Member.dhall
+
 let Input = Model.CustomType
 
 let Output =
@@ -37,42 +39,43 @@ in  Algebra.module
           in  merge
                 { Composite =
                     \(members : List Model.Member) ->
-                      Sdk.Compiled.ok
-                        Output
-                        { moduleName
-                        , moduleNamespace
-                        , modulePath
-                        , moduleContent =
-                            Templates.DeclaredCompositeTypeModule.run
-                              { moduleName = moduleNamespace
-                              , typeName = moduleName
-                              , pgSchemaName = input.pgSchemaName
-                              , pgTypeName = input.pgName
-                              , fields =
-                                  Algebra.Prelude.List.map
-                                    Model.Member
-                                    Templates.DeclaredCompositeTypeModule.Field
-                                    ( \(member : Model.Member) ->
-                                        { name =
-                                            Algebra.Name.toTextInCamel
-                                              member.name
-                                        , sig = "TODO: sig"
-                                        , nullable = member.isNullable
-                                        , dimensionality =
-                                            merge
-                                              { None = 0
-                                              , Some =
-                                                  \ ( arraySettings
-                                                    : Model.ArraySettings
-                                                    ) ->
-                                                    arraySettings.dimensionality
-                                              }
-                                              member.value.arraySettings
+                      let compiledMembers
+                          : Sdk.Compiled.Type (List MemberGen.Output)
+                          = Sdk.Compiled.traverseList
+                              Model.Member
+                              MemberGen.Output
+                              (MemberGen.run config)
+                              members
+
+                      let compiledOutput
+                          : Sdk.Compiled.Type Output
+                          = Sdk.Compiled.map
+                              (List MemberGen.Output)
+                              Output
+                              ( \(members : List MemberGen.Output) ->
+                                  { moduleName
+                                  , moduleNamespace
+                                  , modulePath
+                                  , moduleContent =
+                                      Templates.DeclaredCompositeTypeModule.run
+                                        { moduleName = moduleNamespace
+                                        , typeName = moduleName
+                                        , pgSchemaName = input.pgSchemaName
+                                        , pgTypeName = input.pgName
+                                        , fields =
+                                            Algebra.Prelude.List.map
+                                              MemberGen.Output
+                                              Templates.DeclaredCompositeTypeModule.Field
+                                              ( \(member : MemberGen.Output) ->
+                                                  member.declaredCompositeTypeModuleField
+                                              )
+                                              members
                                         }
-                                    )
-                                    members
-                              }
-                        }
+                                  }
+                              )
+                              compiledMembers
+
+                      in  compiledOutput
                 , Enum =
                     \(variants : List Model.EnumVariant) ->
                       Sdk.Compiled.ok

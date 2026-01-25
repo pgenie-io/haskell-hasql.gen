@@ -10,7 +10,7 @@ let Scalar = ./Scalar.dhall
 
 let Input = Model.Value
 
-let Output = { sig : Text, decoderExp : Text }
+let Output = { sig : Text, encoderExp : Text, decoderExp : Text }
 
 let Result = Sdk.Compiled.Type Output
 
@@ -30,7 +30,10 @@ let run =
                 )
                 ( Sdk.Compiled.ok
                     Output
-                    { sig = scalar.sig, decoderExp = scalar.decoderExp }
+                    { sig = scalar.sig
+                    , encoderExp = scalar.encoderExp
+                    , decoderExp = scalar.decoderExp
+                    }
                 )
           )
           (Scalar.run config input.scalar)

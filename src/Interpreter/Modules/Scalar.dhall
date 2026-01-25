@@ -12,8 +12,6 @@ let Input = Model.Scalar
 
 let Output = { sig : Text, encoderExp : Text, decoderExp : Text }
 
-let Result = Sdk.Compiled.Type Output
-
 let run =
       \(config : Algebra.Config) ->
       \(input : Input) ->
@@ -36,12 +34,14 @@ let run =
 
                 in  Sdk.Compiled.ok
                       Output
-                      { sig = "CustomTypes.${Algebra.Name.toTextInPascal name}"
+                      { sig =
+                          "DeclaredTypes.${Algebra.Name.toTextInPascal name}"
                       , encoderExp =
-                          "Algebra.customTypeEncoder @${Algebra.Name.toTextInCamel
-                                                          name}"
+                          "IsScalar.encoderOf @${Algebra.Name.toTextInCamel
+                                                   name}"
                       , decoderExp =
-                          "CustomTypes.${Algebra.Name.toTextInCamel name}"
+                          "IsScalar.decoderOf @${Algebra.Name.toTextInCamel
+                                                   name}"
                       }
           }
           input
