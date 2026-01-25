@@ -12,12 +12,12 @@ library
 
   exposed-modules:
     -- Demo.MusicCatalogue
-    -- Demo.MusicCatalogue.DeclaredTypes
+    -- Demo.MusicCatalogue.CustomTypes
     -- Demo.MusicCatalogue.Statements
     
   other-modules:
-    -- Demo.MusicCatalogue.DeclaredTypes.AlbumType
-    -- Demo.MusicCatalogue.DeclaredTypes.TrackMetadata
+    -- Demo.MusicCatalogue.CustomTypes.AlbumType
+    -- Demo.MusicCatalogue.CustomTypes.TrackMetadata
     -- Demo.MusicCatalogue.Statements.GetAlbumsByArtist
     -- Demo.MusicCatalogue.Statements.SearchTracksByTitle
     -- Demo.MusicCatalogue.Statements.GetTrackDetails

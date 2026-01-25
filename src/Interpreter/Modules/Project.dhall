@@ -98,7 +98,7 @@ let combineOutputs =
                             Text
                             (\(query : Query) -> query.statementModuleName)
                             queries
-                      , declaredTypeNames =
+                      , customTypeNames =
                           Algebra.Prelude.List.map
                             CustomTypeGen.Output
                             Text

@@ -34,8 +34,7 @@ let run =
 
                 in  Sdk.Compiled.ok
                       Output
-                      { sig =
-                          "DeclaredTypes.${Algebra.Name.toTextInPascal name}"
+                      { sig = "CustomTypes.${Algebra.Name.toTextInPascal name}"
                       , encoderExp =
                           "IsScalar.encoderOf @${Algebra.Name.toTextInCamel
                                                    name}"

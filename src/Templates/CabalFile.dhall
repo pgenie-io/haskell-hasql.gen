@@ -9,7 +9,7 @@ let Member = { fieldName : Text, sig : Text }
 let Params =
       { packageName : Text
       , rootNamespace : Text
-      , declaredTypeNames : List Text
+      , customTypeNames : List Text
       , statementModuleNames : List Text
       , version : Text
       }
@@ -32,7 +32,7 @@ in  Algebra.module
 
             exposed-modules:
               ${params.rootNamespace}
-              ${params.rootNamespace}.DeclaredTypes
+              ${params.rootNamespace}.CustomTypes
               ${params.rootNamespace}.Statements
               
             other-modules:
@@ -42,9 +42,9 @@ in  Algebra.module
                   ("\n" ++ "    ")
                   Text
                   ( \(name : Text) ->
-                      params.rootNamespace ++ ".DeclaredTypes." ++ name
+                      params.rootNamespace ++ ".CustomTypes." ++ name
                   )
-                  params.declaredTypeNames}
+                  params.customTypeNames}
               ${Prelude.Text.concatMapSep
                   ("\n" ++ "    ")
                   Text

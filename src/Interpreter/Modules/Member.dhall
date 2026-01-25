@@ -17,8 +17,8 @@ let Output =
       , sig : Text
       , encoderExp : Text
       , decoderExp : Text
-      , declaredCompositeTypeModuleField :
-          Templates.DeclaredCompositeTypeModule.Field
+      , customCompositeTypeModuleField :
+          Templates.CustomCompositeTypeModule.Field
       }
 
 let run =
@@ -46,7 +46,7 @@ let run =
                           , sig = "Maybe ${value.sig}"
                           , encoderExp = "Encoders.nullable ${value.encoderExp}"
                           , decoderExp = "Decoders.nullable ${value.decoderExp}"
-                          , declaredCompositeTypeModuleField =
+                          , customCompositeTypeModuleField =
                             { name = fieldName
                             , sig = "Maybe ${value.sig}"
                             , nullable = True
@@ -61,7 +61,7 @@ let run =
                               "Encoders.nonNullable ${value.encoderExp}"
                           , decoderExp =
                               "Decoders.nonNullable ${value.decoderExp}"
-                          , declaredCompositeTypeModuleField =
+                          , customCompositeTypeModuleField =
                             { name = fieldName
                             , sig = value.sig
                             , nullable = False

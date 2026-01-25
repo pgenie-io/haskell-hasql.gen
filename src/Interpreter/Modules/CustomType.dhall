@@ -28,7 +28,7 @@ in  Algebra.module
 
           let moduleNamespaceAsList =
                   config.rootNamespace
-                # [ "DeclaredTypes", Algebra.Name.toTextInPascal input.name ]
+                # [ "CustomTypes", Algebra.Name.toTextInPascal input.name ]
 
           let moduleNamespace =
                 Algebra.Prelude.Text.concatSep "." moduleNamespaceAsList
@@ -57,7 +57,7 @@ in  Algebra.module
                                   , moduleNamespace
                                   , modulePath
                                   , moduleContent =
-                                      Templates.DeclaredCompositeTypeModule.run
+                                      Templates.CustomCompositeTypeModule.run
                                         { moduleName = moduleNamespace
                                         , typeName = moduleName
                                         , pgSchemaName = input.pgSchemaName
@@ -65,9 +65,9 @@ in  Algebra.module
                                         , fields =
                                             Algebra.Prelude.List.map
                                               MemberGen.Output
-                                              Templates.DeclaredCompositeTypeModule.Field
+                                              Templates.CustomCompositeTypeModule.Field
                                               ( \(member : MemberGen.Output) ->
-                                                  member.declaredCompositeTypeModuleField
+                                                  member.customCompositeTypeModuleField
                                               )
                                               members
                                         }
@@ -84,7 +84,7 @@ in  Algebra.module
                         , moduleNamespace
                         , modulePath
                         , moduleContent =
-                            Templates.DeclaredEnumTypeModule.run
+                            Templates.CustomEnumTypeModule.run
                               { moduleName = moduleNamespace
                               , typeName = moduleName
                               , pgSchemaName = input.pgSchemaName
@@ -92,7 +92,7 @@ in  Algebra.module
                               , variants =
                                   Algebra.Prelude.List.map
                                     Model.EnumVariant
-                                    Templates.DeclaredEnumTypeModule.Variant
+                                    Templates.CustomEnumTypeModule.Variant
                                     ( \(variant : Model.EnumVariant) ->
                                         { name =
                                             Algebra.Name.toTextInPascal
