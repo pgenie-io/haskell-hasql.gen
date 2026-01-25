@@ -1,0 +1,6 @@
+package: .
+
+source-repository-package
+  type: git
+  location: https://github.com/nikita-volkov/hasql-mapping
+  tag: efeeacb943a627f3ffd8dc0896ddfded4893a616

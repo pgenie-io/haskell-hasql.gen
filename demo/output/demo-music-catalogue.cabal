@@ -16,8 +16,6 @@ library
     -- Demo.MusicCatalogue.Statements
     
   other-modules:
-    Demo.MusicCatalogue.Algebra.Scalar
-    Demo.MusicCatalogue.Algebra.Statement
     -- Demo.MusicCatalogue.DeclaredTypes.AlbumType
     -- Demo.MusicCatalogue.DeclaredTypes.TrackMetadata
     -- Demo.MusicCatalogue.Statements.GetAlbumsByArtist
@@ -33,6 +31,7 @@ library
     bytestring,
     containers,
     hasql,
+    hasql-mapping,
     scientific,
     text,
     tagged,
