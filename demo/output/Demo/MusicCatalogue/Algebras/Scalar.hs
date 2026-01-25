@@ -1,4 +1,4 @@
-module Root.Algebras.Scalar where
+module Demo.MusicCatalogue.Algebras.Scalar where
 
 import Data.Tagged (Tagged(..), retag, untag)
 import qualified Hasql.Encoders as Encoders
@@ -19,5 +19,3 @@ instance IsScalar Bool where
 instance IsScalar Text where
   encoder = Encoders.text
   decoder = Decoders.text
-
-
