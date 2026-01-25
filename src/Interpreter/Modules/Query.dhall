@@ -28,7 +28,7 @@ let render =
       \(input : Input) ->
       \(result : ResultModule.Output) ->
       \(fragments : QueryFragmentsModule.Output) ->
-      \(paramsMembers : List MemberModule.Output) ->
+      \(params : List MemberModule.Output) ->
         let statementModuleName = Algebra.Name.toTextInPascal input.name
 
         let statementModuleNamespaceAsList =
@@ -71,7 +71,7 @@ let render =
                         ( \(member : MemberModule.Output) ->
                             { fieldName = member.fieldName, sig = member.sig }
                         )
-                        paramsMembers
+                        params
                   }}
 
               ${Algebra.Prelude.Text.concatSep "\n\n" result.typeDecls}
@@ -85,7 +85,20 @@ let render =
                       ${Algebra.Lude.Extensions.Text.indent 8 fragments.exp}
 
                     encoder =
-                      error "TODO"
+                      mconcat
+                        [ ${Lude.Extensions.Text.indent
+                              12
+                              ( Algebra.Prelude.Text.concatMapSep
+                                  ''
+                                  ,
+                                  ''
+                                  MemberModule.Output
+                                  ( \(member : MemberModule.Output) ->
+                                      "Encoders.param (${member.fieldEncoder})"
+                                  )
+                                  params
+                              )}
+                        ]
 
                     decoder =
                       ${Algebra.Lude.Extensions.Text.indent 8 result.decoderExp}

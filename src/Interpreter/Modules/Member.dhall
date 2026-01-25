@@ -19,6 +19,7 @@ let Output =
       , decoderExp : Text
       , customCompositeTypeModuleField :
           Templates.CustomCompositeTypeModule.Field
+      , fieldEncoder : Text
       }
 
 let run =
@@ -40,19 +41,30 @@ let run =
                       input.value.arraySettings
 
               in  if    input.isNullable
-                  then  Sdk.Compiled.ok
-                          Output
-                          { fieldName
-                          , sig = "Maybe ${value.sig}"
-                          , encoderExp = "Encoders.nullable ${value.encoderExp}"
-                          , decoderExp = "Decoders.nullable ${value.decoderExp}"
-                          , customCompositeTypeModuleField =
-                            { name = fieldName
-                            , sig = "Maybe ${value.sig}"
-                            , nullable = True
-                            , dimensionality
-                            }
-                          }
+                  then  let sig = "Maybe ${value.sig}"
+
+                        in  Sdk.Compiled.ok
+                              Output
+                              { fieldName
+                              , sig
+                              , encoderExp =
+                                  "Encoders.nullable ${value.encoderExp}"
+                              , decoderExp =
+                                  "Decoders.nullable ${value.decoderExp}"
+                              , customCompositeTypeModuleField =
+                                { name = fieldName
+                                , sig
+                                , nullable = True
+                                , dimensionality
+                                }
+                              , fieldEncoder =
+                                  Templates.FieldEncoder.run
+                                    { name = fieldName
+                                    , nullable = True
+                                    , dimensionality
+                                    , elementIsNullable = True
+                                    }
+                              }
                   else  Sdk.Compiled.ok
                           Output
                           { fieldName
@@ -67,6 +79,13 @@ let run =
                             , nullable = False
                             , dimensionality
                             }
+                          , fieldEncoder =
+                              Templates.FieldEncoder.run
+                                { name = fieldName
+                                , nullable = False
+                                , dimensionality
+                                , elementIsNullable = True
+                                }
                           }
           )
           ( Sdk.Compiled.nest
