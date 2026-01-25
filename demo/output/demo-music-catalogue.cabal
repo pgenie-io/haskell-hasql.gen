@@ -11,21 +11,21 @@ library
     ApplicativeDo, Arrows, BangPatterns, BlockArguments, ConstraintKinds, DataKinds, DefaultSignatures, DeriveAnyClass, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, DerivingStrategies, DerivingVia, DuplicateRecordFields, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, ImportQualifiedPost, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NamedFieldPuns, NoFieldSelectors, NoImplicitPrelude, NoMonomorphismRestriction, NumericUnderscores, OverloadedRecordDot, OverloadedStrings, ParallelListComp, PatternGuards, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, StrictData, TemplateHaskell, TupleSections, TypeApplications, TypeFamilies, TypeOperators, UnboxedTuples, ViewPatterns
 
   exposed-modules:
-    Demo.MusicCatalogue
-    Demo.MusicCatalogue.DeclaredTypes
-    Demo.MusicCatalogue.Statements
+    -- Demo.MusicCatalogue
+    -- Demo.MusicCatalogue.DeclaredTypes
+    -- Demo.MusicCatalogue.Statements
     
   other-modules:
-    Demo.MusicCatalogue.Algebras.Scalar
-    Demo.MusicCatalogue.Algebras.Statement
-    Demo.MusicCatalogue.DeclaredTypes.AlbumType
-    Demo.MusicCatalogue.DeclaredTypes.TrackMetadata
-    Demo.MusicCatalogue.Statements.GetAlbumsByArtist
-    Demo.MusicCatalogue.Statements.SearchTracksByTitle
-    Demo.MusicCatalogue.Statements.GetTrackDetails
-    Demo.MusicCatalogue.Statements.GetArtistsWithTrackCount
-    Demo.MusicCatalogue.Statements.CreatePlaylist
-    Demo.MusicCatalogue.Statements.GetTopTracksByPlayCount
+    Demo.MusicCatalogue.Algebra.Scalar
+    Demo.MusicCatalogue.Algebra.Statement
+    -- Demo.MusicCatalogue.DeclaredTypes.AlbumType
+    -- Demo.MusicCatalogue.DeclaredTypes.TrackMetadata
+    -- Demo.MusicCatalogue.Statements.GetAlbumsByArtist
+    -- Demo.MusicCatalogue.Statements.SearchTracksByTitle
+    -- Demo.MusicCatalogue.Statements.GetTrackDetails
+    -- Demo.MusicCatalogue.Statements.GetArtistsWithTrackCount
+    -- Demo.MusicCatalogue.Statements.CreatePlaylist
+    -- Demo.MusicCatalogue.Statements.GetTopTracksByPlayCount
 
   build-depends:
     aeson,
@@ -33,7 +33,9 @@ library
     bytestring,
     containers,
     hasql,
+    scientific,
     text,
+    tagged,
     time,
     uuid,
     vector,
