@@ -1,6 +1,6 @@
 let Algebra = ./Algebra/package.dhall
 
-let Prelude = ../Prelude.dhall
+let Deps = ../Deps/package.dhall
 
 let Params =
       { packageName : Text
@@ -34,14 +34,14 @@ in  Algebra.module
             other-modules:
               ${params.rootNamespace}.Preludes.CustomType
               ${params.rootNamespace}.Preludes.Statement
-              ${Prelude.Text.concatMapSep
+              ${Deps.Prelude.Text.concatMapSep
                   ("\n" ++ "    ")
                   Text
                   ( \(name : Text) ->
                       params.rootNamespace ++ ".CustomTypes." ++ name
                   )
                   params.customTypeNames}
-              ${Prelude.Text.concatMapSep
+              ${Deps.Prelude.Text.concatMapSep
                   ("\n" ++ "    ")
                   Text
                   ( \(name : Text) ->

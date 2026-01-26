@@ -1,6 +1,6 @@
-let Prelude = ../Prelude.dhall
+let Algebra = ./Algebra/package.dhall
 
-let Lude = ../Lude.dhall
+let Deps = ../Deps/package.dhall
 
 let Variant = { name : Text, pgValue : Text }
 
@@ -24,9 +24,9 @@ let run =
         -- |
         -- Representation of the @${params.pgTypeName}@ user-declared PostgreSQL enumeration type.
         data ${params.typeName}
-          = ${Lude.Extensions.Text.indent
+          = ${Deps.Lude.Extensions.Text.indent
                 2
-                ( Prelude.Text.concatMapSep
+                ( Deps.Prelude.Text.concatMapSep
                     ''
 
                     | ''
@@ -46,9 +46,9 @@ let run =
               (Just "${params.pgSchemaName}")
               "${params.pgTypeName}"
               ( \case
-                  ${Lude.Extensions.Text.indent
+                  ${Deps.Lude.Extensions.Text.indent
                       10
-                      ( Prelude.Text.concatMapSep
+                      ( Deps.Prelude.Text.concatMapSep
                           "\n"
                           Variant
                           ( \(variant : Variant) ->
@@ -63,9 +63,9 @@ let run =
               (Just "${params.pgSchemaName}")
               "${params.pgTypeName}"
               ( \case
-                  ${Lude.Extensions.Text.indent
+                  ${Deps.Lude.Extensions.Text.indent
                       10
-                      ( Prelude.Text.concatMapSep
+                      ( Deps.Prelude.Text.concatMapSep
                           "\n"
                           Variant
                           ( \(variant : Variant) ->

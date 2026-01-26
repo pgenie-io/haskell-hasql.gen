@@ -1,8 +1,6 @@
 let Algebra = ./Algebra/package.dhall
 
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
+let Deps = ../Deps/package.dhall
 
 let Params = { name : Text, fields : List Text }
 
@@ -11,9 +9,9 @@ in  Algebra.module
       ( \(params : Params) ->
           ''
           data ${params.name} = ${params.name}
-            { ${Lude.Extensions.Text.indent
+            { ${Deps.Lude.Extensions.Text.indent
                   4
-                  ( Prelude.Text.concatSep
+                  ( Deps.Prelude.Text.concatSep
                       ''
                       ,
                       ''

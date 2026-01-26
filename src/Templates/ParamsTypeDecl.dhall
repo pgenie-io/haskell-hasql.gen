@@ -1,8 +1,6 @@
 let Algebra = ./Algebra/package.dhall
 
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
+let Deps = ../Deps/package.dhall
 
 let Params =
       { queryName : Text
@@ -21,16 +19,16 @@ in  Algebra.module
           --
           -- == SQL Template
           --
-          -- > ${Lude.Extensions.Text.prefixEachLine "-- > " params.sqlForDocs}
+          -- > ${Deps.Lude.Extensions.Text.prefixEachLine "-- > " params.sqlForDocs}
           --
           -- == Source Path
           --
           -- > ${params.srcPath}
           --
           data ${params.typeName} = ${params.typeName}
-            { ${Lude.Extensions.Text.indent
+            { ${Deps.Lude.Extensions.Text.indent
                   4
-                  ( Prelude.Text.concatSep
+                  ( Deps.Prelude.Text.concatSep
                       ''
                       ,
                       ''

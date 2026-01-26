@@ -1,8 +1,6 @@
 let Algebra = ./Algebra/package.dhall
 
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
+let Deps = ../Deps/package.dhall
 
 let DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
 

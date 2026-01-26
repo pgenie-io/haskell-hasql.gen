@@ -1,6 +1,8 @@
-let Sdk = ./Sdk.dhall
+let Deps = ./Deps/package.dhall
 
-let CodegenKit = ./CodegenKit.dhall
+let Sdk = Deps.Sdk
+
+let CodegenKit = Deps.CodegenKit
 
 let Config = ./Config.dhall
 

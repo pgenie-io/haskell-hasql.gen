@@ -1,14 +1,16 @@
-let Lude = ../../Lude.dhall
+let Deps = ../../Deps/package.dhall
 
-let Sdk = ../../Sdk.dhall
+let Lude = Deps.Lude
 
-let Typeclasses = ../../Typeclasses.dhall
+let Sdk = Deps.Sdk
+
+let Typeclasses = Deps.Typeclasses
 
 let Model = Sdk.Project
 
-let CodegenKit = ../../CodegenKit.dhall
+let CodegenKit = Deps.CodegenKit
 
-let Prelude = ../../Prelude.dhall
+let Prelude = Deps.Prelude
 
 let Config = { rootNamespace : List Text }
 
