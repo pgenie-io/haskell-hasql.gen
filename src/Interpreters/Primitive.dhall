@@ -1,20 +1,19 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
-let Sdk = Algebra.Sdk
-
-let Model = Algebra.Model
-
-let Input = Model.Primitive
+let Input = Deps.Sdk.Project.Primitive
 
 let Output = { sig : Text, codecName : Text }
 
 let unsupportedType =
-      \(type : Text) -> Sdk.Compiled.report Output [ type ] "Unsupported type"
+      \(type : Text) ->
+        Deps.Sdk.Compiled.report Output [ type ] "Unsupported type"
 
 let ok =
       \(sig : Text) ->
       \(codecName : Text) ->
-        Sdk.Compiled.ok Output { sig, codecName }
+        Deps.Sdk.Compiled.ok Output { sig, codecName }
 
 let run =
       \(config : Algebra.Config) ->

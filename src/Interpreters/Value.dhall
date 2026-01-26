@@ -1,8 +1,10 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
-let Sdk = Algebra.Sdk
+let Sdk = Deps.Sdk
 
-let Model = Algebra.Model
+let Model = Deps.Sdk.Project
 
 let Templates = ../Templates/package.dhall
 
@@ -21,7 +23,7 @@ let run =
           Scalar.Output
           Output
           ( \(scalar : Scalar.Output) ->
-              Algebra.Prelude.Optional.fold
+              Deps.Prelude.Optional.fold
                 Model.ArraySettings
                 input.arraySettings
                 Result

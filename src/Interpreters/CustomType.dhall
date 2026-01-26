@@ -1,8 +1,10 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
-let Sdk = Algebra.Sdk
+let Sdk = Deps.Sdk
 
-let Model = Algebra.Model
+let Model = Deps.Sdk.Project
 
 let Templates = ../Templates/package.dhall
 
@@ -22,20 +24,22 @@ in  Algebra.module
       Output
       ( \(config : Algebra.Config) ->
         \(input : Input) ->
-          let moduleName = Algebra.Name.toTextInPascal input.name
+          let moduleName = Deps.CodegenKit.Name.toTextInPascal input.name
 
           let moduleNamespaceAsList =
                   config.rootNamespace
-                # [ "CustomTypes", Algebra.Name.toTextInPascal input.name ]
+                # [ "CustomTypes"
+                  , Deps.CodegenKit.Name.toTextInPascal input.name
+                  ]
 
           let moduleNamespace =
-                Algebra.Prelude.Text.concatSep "." moduleNamespaceAsList
+                Deps.Prelude.Text.concatSep "." moduleNamespaceAsList
 
           let modulePath =
                 Templates.ModulePath.run { namespace = moduleNamespaceAsList }
 
           let preludeModuleName =
-                Algebra.Prelude.Text.concatSep
+                Deps.Prelude.Text.concatSep
                   "."
                   (config.rootNamespace # [ "Preludes", "CustomType" ])
 
@@ -67,7 +71,7 @@ in  Algebra.module
                                         , pgSchemaName = input.pgSchemaName
                                         , pgTypeName = input.pgName
                                         , fieldDeclarations =
-                                            Algebra.Prelude.List.map
+                                            Deps.Prelude.List.map
                                               MemberGen.Output
                                               Text
                                               ( \(member : MemberGen.Output) ->
@@ -75,7 +79,7 @@ in  Algebra.module
                                               )
                                               members
                                         , fieldEncoderExps =
-                                            Algebra.Prelude.List.map
+                                            Deps.Prelude.List.map
                                               MemberGen.Output
                                               Text
                                               ( \(member : MemberGen.Output) ->
@@ -83,7 +87,7 @@ in  Algebra.module
                                               )
                                               members
                                         , fieldDecoderExps =
-                                            Algebra.Prelude.List.map
+                                            Deps.Prelude.List.map
                                               MemberGen.Output
                                               Text
                                               ( \(member : MemberGen.Output) ->
@@ -111,12 +115,12 @@ in  Algebra.module
                               , pgSchemaName = input.pgSchemaName
                               , pgTypeName = input.pgName
                               , variants =
-                                  Algebra.Prelude.List.map
+                                  Deps.Prelude.List.map
                                     Model.EnumVariant
                                     Templates.CustomEnumTypeModule.Variant
                                     ( \(variant : Model.EnumVariant) ->
                                         { name =
-                                            Algebra.Name.toTextInPascal
+                                            Deps.CodegenKit.Name.toTextInPascal
                                               variant.name
                                         , pgValue = variant.pgName
                                         }

@@ -1,22 +1,24 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
 let ResultRows = ./ResultRows.dhall
 
-let Input = Algebra.Model.Result
+let Input = Deps.Sdk.Project.Result
 
 let Output = Text -> { typeDecls : List Text, decoderExp : Text }
 
-let Result = Algebra.Sdk.Compiled.Type Output
+let Result = Deps.Sdk.Compiled.Type Output
 
 let run =
       \(config : Algebra.Config) ->
       \(input : Input) ->
-        Algebra.Prelude.Optional.fold
+        Deps.Prelude.Optional.fold
           ResultRows.Input
           input
           Result
           ( \(resultRows : ResultRows.Input) ->
-              Algebra.Sdk.Compiled.map
+              Deps.Sdk.Compiled.map
                 ResultRows.Output
                 Output
                 ( \(resultRows : ResultRows.Output) ->
@@ -30,6 +32,6 @@ let run =
                 )
                 (ResultRows.run config resultRows)
           )
-          (Algebra.Sdk.Compiled.message Output "TODO: Result")
+          (Deps.Sdk.Compiled.message Output "TODO: Result")
 
 in  Algebra.module Input Output run

@@ -1,8 +1,10 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
-let Sdk = Algebra.Sdk
+let Sdk = Deps.Sdk
 
-let Model = Algebra.Model
+let Model = Deps.Sdk.Project
 
 let Primitive = ./Primitive.dhall
 
@@ -30,11 +32,14 @@ let run =
               \(name : Model.Name) ->
                 Sdk.Compiled.ok
                   Output
-                  { sig = "CustomTypes.${Algebra.Name.toTextInPascal name}"
+                  { sig =
+                      "CustomTypes.${Deps.CodegenKit.Name.toTextInPascal name}"
                   , encoderExp =
-                      "IsScalar.scalarEncoder @${Algebra.Name.toTextInCamel name}"
+                      "IsScalar.scalarEncoder @${Deps.CodegenKit.Name.toTextInCamel
+                                                   name}"
                   , decoderExp =
-                      "IsScalar.scalarDecoder @${Algebra.Name.toTextInCamel name}"
+                      "IsScalar.scalarDecoder @${Deps.CodegenKit.Name.toTextInCamel
+                                                   name}"
                   }
           }
           input

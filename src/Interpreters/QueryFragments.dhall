@@ -1,12 +1,14 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
-let Prelude = Algebra.Prelude
+let Prelude = Deps.Prelude
 
-let Sdk = Algebra.Sdk
+let Sdk = Deps.Sdk
 
 let Compiled = Sdk.Compiled
 
-let Input = Algebra.Model.QueryFragments
+let Input = Deps.Sdk.Project.QueryFragments
 
 let Output
     : Type
@@ -22,18 +24,17 @@ let escapeText
         ]
 
 let renderExp
-    : Algebra.Model.QueryFragments -> Text
-    = \(fragments : Algebra.Model.QueryFragments) ->
+    : Deps.Sdk.Project.QueryFragments -> Text
+    = \(fragments : Deps.Sdk.Project.QueryFragments) ->
             "\""
         ++  Prelude.Text.concatMap
-              Algebra.Model.QueryFragment
-              ( \(queryFragment : Algebra.Model.QueryFragment) ->
+              Deps.Sdk.Project.QueryFragment
+              ( \(queryFragment : Deps.Sdk.Project.QueryFragment) ->
                   merge
                     { Sql = escapeText
                     , Var =
-                        \(var : Algebra.Model.QueryFragmentVar) ->
-                              "\$"
-                          ++  Algebra.Prelude.Natural.show (var.paramIndex + 1)
+                        \(var : Deps.Sdk.Project.QueryFragmentVar) ->
+                          "\$" ++ Deps.Prelude.Natural.show (var.paramIndex + 1)
                     }
                     queryFragment
               )
@@ -41,14 +42,15 @@ let renderExp
         ++  "\""
 
 let renderHaddock
-    : Algebra.Model.QueryFragments -> Text
+    : Deps.Sdk.Project.QueryFragments -> Text
     = Prelude.Text.concatMap
-        Algebra.Model.QueryFragment
-        ( \(queryFragment : Algebra.Model.QueryFragment) ->
+        Deps.Sdk.Project.QueryFragment
+        ( \(queryFragment : Deps.Sdk.Project.QueryFragment) ->
             merge
               { Sql = Prelude.Function.identity Text
               , Var =
-                  \(var : Algebra.Model.QueryFragmentVar) -> "\$" ++ var.rawName
+                  \(var : Deps.Sdk.Project.QueryFragmentVar) ->
+                    "\$" ++ var.rawName
               }
               queryFragment
         )

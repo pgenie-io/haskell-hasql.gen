@@ -1,10 +1,12 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
 let Templates = ../Templates/package.dhall
 
 let Member = ./Member.dhall
 
-let Input = Algebra.Model.ResultRows
+let Input = Deps.Sdk.Project.ResultRows
 
 let Output =
       Text -> { decoderExp : Text, rowTypeDecl : Text, resultTypeDecl : Text }
@@ -13,22 +15,22 @@ let run =
       \(config : Algebra.Config) ->
       \(input : Input) ->
         let compiledColumns =
-              Algebra.Typeclasses.Classes.Applicative.traverseList
-                Algebra.Sdk.Compiled.Type
-                Algebra.Sdk.Compiled.applicative
-                Algebra.Model.Member
+              Deps.Typeclasses.Classes.Applicative.traverseList
+                Deps.Sdk.Compiled.Type
+                Deps.Sdk.Compiled.applicative
+                Deps.Sdk.Project.Member
                 Member.Output
                 (Member.run config)
-                ( Algebra.Prelude.NonEmpty.toList
-                    Algebra.Model.Member
+                ( Deps.Prelude.NonEmpty.toList
+                    Deps.Sdk.Project.Member
                     input.columns
                 )
 
-        in  Algebra.Sdk.Compiled.flatMap
+        in  Deps.Sdk.Compiled.flatMap
               (List Member.Output)
               Output
               ( \(columns : List Member.Output) ->
-                  Algebra.Sdk.Compiled.ok
+                  Deps.Sdk.Compiled.ok
                     Output
                     ( \(typeNameBase : Text) ->
                         let rowTypeName = "${typeNameBase}ResultRow"
@@ -37,7 +39,7 @@ let run =
                               Templates.RecordDeclaration.run
                                 { name = rowTypeName
                                 , fields =
-                                    Algebra.Prelude.List.map
+                                    Deps.Prelude.List.map
                                       Member.Output
                                       Text
                                       ( \(column : Member.Output) ->
@@ -49,9 +51,9 @@ let run =
                         let rowDecoderExp =
                               ''
                               do
-                                ${Algebra.Lude.Extensions.Text.indent
+                                ${Deps.Lude.Extensions.Text.indent
                                     2
-                                    ( Algebra.Prelude.Text.concatMap
+                                    ( Deps.Prelude.Text.concatMap
                                         Member.Output
                                         ( \(column : Member.Output) ->
                                             ''

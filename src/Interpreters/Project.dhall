@@ -1,8 +1,10 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
-let Sdk = Algebra.Sdk
+let Sdk = Deps.Sdk
 
-let Model = Algebra.Model
+let Model = Deps.Sdk.Project
 
 let Templates = ../Templates/package.dhall
 
@@ -35,11 +37,9 @@ let combineOutputs =
               let content =
                     Templates.RootModule.run
                       { projectNamespace =
-                          Algebra.Prelude.Text.concatSep
-                            "."
-                            config.rootNamespace
+                          Deps.Prelude.Text.concatSep "." config.rootNamespace
                       , statementNames =
-                          Algebra.Prelude.List.map
+                          Deps.Prelude.List.map
                             Query
                             Text
                             (\(query : Query) -> query.statementModuleName)
@@ -50,7 +50,7 @@ let combineOutputs =
 
         let customTypeFiles
             : List Sdk.File.Type
-            = Algebra.Prelude.List.map
+            = Deps.Prelude.List.map
                 CustomTypeGen.Output
                 Sdk.File.Type
                 ( \(customType : CustomTypeGen.Output) ->
@@ -62,7 +62,7 @@ let combineOutputs =
 
         let statementFiles
             : List Sdk.File.Type
-            = Algebra.Prelude.List.map
+            = Deps.Prelude.List.map
                 Query
                 Sdk.File.Type
                 ( \(query : Query) ->
@@ -79,9 +79,10 @@ let combineOutputs =
 
         let cabalFile
             : Sdk.File.Type
-            = let packageName = Algebra.Name.concat input.owner [ input.name ]
+            = let packageName =
+                    Deps.CodegenKit.Name.concat input.owner [ input.name ]
 
-              let packageName = Algebra.Name.toTextInKebab packageName
+              let packageName = Deps.CodegenKit.Name.toTextInKebab packageName
 
               let path = packageName ++ ".cabal"
 
@@ -89,17 +90,15 @@ let combineOutputs =
                     Templates.CabalFile.run
                       { packageName
                       , rootNamespace =
-                          Algebra.Prelude.Text.concatSep
-                            "."
-                            config.rootNamespace
+                          Deps.Prelude.Text.concatSep "." config.rootNamespace
                       , statementModuleNames =
-                          Algebra.Prelude.List.map
+                          Deps.Prelude.List.map
                             Query
                             Text
                             (\(query : Query) -> query.statementModuleName)
                             queries
                       , customTypeNames =
-                          Algebra.Prelude.List.map
+                          Deps.Prelude.List.map
                             CustomTypeGen.Output
                             Text
                             ( \(customType : CustomTypeGen.Output) ->
@@ -122,10 +121,10 @@ let run =
         let compiledQueries
             : Sdk.Compiled.Type (List (Optional QueryGen.Output))
             = Sdk.Compiled.traverseList
-                Algebra.Model.Query
+                Deps.Sdk.Project.Query
                 (Optional QueryGen.Output)
-                ( \(query : Algebra.Model.Query) ->
-                    Algebra.Typeclasses.Classes.Alternative.optional
+                ( \(query : Deps.Sdk.Project.Query) ->
+                    Deps.Typeclasses.Classes.Alternative.optional
                       Sdk.Compiled.Type
                       Sdk.Compiled.alternative
                       QueryGen.Output
@@ -138,13 +137,13 @@ let run =
             = Sdk.Compiled.map
                 (List (Optional QueryGen.Output))
                 (List QueryGen.Output)
-                (Algebra.Prelude.List.unpackOptionals QueryGen.Output)
+                (Deps.Prelude.List.unpackOptionals QueryGen.Output)
                 compiledQueries
 
         let compiledCustomTypes
             : Sdk.Compiled.Type (List CustomTypeGen.Output)
             = Sdk.Compiled.traverseList
-                Algebra.Model.CustomType
+                Deps.Sdk.Project.CustomType
                 CustomTypeGen.Output
                 (CustomTypeGen.run config)
                 input.customTypes

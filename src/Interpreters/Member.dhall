@@ -1,8 +1,10 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
-let Sdk = Algebra.Sdk
+let Sdk = Deps.Sdk
 
-let Model = Algebra.Model
+let Model = Deps.Sdk.Project
 
 let Value = ./Value.dhall
 
@@ -24,7 +26,7 @@ let run =
           Value.Output
           Output
           ( \(value : Value.Output) ->
-              let fieldName = Algebra.Name.toTextInCamel input.name
+              let fieldName = Deps.CodegenKit.Name.toTextInCamel input.name
 
               let dimensionality =
                     merge

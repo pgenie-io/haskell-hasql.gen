@@ -1,10 +1,12 @@
+let Deps = ../Deps/package.dhall
+
 let Algebra = ./Algebra/package.dhall
 
-let Lude = Algebra.Lude
+let Lude = Deps.Lude
 
-let Typeclasses = Algebra.Typeclasses
+let Typeclasses = Deps.Typeclasses
 
-let Sdk = Algebra.Sdk
+let Sdk = Deps.Sdk
 
 let Templates = ../Templates/package.dhall
 
@@ -14,7 +16,7 @@ let QueryFragmentsModule = ./QueryFragments.dhall
 
 let MemberModule = ./Member.dhall
 
-let Input = Algebra.Model.Query
+let Input = Deps.Sdk.Project.Query
 
 let Output =
       { statementModuleName : Text
@@ -29,13 +31,13 @@ let render =
       \(result : ResultModule.Output) ->
       \(fragments : QueryFragmentsModule.Output) ->
       \(params : List MemberModule.Output) ->
-        let statementModuleName = Algebra.Name.toTextInPascal input.name
+        let statementModuleName = Deps.CodegenKit.Name.toTextInPascal input.name
 
         let statementModuleNamespaceAsList =
               config.rootNamespace # [ "Statements", statementModuleName ]
 
         let statementModuleNamespace =
-              Algebra.Prelude.Text.concatSep "." statementModuleNamespaceAsList
+              Deps.Prelude.Text.concatSep "." statementModuleNamespaceAsList
 
         let statementModulePath =
               Templates.ModulePath.run
@@ -60,12 +62,12 @@ let render =
               import qualified Data.Vector as Vector
 
               ${Templates.ParamsTypeDecl.run
-                  { queryName = Algebra.Name.toTextInSnake input.name
+                  { queryName = Deps.CodegenKit.Name.toTextInSnake input.name
                   , sqlForDocs = fragments.haddock
                   , srcPath = input.srcPath
                   , typeName = statementTypeName
                   , fields =
-                      Algebra.Prelude.List.map
+                      Deps.Prelude.List.map
                         MemberModule.Output
                         Text
                         ( \(member : MemberModule.Output) ->
@@ -74,7 +76,7 @@ let render =
                         params
                   }}
 
-              ${Algebra.Prelude.Text.concatSep "\n\n" result.typeDecls}
+              ${Deps.Prelude.Text.concatSep "\n\n" result.typeDecls}
 
               instance IsStatement ${statementTypeName} where
                 type ResultOf ${statementTypeName} = ${statementResultTypeName}
@@ -82,13 +84,13 @@ let render =
                 statementOf = Statement.prepared sql encoder decoder
                   where
                     sql =
-                      ${Algebra.Lude.Extensions.Text.indent 8 fragments.exp}
+                      ${Deps.Lude.Extensions.Text.indent 8 fragments.exp}
 
                     encoder =
                       mconcat
                         [ ${Lude.Extensions.Text.indent
                               12
-                              ( Algebra.Prelude.Text.concatMapSep
+                              ( Deps.Prelude.Text.concatMapSep
                                   ''
                                   ,
                                   ''
@@ -101,7 +103,7 @@ let render =
                         ]
 
                     decoder =
-                      ${Algebra.Lude.Extensions.Text.indent 8 result.decoderExp}
+                      ${Deps.Lude.Extensions.Text.indent 8 result.decoderExp}
 
               ''
 
@@ -141,7 +143,7 @@ let run =
                   ( Typeclasses.Classes.Applicative.traverseList
                       Sdk.Compiled.Type
                       Sdk.Compiled.applicative
-                      Algebra.Model.Member
+                      Deps.Sdk.Project.Member
                       MemberModule.Output
                       (MemberModule.run config)
                       input.params
