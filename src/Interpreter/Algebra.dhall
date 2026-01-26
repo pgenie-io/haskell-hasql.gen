@@ -10,8 +10,6 @@ let CodegenKit = ../CodegenKit.dhall
 
 let Prelude = ../Prelude.dhall
 
-let Snippets = ../Snippets/package.dhall
-
 let Config = { rootNamespace : List Text }
 
 let module =
@@ -62,7 +60,6 @@ in  { Typeclasses
     , Prelude
     , Name
     , Model
-    , Snippets
     , Import
     , Import/render
     , Imports

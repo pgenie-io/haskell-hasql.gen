@@ -2,8 +2,6 @@ let Algebra = ../Algebra.dhall
 
 let Sdk = Algebra.Sdk
 
-let Lude = Algebra.Lude
-
 let Model = Algebra.Model
 
 let Primitive = ./Primitive.dhall
@@ -30,18 +28,14 @@ let run =
                   (Primitive.run config primitive)
           , Custom =
               \(name : Model.Name) ->
-                let nameText = Algebra.Name.toTextInCamel name
-
-                in  Sdk.Compiled.ok
-                      Output
-                      { sig = "CustomTypes.${Algebra.Name.toTextInPascal name}"
-                      , encoderExp =
-                          "IsScalar.encoderOf @${Algebra.Name.toTextInCamel
-                                                   name}"
-                      , decoderExp =
-                          "IsScalar.decoderOf @${Algebra.Name.toTextInCamel
-                                                   name}"
-                      }
+                Sdk.Compiled.ok
+                  Output
+                  { sig = "CustomTypes.${Algebra.Name.toTextInPascal name}"
+                  , encoderExp =
+                      "IsScalar.encoderOf @${Algebra.Name.toTextInCamel name}"
+                  , decoderExp =
+                      "IsScalar.decoderOf @${Algebra.Name.toTextInCamel name}"
+                  }
           }
           input
 

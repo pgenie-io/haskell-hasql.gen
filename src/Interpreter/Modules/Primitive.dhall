@@ -2,15 +2,11 @@ let Algebra = ../Algebra.dhall
 
 let Sdk = Algebra.Sdk
 
-let Lude = Algebra.Lude
-
 let Model = Algebra.Model
 
 let Input = Model.Primitive
 
 let Output = { sig : Text, codecName : Text }
-
-let Result = Sdk.Compiled.Type Output
 
 let unsupportedType =
       \(type : Text) -> Sdk.Compiled.report Output [ type ] "Unsupported type"

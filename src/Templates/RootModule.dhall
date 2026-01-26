@@ -1,5 +1,5 @@
 -- | The API module that reexports and organizes everything to fit the UX.
-let Algebra = ../Algebras/Template/package.dhall
+let Algebra = ./Algebra/package.dhall
 
 let Prelude = ../Prelude.dhall
 

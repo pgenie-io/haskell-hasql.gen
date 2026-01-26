@@ -1,5 +1,3 @@
-let Prelude = ./Prelude.dhall
-
 let Sdk = ./Sdk.dhall
 
 let CodegenKit = ./CodegenKit.dhall

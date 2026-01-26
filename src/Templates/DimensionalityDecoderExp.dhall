@@ -1,9 +1,3 @@
-let Algebra = ../Algebras/Template/package.dhall
-
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
-
 let Params =
       { dimensionality : Natural, elementIsNullable : Bool, elementExp : Text }
 

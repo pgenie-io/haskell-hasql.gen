@@ -6,8 +6,6 @@ let Sdk = Algebra.Sdk
 
 let Compiled = Sdk.Compiled
 
-let ResultModule = ./Result.dhall
-
 let Input = Algebra.Model.QueryFragments
 
 let Output

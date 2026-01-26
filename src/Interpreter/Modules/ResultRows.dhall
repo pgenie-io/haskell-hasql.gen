@@ -9,8 +9,6 @@ let Input = Algebra.Model.ResultRows
 let Output =
       Text -> { decoderExp : Text, rowTypeDecl : Text, resultTypeDecl : Text }
 
-let Result = Algebra.Sdk.Compiled.Type Output
-
 let run =
       \(config : Algebra.Config) ->
       \(input : Input) ->

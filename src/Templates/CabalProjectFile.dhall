@@ -1,4 +1,4 @@
-let Algebra = ../Algebras/Template/package.dhall
+let Algebra = ./Algebra/package.dhall
 
 let Params = {}
 

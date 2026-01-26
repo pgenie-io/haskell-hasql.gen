@@ -1,14 +1,8 @@
-let Algebra = ../Algebras/Template/package.dhall
+let Algebra = ./Algebra/package.dhall
 
 let Prelude = ../Prelude.dhall
 
 let Lude = ../Lude.dhall
-
-let DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
-
-let DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
-
-let FieldEncoder = ./FieldEncoder.dhall
 
 let Params =
       { preludeModuleName : Text

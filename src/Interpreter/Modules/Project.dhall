@@ -2,8 +2,6 @@ let Algebra = ../Algebra.dhall
 
 let Sdk = Algebra.Sdk
 
-let Lude = Algebra.Lude
-
 let Model = Algebra.Model
 
 let Templates = ../../Templates/package.dhall
@@ -21,9 +19,6 @@ let combineOutputs =
       \(input : Input) ->
       \(queries : List QueryGen.Output) ->
       \(customTypes : List CustomTypeGen.Output) ->
-        let rootNamespace =
-              Algebra.Prelude.Text.concatSep "." config.rootNamespace
-
         let Query =
               { statementModuleName : Text
               , statementModuleNamespace : Text

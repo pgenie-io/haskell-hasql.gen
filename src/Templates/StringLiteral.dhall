@@ -1,8 +1,6 @@
-let Algebra = ../Algebras/Template/package.dhall
+let Algebra = ./Algebra/package.dhall
 
 let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
 
 let Params = Text
 
