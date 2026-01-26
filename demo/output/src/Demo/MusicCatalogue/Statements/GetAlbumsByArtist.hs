@@ -56,14 +56,14 @@ instance IsStatement GetAlbumsByArtist where
 
       encoder =
         mconcat
-          [ Encoders.param ((.artistId) >$< Encoders.nonNullable (valueEncoder))
+          [ Encoders.param ((.artistId) >$< Encoders.nonNullable (scalarEncoder))
           ]
 
       decoder =
         Decoders.rowVector do
-          id <- Decoders.column ((.id) <$> Decoders.nonNullable (valueDecoder))
-          title <- Decoders.column ((.title) <$> Decoders.nonNullable (valueDecoder))
-          releaseYear <- Decoders.column ((.releaseYear) <$> Decoders.nullable (valueDecoder))
-          albumType <- Decoders.column ((.albumType) <$> Decoders.nonNullable (valueDecoder))
+          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          title <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          releaseYear <- Decoders.column (Decoders.nullable (scalarDecoder))
+          albumType <- Decoders.column (Decoders.nonNullable (scalarDecoder))
           pure GetAlbumsByArtistResultRow {..}
 

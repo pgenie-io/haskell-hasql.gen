@@ -60,8 +60,7 @@ let run =
                           }
                     , fieldDecoder =
                         Templates.FieldDecoder.run
-                          { name = fieldName
-                          , nullable = input.isNullable
+                          { nullable = input.isNullable
                           , dimensionality
                           , elementIsNullable
                           }

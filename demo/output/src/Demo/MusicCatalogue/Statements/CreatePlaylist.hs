@@ -49,15 +49,15 @@ instance IsStatement CreatePlaylist where
 
       encoder =
         mconcat
-          [ Encoders.param ((.name) >$< Encoders.nonNullable (valueEncoder)),
-            Encoders.param ((.description) >$< Encoders.nullable (valueEncoder)),
-            Encoders.param ((.userId) >$< Encoders.nonNullable (valueEncoder))
+          [ Encoders.param ((.name) >$< Encoders.nonNullable (scalarEncoder)),
+            Encoders.param ((.description) >$< Encoders.nullable (scalarEncoder)),
+            Encoders.param ((.userId) >$< Encoders.nonNullable (scalarEncoder))
           ]
 
       decoder =
         Decoders.singleRow do
-          id <- Decoders.column ((.id) <$> Decoders.nonNullable (valueDecoder))
-          name <- Decoders.column ((.name) <$> Decoders.nonNullable (valueDecoder))
-          createdAt <- Decoders.column ((.createdAt) <$> Decoders.nonNullable (valueDecoder))
+          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          name <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          createdAt <- Decoders.column (Decoders.nonNullable (scalarDecoder))
           pure CreatePlaylistResultRow {..}
 

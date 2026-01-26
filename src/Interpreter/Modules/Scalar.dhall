@@ -32,9 +32,9 @@ let run =
                   Output
                   { sig = "CustomTypes.${Algebra.Name.toTextInPascal name}"
                   , encoderExp =
-                      "IsScalar.encoderOf @${Algebra.Name.toTextInCamel name}"
+                      "IsScalar.scalarEncoder @${Algebra.Name.toTextInCamel name}"
                   , decoderExp =
-                      "IsScalar.decoderOf @${Algebra.Name.toTextInCamel name}"
+                      "IsScalar.scalarDecoder @${Algebra.Name.toTextInCamel name}"
                   }
           }
           input

@@ -41,8 +41,7 @@ let run =
           deriving stock (Show, Eq, Ord, Enum, Bounded)
 
         instance IsScalar ${params.typeName} where
-          valueEncoder :: Encoders.Value ${params.typeName}
-          valueEncoder =
+          scalarEncoder =
             Encoders.enum
               (Just "${params.pgSchemaName}")
               "${params.pgTypeName}"
@@ -59,8 +58,7 @@ let run =
                       )}
               )
           
-          valueDecoder :: Decoders.Value ${params.typeName}
-          valueDecoder =
+          scalarDecoder =
             Decoders.enum
               (Just "${params.pgSchemaName}")
               "${params.pgTypeName}"

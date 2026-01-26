@@ -38,8 +38,7 @@ let run =
           deriving stock (Show, Eq, Ord)
 
         instance IsScalar ${params.typeName} where
-          valueEncoder :: Encoders.Value ${params.typeName}
-          valueEncoder =
+          scalarEncoder =
             Encoders.composite
               (Just "${params.pgSchemaName}")
               "${params.pgTypeName}"
@@ -57,8 +56,7 @@ let run =
                   ]
               )
           
-          valueDecoder :: Decoders.Value ${params.typeName}
-          valueDecoder =
+          scalarDecoder =
             Decoders.composite
               (Just "${params.pgSchemaName}")
               "${params.pgTypeName}"
