@@ -12,4 +12,5 @@
 , FieldDecoder = ./FieldDecoder.dhall
 , FieldDeclaration = ./FieldDeclaration.dhall
 , RecordDeclaration = ./RecordDeclaration.dhall
+, ReexportModule = ./ReexportModule.dhall
 }
