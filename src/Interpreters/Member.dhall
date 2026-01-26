@@ -1,4 +1,4 @@
-let Algebra = ../Algebra.dhall
+let Algebra = ./Algebra/package.dhall
 
 let Sdk = Algebra.Sdk
 
@@ -6,7 +6,7 @@ let Model = Algebra.Model
 
 let Value = ./Value.dhall
 
-let Templates = ../../Templates/package.dhall
+let Templates = ../Templates/package.dhall
 
 let Input = Model.Member
 

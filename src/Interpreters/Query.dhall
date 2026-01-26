@@ -1,4 +1,4 @@
-let Algebra = ../Algebra.dhall
+let Algebra = ./Algebra/package.dhall
 
 let Lude = Algebra.Lude
 
@@ -6,7 +6,7 @@ let Typeclasses = Algebra.Typeclasses
 
 let Sdk = Algebra.Sdk
 
-let Templates = ../../Templates/package.dhall
+let Templates = ../Templates/package.dhall
 
 let ResultModule = ./Result.dhall
 

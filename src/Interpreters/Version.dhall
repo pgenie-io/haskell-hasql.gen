@@ -1,4 +1,4 @@
-let Algebra = ../Algebra.dhall
+let Algebra = ./Algebra/package.dhall
 
 let Sdk = Algebra.Sdk
 
