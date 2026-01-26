@@ -1,5 +1,7 @@
 let Algebra = ../Algebra.dhall
 
+let Templates = ../../Templates/package.dhall
+
 let Member = ./Member.dhall
 
 let Input = Algebra.Model.ResultRows
@@ -34,16 +36,14 @@ let run =
                         let rowTypeName = "${typeNameBase}ResultRow"
 
                         let rowTypeDecl =
-                              Algebra.Snippets.recordDataDecl
+                              Templates.RecordDeclaration.run
                                 { name = rowTypeName
                                 , fields =
                                     Algebra.Prelude.List.map
                                       Member.Output
-                                      { name : Text, sig : Text }
+                                      Text
                                       ( \(column : Member.Output) ->
-                                          { name = column.fieldName
-                                          , sig = column.sig
-                                          }
+                                          column.fieldDeclaration
                                       )
                                       columns
                                 }
@@ -57,7 +57,7 @@ let run =
                                         Member.Output
                                         ( \(column : Member.Output) ->
                                             ''
-                                            ${column.fieldName} <- Decoders.column (${column.decoderExp})
+                                            ${column.fieldName} <- Decoders.column (${column.fieldDecoder})
                                             ''
                                         )
                                         columns

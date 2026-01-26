@@ -9,4 +9,7 @@
 , DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
 , DimensionalityType = ./DimensionalityType.dhall
 , FieldEncoder = ./FieldEncoder.dhall
+, FieldDecoder = ./FieldDecoder.dhall
+, FieldDeclaration = ./FieldDeclaration.dhall
+, RecordDeclaration = ./RecordDeclaration.dhall
 }

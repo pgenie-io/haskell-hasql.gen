@@ -68,12 +68,28 @@ in  Algebra.module
                                         , typeName = moduleName
                                         , pgSchemaName = input.pgSchemaName
                                         , pgTypeName = input.pgName
-                                        , fields =
+                                        , fieldDeclarations =
                                             Algebra.Prelude.List.map
                                               MemberGen.Output
-                                              Templates.CustomCompositeTypeModule.Field
+                                              Text
                                               ( \(member : MemberGen.Output) ->
-                                                  member.customCompositeTypeModuleField
+                                                  member.fieldDeclaration
+                                              )
+                                              members
+                                        , fieldEncoderExps =
+                                            Algebra.Prelude.List.map
+                                              MemberGen.Output
+                                              Text
+                                              ( \(member : MemberGen.Output) ->
+                                                  member.fieldEncoder
+                                              )
+                                              members
+                                        , fieldDecoderExps =
+                                            Algebra.Prelude.List.map
+                                              MemberGen.Output
+                                              Text
+                                              ( \(member : MemberGen.Output) ->
+                                                  member.fieldDecoder
                                               )
                                               members
                                         }

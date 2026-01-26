@@ -64,12 +64,12 @@ let render =
                   , sqlForDocs = fragments.haddock
                   , srcPath = input.srcPath
                   , typeName = statementTypeName
-                  , members =
+                  , fields =
                       Algebra.Prelude.List.map
                         MemberModule.Output
-                        { fieldName : Text, sig : Text }
+                        Text
                         ( \(member : MemberModule.Output) ->
-                            { fieldName = member.fieldName, sig = member.sig }
+                            member.fieldDeclaration
                         )
                         params
                   }}

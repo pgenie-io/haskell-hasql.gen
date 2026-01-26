@@ -10,16 +10,15 @@ let DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
 
 let FieldEncoder = ./FieldEncoder.dhall
 
-let Field =
-      { name : Text, sig : Text, nullable : Bool, dimensionality : Natural }
-
 let Params =
       { preludeModuleName : Text
       , moduleName : Text
       , typeName : Text
       , pgSchemaName : Text
       , pgTypeName : Text
-      , fields : List Field
+      , fieldDeclarations : List Text
+      , fieldEncoderExps : List Text
+      , fieldDecoderExps : List Text
       }
 
 let run =
@@ -35,13 +34,11 @@ let run =
         data ${params.typeName} = ${params.typeName}
           { ${Lude.Extensions.Text.indent
                 4
-                ( Prelude.Text.concatMapSep
+                ( Prelude.Text.concatSep
                     ''
                     ,
                     ''
-                    Field
-                    (\(field : Field) -> field.name ++ " :: " ++ field.sig)
-                    params.fields
+                    params.fieldDeclarations
                 )}
           }
           deriving stock (Show, Eq, Ord)
@@ -59,18 +56,9 @@ let run =
                             ''
                             ,
                             ''
-                            Field
-                            ( \(field : Field) ->
-                                    "Encoders.field ("
-                                ++  FieldEncoder.run
-                                      { name = field.name
-                                      , nullable = field.nullable
-                                      , dimensionality = field.dimensionality
-                                      , elementIsNullable = True
-                                      }
-                                ++  ")"
-                            )
-                            params.fields
+                            Text
+                            (\(field : Text) -> "Encoders.field (${field})")
+                            params.fieldEncoderExps
                         )}
                   ]
               )
@@ -87,25 +75,12 @@ let run =
                               ''
 
                               <*> ''
-                              Field
-                              ( \(field : Field) ->
-                                      "Decoders.field ("
-                                  ++  ( if    field.nullable
-                                        then  "Decoders.nullable"
-                                        else  "Decoders.nonNullable"
-                                      )
-                                  ++  " ("
-                                  ++  DimensionalityDecoderExp.run
-                                        { dimensionality = field.dimensionality
-                                        , elementIsNullable = True
-                                        , elementExp = "valueDecoder"
-                                        }
-                                  ++  "))"
-                              )
-                              params.fields
+                              Text
+                              (\(field : Text) -> "Decoders.field (${field})")
+                              params.fieldDecoderExps
                           )}
               )
           
         ''
 
-in  { Params, Field, run }
+in  Algebra.module Params run

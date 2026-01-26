@@ -14,12 +14,9 @@ let Input = Model.Member
 
 let Output =
       { fieldName : Text
-      , sig : Text
-      , encoderExp : Text
-      , decoderExp : Text
-      , customCompositeTypeModuleField :
-          Templates.CustomCompositeTypeModule.Field
+      , fieldDeclaration : Text
       , fieldEncoder : Text
+      , fieldDecoder : Text
       }
 
 let run =
@@ -40,53 +37,40 @@ let run =
                       }
                       input.value.arraySettings
 
-              in  if    input.isNullable
-                  then  let sig = "Maybe ${value.sig}"
+              let elementIsNullable =
+                    merge
+                      { Some =
+                          \(arraySettings : Model.ArraySettings) ->
+                            arraySettings.elementIsNullable
+                      , None = True
+                      }
+                      input.value.arraySettings
 
-                        in  Sdk.Compiled.ok
-                              Output
-                              { fieldName
-                              , sig
-                              , encoderExp =
-                                  "Encoders.nullable ${value.encoderExp}"
-                              , decoderExp =
-                                  "Decoders.nullable ${value.decoderExp}"
-                              , customCompositeTypeModuleField =
-                                { name = fieldName
-                                , sig
-                                , nullable = True
-                                , dimensionality
-                                }
-                              , fieldEncoder =
-                                  Templates.FieldEncoder.run
-                                    { name = fieldName
-                                    , nullable = True
-                                    , dimensionality
-                                    , elementIsNullable = True
-                                    }
-                              }
-                  else  Sdk.Compiled.ok
-                          Output
-                          { fieldName
-                          , sig = value.sig
-                          , encoderExp =
-                              "Encoders.nonNullable ${value.encoderExp}"
-                          , decoderExp =
-                              "Decoders.nonNullable ${value.decoderExp}"
-                          , customCompositeTypeModuleField =
-                            { name = fieldName
-                            , sig = value.sig
-                            , nullable = False
-                            , dimensionality
-                            }
-                          , fieldEncoder =
-                              Templates.FieldEncoder.run
-                                { name = fieldName
-                                , nullable = False
-                                , dimensionality
-                                , elementIsNullable = True
-                                }
+              let sig = value.sig
+
+              let sig = if input.isNullable then "Maybe (${sig})" else sig
+
+              in  Sdk.Compiled.ok
+                    Output
+                    { fieldName
+                    , fieldEncoder =
+                        Templates.FieldEncoder.run
+                          { name = fieldName
+                          , nullable = input.isNullable
+                          , dimensionality
+                          , elementIsNullable
                           }
+                    , fieldDecoder =
+                        Templates.FieldDecoder.run
+                          { name = fieldName
+                          , nullable = input.isNullable
+                          , dimensionality
+                          , elementIsNullable
+                          }
+                    , fieldDeclaration =
+                        Templates.FieldDeclaration.run
+                          { name = fieldName, sig, docs = None Text }
+                    }
           )
           ( Sdk.Compiled.nest
               Value.Output
