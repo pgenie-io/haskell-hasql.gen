@@ -6,7 +6,7 @@ let CodegenKit = Deps.CodegenKit
 
 let Config = ./Config.dhall
 
-let Interpreters = ./Interpreters/package.dhall
+let ProjectInterpreter = ./Interpreters/Project.dhall
 
 in  Sdk.Gen
       Config.Type
@@ -19,5 +19,5 @@ in  Sdk.Gen
                   ]
                 }
 
-          in  Interpreters.Project.run interpreterConfig project
+          in  ProjectInterpreter.run interpreterConfig project
       )
