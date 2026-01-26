@@ -77,6 +77,11 @@ let combineOutputs =
                 )
                 queries
 
+        let cabalProjectFile =
+              { path = "cabal.project"
+              , content = Templates.CabalProjectFile.run {=}
+              }
+
         let cabalFile
             : Sdk.File.Type
             = let packageName = Algebra.Name.concat input.owner [ input.name ]
@@ -111,7 +116,9 @@ let combineOutputs =
 
               in  { path, content }
 
-        in    [ cabalFile, rootModuleFile ] # customTypeFiles # statementFiles
+        in      [ cabalProjectFile, cabalFile, rootModuleFile ]
+              # customTypeFiles
+              # statementFiles
             : List Sdk.File.Type
 
 let run =

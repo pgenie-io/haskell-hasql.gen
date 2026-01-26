@@ -4,13 +4,13 @@ let Sdk = ./Sdk.dhall
 
 let CodegenKit = ./CodegenKit.dhall
 
-let Config = ./Config/package.dhall
+let Config = ./Config.dhall
 
 let Interpreter = ./Interpreter/package.dhall
 
 in  Sdk.Gen
-      Config.Config
-      ( \(config : Config.Config) ->
+      Config.Type
+      ( \(config : Config.Type) ->
         \(project : Sdk.Project.Project) ->
           let interpreterConfig =
                 { rootNamespace =
