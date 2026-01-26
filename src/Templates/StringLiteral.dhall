@@ -4,8 +4,6 @@ let Prelude = ../Prelude.dhall
 
 let Lude = ../Lude.dhall
 
-let Member = { fieldName : Text, sig : Text }
-
 let Params = Text
 
 in  Algebra.module
