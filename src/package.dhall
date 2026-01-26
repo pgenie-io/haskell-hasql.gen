@@ -2,18 +2,22 @@ let Prelude = ./Prelude.dhall
 
 let Sdk = ./Sdk.dhall
 
-let Gen = Sdk.Gen
+let CodegenKit = ./CodegenKit.dhall
 
-let Project = Gen.Project
+let Config = ./Config.dhall
 
-let Config = ./Config/package.dhall
+let Interpreter = ./Interpreter/package.dhall
 
-let Package = ./Package/package.dhall
+in  Sdk.Gen
+      Config.Type
+      ( \(config : Config.Type) ->
+        \(project : Sdk.Project.Project) ->
+          let interpreterConfig =
+                { rootNamespace =
+                  [ CodegenKit.Name.toTextInPascal project.owner
+                  , CodegenKit.Name.toTextInPascal project.name
+                  ]
+                }
 
-let generate
-    : Gen.Generate Config.Config
-    = \(config : Config.Config) ->
-      \(project : Project.Project) ->
-        Package.compile project
-
-in  Sdk.Gen.Gen Config.Config generate
+          in  Interpreter.Modules.Project.run interpreterConfig project
+      )

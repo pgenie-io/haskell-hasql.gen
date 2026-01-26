@@ -11,31 +11,29 @@ library
     ApplicativeDo, Arrows, BangPatterns, BlockArguments, ConstraintKinds, DataKinds, DefaultSignatures, DeriveAnyClass, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, DerivingStrategies, DerivingVia, DuplicateRecordFields, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, ImportQualifiedPost, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NamedFieldPuns, NoFieldSelectors, NoImplicitPrelude, NoMonomorphismRestriction, NumericUnderscores, OverloadedRecordDot, OverloadedStrings, ParallelListComp, PatternGuards, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, StrictData, TemplateHaskell, TupleSections, TypeApplications, TypeFamilies, TypeOperators, UnboxedTuples, ViewPatterns
 
   exposed-modules:
-    -- Demo.MusicCatalogue
-    -- Demo.MusicCatalogue.CustomTypes
-    -- Demo.MusicCatalogue.Statements
+    Demo.MusicCatalogue
+    Demo.MusicCatalogue.CustomTypes
+    Demo.MusicCatalogue.Statements
     
   other-modules:
-    -- Demo.MusicCatalogue.CustomTypes.AlbumType
-    -- Demo.MusicCatalogue.CustomTypes.TrackMetadata
-    -- Demo.MusicCatalogue.Statements.GetAlbumsByArtist
-    -- Demo.MusicCatalogue.Statements.SearchTracksByTitle
-    -- Demo.MusicCatalogue.Statements.GetTrackDetails
-    -- Demo.MusicCatalogue.Statements.GetArtistsWithTrackCount
-    -- Demo.MusicCatalogue.Statements.CreatePlaylist
-    -- Demo.MusicCatalogue.Statements.GetTopTracksByPlayCount
+    Demo.MusicCatalogue.Preludes.CustomType
+    Demo.MusicCatalogue.Preludes.Statement
+    Demo.MusicCatalogue.CustomTypes.AlbumType
+    Demo.MusicCatalogue.CustomTypes.TrackMetadata
+    Demo.MusicCatalogue.Statements.GetAlbumsByArtist
+    Demo.MusicCatalogue.Statements.SearchTracksByTitle
+    Demo.MusicCatalogue.Statements.GetTrackDetails
+    Demo.MusicCatalogue.Statements.GetArtistsWithTrackCount
+    Demo.MusicCatalogue.Statements.CreatePlaylist
+    Demo.MusicCatalogue.Statements.GetTopTracksByPlayCount
 
   build-depends:
-    aeson,
-    base,
-    bytestring,
-    containers,
-    hasql,
-    hasql-mapping,
-    scientific,
-    text,
-    tagged,
-    time,
-    uuid,
-    vector,
-
+    aeson >=2 && <3,
+    base >=4.14 && <5,
+    bytestring >=0.10 && <0.13,
+    containers >=0.6 && <0.9,
+    hasql ^>=1.10.1,
+    text >=1.2 && <3,
+    time >=1.9 && <2,
+    uuid >=1.2 && <2,
+    vector >=0.12 && <0.14,

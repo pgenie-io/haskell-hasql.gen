@@ -54,14 +54,14 @@ in  Algebra.module
                   params.statementModuleNames}
 
             build-depends:
-              aeson,
-              base,
-              bytestring,
-              containers,
-              hasql,
-              text,
-              time,
-              uuid,
-              vector,
+              aeson >=2 && <3,
+              base >=4.14 && <5,
+              bytestring >=0.10 && <0.13,
+              containers >=0.6 && <0.9,
+              hasql ^>=1.10.1,
+              text >=1.2 && <3,
+              time >=1.9 && <2,
+              uuid >=1.2 && <2,
+              vector >=0.12 && <0.14,
           ''
       )
