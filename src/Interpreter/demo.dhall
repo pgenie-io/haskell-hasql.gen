@@ -2,28 +2,34 @@ let Algebra = ./Algebra.dhall
 
 let Modules = ./Modules/package.dhall
 
-let ProjectModule = Modules.Project
+let Sdk = ../Sdk.dhall
 
-let fixture = Algebra.Sdk.Fixtures._1
+let ProjectGen = Modules.Project
+
+let project = Sdk.Fixtures._1
 
 let config
     : Algebra.Config
     = { rootNamespace =
-        [ Algebra.Name.toTextInPascal fixture.owner
-        , Algebra.Name.toTextInPascal fixture.name
+        [ Algebra.Name.toTextInPascal project.owner
+        , Algebra.Name.toTextInPascal project.name
         ]
       }
 
-in  Algebra.Sdk.Compiled.toPlainText
-      ( Algebra.Sdk.Compiled.map
-          ProjectModule.Output
+let compiledFiles
+    : Sdk.Compiled.Type (List Sdk.File.Type)
+    = ProjectGen.run config project
+
+in  Sdk.Compiled.toPlainText
+      ( Sdk.Compiled.map
+          ProjectGen.Output
           Text
-          ( \(files : List Algebra.Sdk.File.Type) ->
+          ( \(files : List Sdk.File.Type) ->
               Algebra.Prelude.Text.concatMapSep
                 "\n\n"
-                Algebra.Sdk.File.Type
-                Algebra.Sdk.File.toPlainText
+                Sdk.File.Type
+                Sdk.File.toPlainText
                 files
           )
-          (ProjectModule.run config fixture)
+          (ProjectGen.run config project)
       )

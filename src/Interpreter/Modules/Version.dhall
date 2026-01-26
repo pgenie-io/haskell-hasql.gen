@@ -8,7 +8,7 @@ let Model = Algebra.Model
 
 let Input = Model.Project
 
-let Output = List Sdk.Gen.File
+let Output = List Sdk.File.Type
 
 let run =
       \(config : Algebra.Config) ->

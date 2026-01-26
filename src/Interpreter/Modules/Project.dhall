@@ -78,7 +78,7 @@ let combineOutputs =
                 queries
 
         let cabalFile
-            : Sdk.Gen.File
+            : Sdk.File.Type
             = let packageName = Algebra.Name.concat input.owner [ input.name ]
 
               let packageName = Algebra.Name.toTextInKebab packageName
