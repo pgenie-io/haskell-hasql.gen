@@ -35,7 +35,8 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > queries/get_track_details.sql
 --
 newtype GetTrackDetails = GetTrackDetails
-  { trackId :: UUID
+  { -- | Maps to @track_id@.
+    trackId :: UUID
   }
   deriving stock (Eq, Show)
 
@@ -44,14 +45,23 @@ type GetTrackDetailsResult = GetTrackDetailsResultRow
 
 -- | Row of 'GetTrackDetailsResult'.
 data GetTrackDetailsResultRow = GetTrackDetailsResultRow
-  { id :: UUID,
+  { -- | Maps to @id@.
+    id :: UUID,
+    -- | Maps to @title@.
     title :: Text,
+    -- | Maps to @duration_seconds@.
     duration :: Maybe (Int32),
+    -- | Maps to @track_number@.
     trackNumber :: Maybe (Int32),
+    -- | Maps to @album_id@.
     albumId :: UUID,
+    -- | Maps to @album_title@.
     albumTitle :: Text,
+    -- | Maps to @artist_id@.
     artistId :: UUID,
+    -- | Maps to @artist_name@.
     artistName :: Text,
+    -- | Maps to @genre@.
     genre :: Maybe (Text)
   }
   deriving stock (Show, Eq)

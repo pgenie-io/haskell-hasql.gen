@@ -37,9 +37,13 @@ type GetArtistsWithTrackCountResult = Vector.Vector GetArtistsWithTrackCountResu
 
 -- | Row of 'GetArtistsWithTrackCountResult'.
 data GetArtistsWithTrackCountResultRow = GetArtistsWithTrackCountResultRow
-  { id :: UUID,
+  { -- | Maps to @id@.
+    id :: UUID,
+    -- | Maps to @name@.
     name :: Text,
+    -- | Maps to @track_count@.
     trackCount :: Int32,
+    -- | Maps to @album_count@.
     albumCount :: Int32
   }
   deriving stock (Show, Eq)

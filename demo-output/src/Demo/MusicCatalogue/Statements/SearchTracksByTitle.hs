@@ -30,7 +30,8 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > queries/search_tracks_by_title.sql
 --
 newtype SearchTracksByTitle = SearchTracksByTitle
-  { searchTerm :: Text
+  { -- | Maps to @search_term@.
+    searchTerm :: Text
   }
   deriving stock (Eq, Show)
 
@@ -39,10 +40,15 @@ type SearchTracksByTitleResult = Vector.Vector SearchTracksByTitleResultRow
 
 -- | Row of 'SearchTracksByTitleResult'.
 data SearchTracksByTitleResultRow = SearchTracksByTitleResultRow
-  { id :: UUID,
+  { -- | Maps to @id@.
+    id :: UUID,
+    -- | Maps to @title@.
     title :: Text,
+    -- | Maps to @duration_seconds@.
     duration :: Maybe (Int32),
+    -- | Maps to @album_title@.
     albumTitle :: Text,
+    -- | Maps to @artist_name@.
     artistName :: Text
   }
   deriving stock (Show, Eq)

@@ -23,8 +23,11 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > queries/create_playlist.sql
 --
 data CreatePlaylist = CreatePlaylist
-  { name :: Text,
+  { -- | Maps to @name@.
+    name :: Text,
+    -- | Maps to @description@.
     description :: Maybe (Text),
+    -- | Maps to @user_id@.
     userId :: UUID
   }
   deriving stock (Eq, Show)
@@ -34,8 +37,11 @@ type CreatePlaylistResult = CreatePlaylistResultRow
 
 -- | Row of 'CreatePlaylistResult'.
 data CreatePlaylistResultRow = CreatePlaylistResultRow
-  { id :: UUID,
+  { -- | Maps to @id@.
+    id :: UUID,
+    -- | Maps to @name@.
     name :: Text,
+    -- | Maps to @created_at@.
     createdAt :: LocalTime
   }
   deriving stock (Show, Eq)

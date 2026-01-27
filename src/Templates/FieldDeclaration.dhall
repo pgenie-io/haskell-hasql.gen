@@ -14,8 +14,7 @@ in  Algebra.module
 
                   in  ''
                       -- | ${docs}
-                      ${name} :: ${sig}
-                      ''
+                      ${name} :: ${sig}''
             , None =
                 let name = params.name
 

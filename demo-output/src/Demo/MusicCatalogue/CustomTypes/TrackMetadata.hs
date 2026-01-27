@@ -11,8 +11,11 @@ import qualified Hasql.Mapping as Mapping
 -- |
 -- Representation of the @track_metadata@ user-declared PostgreSQL record type.
 data TrackMetadata = TrackMetadata
-  { title :: Text,
+  { -- | Maps to @title@.
+    title :: Text,
+    -- | Maps to @metadata@.
     metadata :: Maybe (Vector (Maybe Aeson.Value)),
+    -- | Maps to @created_at@.
     createdAt :: LocalTime
   }
   deriving stock (Show, Eq, Ord)

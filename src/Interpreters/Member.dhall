@@ -70,7 +70,10 @@ let run =
                           }
                     , fieldDeclaration =
                         Templates.FieldDeclaration.run
-                          { name = fieldName, sig, docs = None Text }
+                          { name = fieldName
+                          , sig
+                          , docs = Some "Maps to @${input.pgName}@."
+                          }
                     }
           )
           ( Sdk.Compiled.nest

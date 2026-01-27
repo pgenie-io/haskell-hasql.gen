@@ -36,7 +36,8 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > queries/get_top_tracks_by_play_count.sql
 --
 newtype GetTopTracksByPlayCount = GetTopTracksByPlayCount
-  { limit :: Int32
+  { -- | Maps to @limit@.
+    limit :: Int32
   }
   deriving stock (Eq, Show)
 
@@ -45,10 +46,15 @@ type GetTopTracksByPlayCountResult = Vector.Vector GetTopTracksByPlayCountResult
 
 -- | Row of 'GetTopTracksByPlayCountResult'.
 data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
-  { id :: UUID,
+  { -- | Maps to @id@.
+    id :: UUID,
+    -- | Maps to @title@.
     title :: Text,
+    -- | Maps to @artist_name@.
     artistName :: Text,
+    -- | Maps to @album_title@.
     albumTitle :: Text,
+    -- | Maps to @play_count@.
     playCount :: Int32
   }
   deriving stock (Show, Eq)

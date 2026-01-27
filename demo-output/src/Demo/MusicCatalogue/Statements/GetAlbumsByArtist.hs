@@ -27,7 +27,8 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > queries/get_albums_by_artist.sql
 --
 newtype GetAlbumsByArtist = GetAlbumsByArtist
-  { artistId :: UUID
+  { -- | Maps to @artist_id@.
+    artistId :: UUID
   }
   deriving stock (Eq, Show)
 
@@ -36,9 +37,13 @@ type GetAlbumsByArtistResult = Vector.Vector GetAlbumsByArtistResultRow
 
 -- | Row of 'GetAlbumsByArtistResult'.
 data GetAlbumsByArtistResultRow = GetAlbumsByArtistResultRow
-  { id :: UUID,
+  { -- | Maps to @id@.
+    id :: UUID,
+    -- | Maps to @title@.
     title :: Text,
+    -- | Maps to @release_year@.
     releaseYear :: Maybe (Int32),
+    -- | Maps to @album_type@.
     albumType :: CustomTypes.AlbumType
   }
   deriving stock (Show, Eq)
