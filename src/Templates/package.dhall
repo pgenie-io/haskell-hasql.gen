@@ -1,5 +1,4 @@
-{ RootModule = ./RootModule.dhall
-, CabalFile = ./CabalFile.dhall
+{ CabalFile = ./CabalFile.dhall
 , ModulePath = ./ModulePath.dhall
 , ParamsTypeDecl = ./ParamsTypeDecl.dhall
 , CustomCompositeTypeModule = ./CustomCompositeTypeModule.dhall

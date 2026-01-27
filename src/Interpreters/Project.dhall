@@ -24,27 +24,6 @@ let combineOutputs =
         let projectNamespace =
               Deps.Prelude.Text.concatSep "." config.rootNamespace
 
-        let rootModuleFile
-            : Sdk.File.Type
-            = let path =
-                    Templates.ModulePath.run
-                      { namespace = config.rootNamespace }
-
-              let content =
-                    Templates.RootModule.run
-                      { projectNamespace
-                      , statementNames =
-                          Deps.Prelude.List.map
-                            QueryGen.Output
-                            Text
-                            ( \(query : QueryGen.Output) ->
-                                query.statementModuleName
-                            )
-                            queries
-                      }
-
-              in  { path, content }
-
         let rootNamespace = Deps.Prelude.Text.concatSep "." config.rootNamespace
 
         let customTypeFiles
@@ -158,7 +137,6 @@ let combineOutputs =
         in      [ cabalProjectFile
                 , cabalFile
                 , preludeFile
-                , rootModuleFile
                 , customTypesFile
                 , statementsFile
                 ]
