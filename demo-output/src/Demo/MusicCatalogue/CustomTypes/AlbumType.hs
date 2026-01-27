@@ -1,6 +1,6 @@
 module Demo.MusicCatalogue.CustomTypes.AlbumType where
 
-import Demo.MusicCatalogue.Preludes.CustomType
+import Demo.MusicCatalogue.Prelude
 import Hasql.Mapping.Scalar
 
 -- |

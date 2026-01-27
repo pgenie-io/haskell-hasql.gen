@@ -1,5 +1,6 @@
 module Demo.MusicCatalogue.Statements.GetTrackDetails where
 
+import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
@@ -34,7 +35,7 @@ import qualified Data.Vector as Vector
 -- > queries/get_track_details.sql
 --
 data GetTrackDetails = GetTrackDetails
-  { trackId :: Uuid
+  { trackId :: UUID
   }
   deriving stock (Eq, Show)
 
@@ -42,21 +43,21 @@ data GetTrackDetails = GetTrackDetails
 type GetTrackDetailsResult = GetTrackDetailsResultRow
 
 data GetTrackDetailsResultRow = GetTrackDetailsResultRow
-  { id :: Uuid,
+  { id :: UUID,
     title :: Text,
     duration :: Maybe (Int32),
     trackNumber :: Maybe (Int32),
-    albumId :: Uuid,
+    albumId :: UUID,
     albumTitle :: Text,
-    artistId :: Uuid,
+    artistId :: UUID,
     artistName :: Text,
     genre :: Maybe (Text)
   }
 
 instance IsStatement GetTrackDetails where
-  type ResultOf GetTrackDetails = GetTrackDetailsResult
+  type Result GetTrackDetails = GetTrackDetailsResult
 
-  statementOf = Statement.prepared sql encoder decoder
+  statement = Statement.prepared sql encoder decoder
     where
       sql =
         "SELECT \n\

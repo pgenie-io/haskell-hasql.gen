@@ -1,5 +1,6 @@
 module Demo.MusicCatalogue.Statements.CreatePlaylist where
 
+import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
@@ -24,7 +25,7 @@ import qualified Data.Vector as Vector
 data CreatePlaylist = CreatePlaylist
   { name :: Text,
     description :: Maybe (Text),
-    userId :: Uuid
+    userId :: UUID
   }
   deriving stock (Eq, Show)
 
@@ -32,15 +33,15 @@ data CreatePlaylist = CreatePlaylist
 type CreatePlaylistResult = CreatePlaylistResultRow
 
 data CreatePlaylistResultRow = CreatePlaylistResultRow
-  { id :: Uuid,
+  { id :: UUID,
     name :: Text,
     createdAt :: LocalTime
   }
 
 instance IsStatement CreatePlaylist where
-  type ResultOf CreatePlaylist = CreatePlaylistResult
+  type Result CreatePlaylist = CreatePlaylistResult
 
-  statementOf = Statement.prepared sql encoder decoder
+  statement = Statement.prepared sql encoder decoder
     where
       sql =
         "INSERT INTO playlists (name, description, user_id, created_at)\n\

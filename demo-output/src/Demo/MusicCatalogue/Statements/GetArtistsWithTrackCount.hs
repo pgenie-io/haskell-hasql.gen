@@ -1,5 +1,6 @@
 module Demo.MusicCatalogue.Statements.GetArtistsWithTrackCount where
 
+import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
@@ -37,16 +38,16 @@ data GetArtistsWithTrackCount = GetArtistsWithTrackCount
 type GetArtistsWithTrackCountResult = Vector.Vector GetArtistsWithTrackCountResultRow
 
 data GetArtistsWithTrackCountResultRow = GetArtistsWithTrackCountResultRow
-  { id :: Uuid,
+  { id :: UUID,
     name :: Text,
     trackCount :: Int32,
     albumCount :: Int32
   }
 
 instance IsStatement GetArtistsWithTrackCount where
-  type ResultOf GetArtistsWithTrackCount = GetArtistsWithTrackCountResult
+  type Result GetArtistsWithTrackCount = GetArtistsWithTrackCountResult
 
-  statementOf = Statement.prepared sql encoder decoder
+  statement = Statement.prepared sql encoder decoder
     where
       sql =
         "SELECT \n\

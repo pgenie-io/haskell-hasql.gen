@@ -1,5 +1,6 @@
 module Demo.MusicCatalogue.Statements.GetAlbumsByArtist where
 
+import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
@@ -26,7 +27,7 @@ import qualified Data.Vector as Vector
 -- > queries/get_albums_by_artist.sql
 --
 data GetAlbumsByArtist = GetAlbumsByArtist
-  { artistId :: Uuid
+  { artistId :: UUID
   }
   deriving stock (Eq, Show)
 
@@ -34,16 +35,16 @@ data GetAlbumsByArtist = GetAlbumsByArtist
 type GetAlbumsByArtistResult = Vector.Vector GetAlbumsByArtistResultRow
 
 data GetAlbumsByArtistResultRow = GetAlbumsByArtistResultRow
-  { id :: Uuid,
+  { id :: UUID,
     title :: Text,
     releaseYear :: Maybe (Int32),
     albumType :: CustomTypes.AlbumType
   }
 
 instance IsStatement GetAlbumsByArtist where
-  type ResultOf GetAlbumsByArtist = GetAlbumsByArtistResult
+  type Result GetAlbumsByArtist = GetAlbumsByArtistResult
 
-  statementOf = Statement.prepared sql encoder decoder
+  statement = Statement.prepared sql encoder decoder
     where
       sql =
         "SELECT \n\

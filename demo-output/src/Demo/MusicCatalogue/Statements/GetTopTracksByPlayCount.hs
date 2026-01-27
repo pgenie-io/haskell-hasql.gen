@@ -1,5 +1,6 @@
 module Demo.MusicCatalogue.Statements.GetTopTracksByPlayCount where
 
+import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
@@ -43,7 +44,7 @@ data GetTopTracksByPlayCount = GetTopTracksByPlayCount
 type GetTopTracksByPlayCountResult = Vector.Vector GetTopTracksByPlayCountResultRow
 
 data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
-  { id :: Uuid,
+  { id :: UUID,
     title :: Text,
     artistName :: Text,
     albumTitle :: Text,
@@ -51,9 +52,9 @@ data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
   }
 
 instance IsStatement GetTopTracksByPlayCount where
-  type ResultOf GetTopTracksByPlayCount = GetTopTracksByPlayCountResult
+  type Result GetTopTracksByPlayCount = GetTopTracksByPlayCountResult
 
-  statementOf = Statement.prepared sql encoder decoder
+  statement = Statement.prepared sql encoder decoder
     where
       sql =
         "SELECT \n\

@@ -49,10 +49,14 @@ let render =
 
         let result = result statementModuleName
 
+        let projectNamespace =
+              Deps.Prelude.Text.concatSep "." config.rootNamespace
+
         let statementModuleContents =
               ''
               module ${statementModuleNamespace} where
 
+              import ${projectNamespace}.Prelude
               import qualified Hasql.Statement as Statement
               import qualified Hasql.Decoders as Decoders
               import qualified Hasql.Encoders as Encoders
@@ -79,9 +83,9 @@ let render =
               ${Deps.Prelude.Text.concatSep "\n\n" result.typeDecls}
 
               instance IsStatement ${statementTypeName} where
-                type ResultOf ${statementTypeName} = ${statementResultTypeName}
+                type Result ${statementTypeName} = ${statementResultTypeName}
 
-                statementOf = Statement.prepared sql encoder decoder
+                statement = Statement.prepared sql encoder decoder
                   where
                     sql =
                       ${Deps.Lude.Extensions.Text.indent 8 fragments.exp}

@@ -1,5 +1,6 @@
 module Demo.MusicCatalogue.Statements.SearchTracksByTitle where
 
+import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
@@ -37,7 +38,7 @@ data SearchTracksByTitle = SearchTracksByTitle
 type SearchTracksByTitleResult = Vector.Vector SearchTracksByTitleResultRow
 
 data SearchTracksByTitleResultRow = SearchTracksByTitleResultRow
-  { id :: Uuid,
+  { id :: UUID,
     title :: Text,
     duration :: Maybe (Int32),
     albumTitle :: Text,
@@ -45,9 +46,9 @@ data SearchTracksByTitleResultRow = SearchTracksByTitleResultRow
   }
 
 instance IsStatement SearchTracksByTitle where
-  type ResultOf SearchTracksByTitle = SearchTracksByTitleResult
+  type Result SearchTracksByTitle = SearchTracksByTitleResult
 
-  statementOf = Statement.prepared sql encoder decoder
+  statement = Statement.prepared sql encoder decoder
     where
       sql =
         "SELECT \n\

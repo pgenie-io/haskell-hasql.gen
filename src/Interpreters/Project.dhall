@@ -21,12 +21,8 @@ let combineOutputs =
       \(input : Input) ->
       \(queries : List QueryGen.Output) ->
       \(customTypes : List CustomTypeGen.Output) ->
-        let Query =
-              { statementModuleName : Text
-              , statementModuleNamespace : Text
-              , statementModulePath : Text
-              , statementModuleContents : Text
-              }
+        let projectNamespace =
+              Deps.Prelude.Text.concatSep "." config.rootNamespace
 
         let rootModuleFile
             : Sdk.File.Type
@@ -36,13 +32,14 @@ let combineOutputs =
 
               let content =
                     Templates.RootModule.run
-                      { projectNamespace =
-                          Deps.Prelude.Text.concatSep "." config.rootNamespace
+                      { projectNamespace
                       , statementNames =
                           Deps.Prelude.List.map
-                            Query
+                            QueryGen.Output
                             Text
-                            (\(query : Query) -> query.statementModuleName)
+                            ( \(query : QueryGen.Output) ->
+                                query.statementModuleName
+                            )
                             queries
                       }
 
@@ -63,9 +60,9 @@ let combineOutputs =
         let statementFiles
             : List Sdk.File.Type
             = Deps.Prelude.List.map
-                Query
+                QueryGen.Output
                 Sdk.File.Type
-                ( \(query : Query) ->
+                ( \(query : QueryGen.Output) ->
                     { path = query.statementModulePath
                     , content = query.statementModuleContents
                     }
@@ -75,6 +72,13 @@ let combineOutputs =
         let cabalProjectFile =
               { path = "cabal.project"
               , content = Templates.CabalProjectFile.run {=}
+              }
+
+        let preludeFile =
+              { path =
+                  Templates.ModulePath.run
+                    { namespace = config.rootNamespace # [ "Prelude" ] }
+              , content = Templates.PreludeModule.run { projectNamespace }
               }
 
         let cabalFile
@@ -110,7 +114,7 @@ let combineOutputs =
 
               in  { path, content }
 
-        in      [ cabalProjectFile, cabalFile, rootModuleFile ]
+        in      [ cabalProjectFile, cabalFile, preludeFile, rootModuleFile ]
               # customTypeFiles
               # statementFiles
             : List Sdk.File.Type

@@ -41,7 +41,7 @@ in  Algebra.module
           let preludeModuleName =
                 Deps.Prelude.Text.concatSep
                   "."
-                  (config.rootNamespace # [ "Preludes", "CustomType" ])
+                  (config.rootNamespace # [ "Prelude" ])
 
           in  merge
                 { Composite =

@@ -21,9 +21,9 @@ let run =
         merge
           { Bool = ok "Bool" "bool"
           , Bytea = ok "ByteString" "bytea"
-          , Char = unsupportedType "char"
+          , Char = ok "Char" "char"
           , Cidr = unsupportedType "cidr"
-          , Date = unsupportedType "date"
+          , Date = ok "Day" "date"
           , Datemultirange = unsupportedType "datemultirange"
           , Daterange = unsupportedType "daterange"
           , Float4 = ok "Float" "float4"
@@ -54,7 +54,7 @@ let run =
           , Tsrange = unsupportedType "tsrange"
           , Tstzmultirange = unsupportedType "tstzmultirange"
           , Tstzrange = unsupportedType "tstzrange"
-          , Uuid = ok "Uuid" "uuid"
+          , Uuid = ok "UUID" "uuid"
           , Xml = unsupportedType "xml"
           }
           input

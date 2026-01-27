@@ -14,4 +14,5 @@
 , RecordDeclaration = ./RecordDeclaration.dhall
 , ReexportModule = ./ReexportModule.dhall
 , CabalProjectFile = ./CabalProjectFile.dhall
+, PreludeModule = ./PreludeModule.dhall
 }

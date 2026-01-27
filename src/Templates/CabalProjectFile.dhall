@@ -6,7 +6,7 @@ in  Algebra.module
       Params
       ( \(params : Params) ->
           ''
-          package: .
+          packages: .
 
           source-repository-package
             type: git

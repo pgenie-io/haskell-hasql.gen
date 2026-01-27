@@ -1,17 +1,6 @@
 let Algebra = ./Algebra/package.dhall
 
-let Deps = ../Deps/package.dhall
-
-let DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
-
-let DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
-
-let Field =
-      { name : Text, sig : Text, nullable : Bool, dimensionality : Natural }
-
-let Params =
-      { projectNamespace : Text
-      }
+let Params = { projectNamespace : Text }
 
 let run =
       \(params : Params) ->
@@ -30,7 +19,7 @@ let run =
         import Data.ByteString as Exports (ByteString)
         import Data.Time as Exports (Day, TimeOfDay, LocalTime, UTCTime)
         import Data.Vector as Exports (Vector)
-          
+
         ''
 
-in  { Params, Field, run }
+in  Algebra.module Params run
