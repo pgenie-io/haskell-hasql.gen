@@ -139,6 +139,7 @@ let combineOutputs =
                             )
                             customTypes
                       , version = "0"
+                      , dbName = Deps.CodegenKit.Name.toTextInSnake input.name
                       }
 
               in  { path, content }

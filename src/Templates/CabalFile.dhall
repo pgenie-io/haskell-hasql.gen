@@ -8,6 +8,7 @@ let Params =
       , customTypeNames : List Text
       , statementModuleNames : List Text
       , version : Text
+      , dbName : Text
       }
 
 in  Algebra.module
@@ -17,6 +18,18 @@ in  Algebra.module
           cabal-version: 3.4
           name: ${params.packageName}
           version: ${params.version}
+          synopsis: Type-safe mapping to the "${params.dbName}" database
+          description:
+            This package provides type-safe Haskell bindings for the @${params.dbName}@ database.
+            It was generated from SQL queries using the [@pGenie@](https://pgenie.io) code generator.
+
+            The package features:
+
+            * Ready-to-use statement definitions for all queries with associated parameter and result types
+            * Mappings for PostgreSQL enums and composite types
+
+            All statements are defined using the @hasql-mapping@ library and can be
+            executed using the @hasql-execution@ package or directly with @hasql@.
 
           library
             hs-source-dirs: src
