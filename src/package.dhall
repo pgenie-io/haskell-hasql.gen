@@ -8,9 +8,9 @@ let Config = ./Config.dhall
 
 let ProjectInterpreter = ./Interpreters/Project.dhall
 
-in  Sdk.Gen
-      Config.Type
-      ( \(config : Config.Type) ->
+in  Sdk.module
+      Config
+      ( \(config : Config) ->
         \(project : Sdk.Project.Project) ->
           let interpreterConfig =
                 { rootNamespace =

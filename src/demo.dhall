@@ -1,16 +1,24 @@
-let Deps = ../../src/Deps/package.dhall
+-- Intended to be executed with:
+--
+-- ```bash
+-- dhall to-directory-tree --file src/demo.dhall --output demo-output --allow-path-separators
+-- ```
+--
+-- It however assumes that you have a proper version of Dhall installed.
+--
+-- The changes required for this to work are in [this PR](https://github.com/dhall-lang/dhall-haskell/pull/2448).
+-- You can acquire this version of Dhall by installing from https://github.com/nikita-volkov/dhall-haskell.
+let Deps = ./Deps/package.dhall
 
 let Prelude = Deps.Prelude
 
 let Sdk = Deps.Sdk
 
-let Config = ../../src/Config.dhall
-
-let Gen = ../../src/package.dhall
+let Gen = ./package.dhall
 
 let project = Sdk.Fixtures._1
 
-let config = Config.default
+let config = {=}
 
 let compiledFiles
     : Sdk.Compiled.Type (List Sdk.File.Type)
@@ -30,9 +38,7 @@ let files
               # Prelude.List.map
                   Sdk.File.Type
                   (Prelude.Map.Entry Text Text)
-                  ( \(file : Sdk.File.Type) ->
-                      Prelude.Map.keyText file.path file.content
-                  )
+                  Sdk.File.toMapEntry
                   files
         }
         compiledFiles.result
