@@ -1,3 +1,7 @@
+-- | Mappings to all queries in the project.
+-- 
+-- Hasql statements are provided by the 'Hasql.Mapping.IsStatement' typeclass instances indexed by the statement parameter type.
+-- 
 module Demo.MusicCatalogue.Statements 
   ( module Demo.MusicCatalogue.Statements.GetAlbumsByArtist,
     module Demo.MusicCatalogue.Statements.SearchTracksByTitle,

@@ -69,7 +69,8 @@ let combineOutputs =
                     { namespace = config.rootNamespace # [ "CustomTypes" ] }
               , content =
                   Templates.ReexportModule.run
-                    { namespace = rootNamespace ++ ".CustomTypes"
+                    { haddock = None Text
+                    , namespace = rootNamespace ++ ".CustomTypes"
                     , reexportedModules =
                         Deps.Prelude.List.map
                           CustomTypeGen.Output
@@ -88,7 +89,13 @@ let combineOutputs =
                     { namespace = config.rootNamespace # [ "Statements" ] }
               , content =
                   Templates.ReexportModule.run
-                    { namespace = rootNamespace ++ ".Statements"
+                    { haddock = Some
+                        ''
+                        Mappings to all queries in the project.
+
+                        Hasql statements are provided by the 'Hasql.Mapping.IsStatement' typeclass instances indexed by the statement parameter type.
+                        ''
+                    , namespace = rootNamespace ++ ".Statements"
                     , reexportedModules =
                         Deps.Prelude.List.map
                           QueryGen.Output
