@@ -29,13 +29,16 @@ data CreatePlaylist = CreatePlaylist
   }
   deriving stock (Eq, Show)
 
+-- | Result of the statement parameterised by 'CreatePlaylist'.
 type CreatePlaylistResult = CreatePlaylistResultRow
 
+-- | Row of 'CreatePlaylistResult'.
 data CreatePlaylistResultRow = CreatePlaylistResultRow
   { id :: UUID,
     name :: Text,
     createdAt :: LocalTime
   }
+
 
 instance Mapping.IsStatement CreatePlaylist where
   type Result CreatePlaylist = CreatePlaylistResult

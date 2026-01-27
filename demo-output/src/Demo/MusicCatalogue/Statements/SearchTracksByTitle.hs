@@ -34,8 +34,10 @@ newtype SearchTracksByTitle = SearchTracksByTitle
   }
   deriving stock (Eq, Show)
 
+-- | Result of the statement parameterised by 'SearchTracksByTitle'.
 type SearchTracksByTitleResult = Vector.Vector SearchTracksByTitleResultRow
 
+-- | Row of 'SearchTracksByTitleResult'.
 data SearchTracksByTitleResultRow = SearchTracksByTitleResultRow
   { id :: UUID,
     title :: Text,
@@ -43,6 +45,7 @@ data SearchTracksByTitleResultRow = SearchTracksByTitleResultRow
     albumTitle :: Text,
     artistName :: Text
   }
+
 
 instance Mapping.IsStatement SearchTracksByTitle where
   type Result SearchTracksByTitle = SearchTracksByTitleResult

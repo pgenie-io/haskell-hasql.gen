@@ -79,7 +79,7 @@ let render =
                         )
                         params
                   }}
-              ${Deps.Prelude.Text.concatSep "\n\n" result.typeDecls}
+              ${result.typeDecls}
 
               instance Mapping.IsStatement ${statementTypeName} where
                 type Result ${statementTypeName} = ${statementResultTypeName}

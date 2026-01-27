@@ -32,14 +32,17 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 data GetArtistsWithTrackCount = GetArtistsWithTrackCount
   deriving stock (Eq, Show)
 
+-- | Result of the statement parameterised by 'GetArtistsWithTrackCount'.
 type GetArtistsWithTrackCountResult = Vector.Vector GetArtistsWithTrackCountResultRow
 
+-- | Row of 'GetArtistsWithTrackCountResult'.
 data GetArtistsWithTrackCountResultRow = GetArtistsWithTrackCountResultRow
   { id :: UUID,
     name :: Text,
     trackCount :: Int32,
     albumCount :: Int32
   }
+
 
 instance Mapping.IsStatement GetArtistsWithTrackCount where
   type Result GetArtistsWithTrackCount = GetArtistsWithTrackCountResult

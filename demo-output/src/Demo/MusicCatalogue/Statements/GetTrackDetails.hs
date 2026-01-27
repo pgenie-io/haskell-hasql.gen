@@ -39,8 +39,10 @@ newtype GetTrackDetails = GetTrackDetails
   }
   deriving stock (Eq, Show)
 
+-- | Result of the statement parameterised by 'GetTrackDetails'.
 type GetTrackDetailsResult = GetTrackDetailsResultRow
 
+-- | Row of 'GetTrackDetailsResult'.
 data GetTrackDetailsResultRow = GetTrackDetailsResultRow
   { id :: UUID,
     title :: Text,
@@ -52,6 +54,7 @@ data GetTrackDetailsResultRow = GetTrackDetailsResultRow
     artistName :: Text,
     genre :: Maybe (Text)
   }
+
 
 instance Mapping.IsStatement GetTrackDetails where
   type Result GetTrackDetails = GetTrackDetailsResult

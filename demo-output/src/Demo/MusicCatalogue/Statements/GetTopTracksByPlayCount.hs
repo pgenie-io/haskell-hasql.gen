@@ -40,8 +40,10 @@ newtype GetTopTracksByPlayCount = GetTopTracksByPlayCount
   }
   deriving stock (Eq, Show)
 
+-- | Result of the statement parameterised by 'GetTopTracksByPlayCount'.
 type GetTopTracksByPlayCountResult = Vector.Vector GetTopTracksByPlayCountResultRow
 
+-- | Row of 'GetTopTracksByPlayCountResult'.
 data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
   { id :: UUID,
     title :: Text,
@@ -49,6 +51,7 @@ data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
     albumTitle :: Text,
     playCount :: Int32
   }
+
 
 instance Mapping.IsStatement GetTopTracksByPlayCount where
   type Result GetTopTracksByPlayCount = GetTopTracksByPlayCountResult

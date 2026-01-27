@@ -8,8 +8,7 @@ let Member = ./Member.dhall
 
 let Input = Deps.Sdk.Project.ResultRows
 
-let Output =
-      Text -> { decoderExp : Text, rowTypeDecl : Text, resultTypeDecl : Text }
+let Output = Text -> { decoderExp : Text, typeDecls : Text }
 
 let run =
       \(config : Algebra.Config) ->
@@ -63,33 +62,41 @@ let run =
                                         columns
                                     )}pure ${rowTypeName} {..}''
 
-                        let output =
+                        let resolvedCardinality =
                               merge
                                 { Optional =
                                   { decoderExp =
                                       "Decoders.rowMaybe ${rowDecoderExp}"
-                                  , rowTypeDecl
                                   , resultTypeDecl =
                                       "type ${typeNameBase}Result = Maybe ${rowTypeName}"
                                   }
                                 , Single =
                                   { decoderExp =
                                       "Decoders.singleRow ${rowDecoderExp}"
-                                  , rowTypeDecl
                                   , resultTypeDecl =
                                       "type ${typeNameBase}Result = ${rowTypeName}"
                                   }
                                 , Multiple =
                                   { decoderExp =
                                       "Decoders.rowVector ${rowDecoderExp}"
-                                  , rowTypeDecl
                                   , resultTypeDecl =
                                       "type ${typeNameBase}Result = Vector.Vector ${rowTypeName}"
                                   }
                                 }
                                 input.cardinality
 
-                        in  output
+                        let typeDecls =
+                              ''
+                              -- | Result of the statement parameterised by '${typeNameBase}'.
+                              ${resolvedCardinality.resultTypeDecl}
+
+                              -- | Row of '${typeNameBase}Result'.
+                              ${rowTypeDecl}
+                              ''
+
+                        in  { decoderExp = resolvedCardinality.decoderExp
+                            , typeDecls
+                            }
                     )
               )
               compiledColumns

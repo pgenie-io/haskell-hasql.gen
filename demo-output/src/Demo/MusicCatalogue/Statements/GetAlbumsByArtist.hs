@@ -31,14 +31,17 @@ newtype GetAlbumsByArtist = GetAlbumsByArtist
   }
   deriving stock (Eq, Show)
 
+-- | Result of the statement parameterised by 'GetAlbumsByArtist'.
 type GetAlbumsByArtistResult = Vector.Vector GetAlbumsByArtistResultRow
 
+-- | Row of 'GetAlbumsByArtistResult'.
 data GetAlbumsByArtistResultRow = GetAlbumsByArtistResultRow
   { id :: UUID,
     title :: Text,
     releaseYear :: Maybe (Int32),
     albumType :: CustomTypes.AlbumType
   }
+
 
 instance Mapping.IsStatement GetAlbumsByArtist where
   type Result GetAlbumsByArtist = GetAlbumsByArtistResult

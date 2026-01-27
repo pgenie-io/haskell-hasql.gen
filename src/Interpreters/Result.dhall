@@ -6,7 +6,7 @@ let ResultRows = ./ResultRows.dhall
 
 let Input = Deps.Sdk.Project.Result
 
-let Output = Text -> { typeDecls : List Text, decoderExp : Text }
+let Output = Text -> { typeDecls : Text, decoderExp : Text }
 
 let Result = Deps.Sdk.Compiled.Type Output
 
@@ -17,21 +17,17 @@ let run =
           ResultRows.Input
           input
           Result
-          ( \(resultRows : ResultRows.Input) ->
-              Deps.Sdk.Compiled.map
-                ResultRows.Output
-                Output
-                ( \(resultRows : ResultRows.Output) ->
-                  \(typeNameBase : Text) ->
-                    let resultRows = resultRows typeNameBase
-
-                    in  { typeDecls =
-                          [ resultRows.resultTypeDecl, resultRows.rowTypeDecl ]
-                        , decoderExp = resultRows.decoderExp
-                        }
-                )
-                (ResultRows.run config resultRows)
+          (ResultRows.run config)
+          ( Deps.Sdk.Compiled.ok
+              Output
+              ( \(typeNameBase : Text) ->
+                  { typeDecls =
+                      ''
+                      type ${typeNameBase}Result = Int
+                      ''
+                  , decoderExp = "fromIntegral <\$> Decoders.rowsAffected"
+                  }
+              )
           )
-          (Deps.Sdk.Compiled.message Output "TODO: Result")
 
 in  Algebra.module Input Output run
