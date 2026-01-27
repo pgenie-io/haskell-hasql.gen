@@ -4,7 +4,7 @@ let Deps = ../Deps/package.dhall
 
 let Haddock = ./Haddock.dhall
 
-let ReexportedModule = { haddock : Optional Text, namespace : Text }
+let ReexportedModule = { header : Optional Text, namespace : Text }
 
 let Params =
       { haddock : Optional Text
@@ -15,7 +15,7 @@ let Params =
 in      Algebra.module
           Params
           ( \(params : Params) ->
-              let haddock = Haddock.run { isDoc = True, text = params.haddock }
+              let haddock = Haddock.run params.haddock
 
               let importsBlock =
                     Deps.Prelude.Text.concatMapSep
@@ -32,8 +32,18 @@ in      Algebra.module
                       ReexportedModule
                       ( \(module : ReexportedModule) ->
                           let haddock =
-                                Haddock.run
-                                  { isDoc = False, text = module.haddock }
+                                Deps.Prelude.Optional.fold
+                                  Text
+                                  module.header
+                                  Text
+                                  ( \(header : Text) ->
+                                          "-- ** "
+                                      ++  Deps.Lude.Extensions.Text.prefixEachLine
+                                            "-- "
+                                            header
+                                      ++  "\n"
+                                  )
+                                  ""
 
                           in  "${haddock}module ${module.namespace},"
                       )

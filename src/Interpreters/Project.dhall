@@ -76,7 +76,7 @@ let combineOutputs =
                           CustomTypeGen.Output
                           Templates.ReexportModule.ReexportedModule
                           ( \(customType : CustomTypeGen.Output) ->
-                              { haddock = None Text
+                              { header = None Text
                               , namespace = customType.moduleNamespace
                               }
                           )

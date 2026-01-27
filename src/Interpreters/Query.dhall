@@ -115,7 +115,7 @@ let render =
               ''
 
         let statementsModuleReexportedModule =
-              { haddock = Some "** ${statementModuleName}"
+              { header = Some statementModuleName
               , namespace = statementModuleNamespace
               }
 
