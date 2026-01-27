@@ -21,8 +21,7 @@ data AlbumType
   deriving stock (Show, Eq, Ord, Enum, Bounded)
 
 instance IsScalar AlbumType where
-  valueEncoder :: Encoders.Value AlbumType
-  valueEncoder =
+  scalarEncoder =
     Encoders.enum
       (Just "music_catalogue")
       "album_type"
@@ -35,8 +34,7 @@ instance IsScalar AlbumType where
           SingleAlbumType -> "single"
       )
   
-  valueDecoder :: Decoders.Value AlbumType
-  valueDecoder =
+  scalarDecoder =
     Decoders.enum
       (Just "music_catalogue")
       "album_type"

@@ -77,19 +77,19 @@ instance IsStatement GetTrackDetails where
 
       encoder =
         mconcat
-          [ Encoders.param ((.trackId) >$< Encoders.nonNullable (valueEncoder))
+          [ Encoders.param ((.trackId) >$< Encoders.nonNullable (scalarEncoder))
           ]
 
       decoder =
         Decoders.singleRow do
-          id <- Decoders.column ((.id) <$> Decoders.nonNullable (valueDecoder))
-          title <- Decoders.column ((.title) <$> Decoders.nonNullable (valueDecoder))
-          duration <- Decoders.column ((.duration) <$> Decoders.nullable (valueDecoder))
-          trackNumber <- Decoders.column ((.trackNumber) <$> Decoders.nullable (valueDecoder))
-          albumId <- Decoders.column ((.albumId) <$> Decoders.nonNullable (valueDecoder))
-          albumTitle <- Decoders.column ((.albumTitle) <$> Decoders.nonNullable (valueDecoder))
-          artistId <- Decoders.column ((.artistId) <$> Decoders.nonNullable (valueDecoder))
-          artistName <- Decoders.column ((.artistName) <$> Decoders.nonNullable (valueDecoder))
-          genre <- Decoders.column ((.genre) <$> Decoders.nullable (valueDecoder))
+          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          title <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          duration <- Decoders.column (Decoders.nullable (scalarDecoder))
+          trackNumber <- Decoders.column (Decoders.nullable (scalarDecoder))
+          albumId <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          albumTitle <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          artistId <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          artistName <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          genre <- Decoders.column (Decoders.nullable (scalarDecoder))
           pure GetTrackDetailsResultRow {..}
 

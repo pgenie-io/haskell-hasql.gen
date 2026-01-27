@@ -63,15 +63,15 @@ instance IsStatement SearchTracksByTitle where
 
       encoder =
         mconcat
-          [ Encoders.param ((.searchTerm) >$< Encoders.nonNullable (valueEncoder))
+          [ Encoders.param ((.searchTerm) >$< Encoders.nonNullable (scalarEncoder))
           ]
 
       decoder =
         Decoders.rowVector do
-          id <- Decoders.column ((.id) <$> Decoders.nonNullable (valueDecoder))
-          title <- Decoders.column ((.title) <$> Decoders.nonNullable (valueDecoder))
-          duration <- Decoders.column ((.duration) <$> Decoders.nullable (valueDecoder))
-          albumTitle <- Decoders.column ((.albumTitle) <$> Decoders.nonNullable (valueDecoder))
-          artistName <- Decoders.column ((.artistName) <$> Decoders.nonNullable (valueDecoder))
+          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          title <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          duration <- Decoders.column (Decoders.nullable (scalarDecoder))
+          albumTitle <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          artistName <- Decoders.column (Decoders.nonNullable (scalarDecoder))
           pure SearchTracksByTitleResultRow {..}
 

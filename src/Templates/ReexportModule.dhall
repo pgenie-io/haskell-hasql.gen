@@ -1,8 +1,6 @@
-let Algebra = ../Algebras/Template/package.dhall
+let Algebra = ./Algebra/package.dhall
 
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
+let Deps = ../Deps/package.dhall
 
 let Params = { namespace : Text, reexportedModules : List Text }
 
@@ -10,14 +8,14 @@ in  Algebra.module
       Params
       ( \(params : Params) ->
           let importsBlock =
-                Prelude.Text.concatMapSep
+                Deps.Prelude.Text.concatMapSep
                   "\n"
                   Text
                   (\(namespace : Text) -> "import ${namespace}")
                   params.reexportedModules
 
           let exportsBlock =
-                Prelude.Text.concatMapSep
+                Deps.Prelude.Text.concatMapSep
                   "\n"
                   Text
                   (\(statement : Text) -> "module ${statement},")
@@ -25,7 +23,7 @@ in  Algebra.module
 
           in  ''
               module ${params.namespace} 
-                ( ${Lude.Extensions.Text.indent 4 exportsBlock}
+                ( ${Deps.Lude.Extensions.Text.indent 4 exportsBlock}
                 )
               where
 

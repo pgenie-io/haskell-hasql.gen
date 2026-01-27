@@ -1,12 +1,12 @@
-let Prelude = ./Prelude.dhall
+let Deps = ./Deps/package.dhall
 
-let Sdk = ./Sdk.dhall
+let Sdk = Deps.Sdk
 
-let CodegenKit = ./CodegenKit.dhall
+let CodegenKit = Deps.CodegenKit
 
 let Config = ./Config.dhall
 
-let Interpreter = ./Interpreter/package.dhall
+let ProjectInterpreter = ./Interpreters/Project.dhall
 
 in  Sdk.Gen
       Config.Type
@@ -19,5 +19,5 @@ in  Sdk.Gen
                   ]
                 }
 
-          in  Interpreter.Modules.Project.run interpreterConfig project
+          in  ProjectInterpreter.run interpreterConfig project
       )

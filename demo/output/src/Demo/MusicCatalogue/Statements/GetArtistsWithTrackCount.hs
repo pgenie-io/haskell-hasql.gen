@@ -67,9 +67,9 @@ instance IsStatement GetArtistsWithTrackCount where
 
       decoder =
         Decoders.rowVector do
-          id <- Decoders.column ((.id) <$> Decoders.nonNullable (valueDecoder))
-          name <- Decoders.column ((.name) <$> Decoders.nonNullable (valueDecoder))
-          trackCount <- Decoders.column ((.trackCount) <$> Decoders.nonNullable (valueDecoder))
-          albumCount <- Decoders.column ((.albumCount) <$> Decoders.nonNullable (valueDecoder))
+          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          name <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          trackCount <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          albumCount <- Decoders.column (Decoders.nonNullable (scalarDecoder))
           pure GetArtistsWithTrackCountResultRow {..}
 

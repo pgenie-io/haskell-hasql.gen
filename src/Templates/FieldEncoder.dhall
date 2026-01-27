@@ -1,8 +1,4 @@
-let Algebra = ../Algebras/Template/package.dhall
-
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
+let Algebra = ./Algebra/package.dhall
 
 let DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
 
@@ -27,7 +23,7 @@ in  Algebra.module
           ++  DimensionalityEncoderExp.run
                 { dimensionality = params.dimensionality
                 , elementIsNullable = params.elementIsNullable
-                , elementExp = "valueEncoder"
+                , elementExp = "scalarEncoder"
                 }
           ++  ")"
       )

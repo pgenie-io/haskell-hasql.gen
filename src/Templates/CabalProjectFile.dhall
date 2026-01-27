@@ -1,4 +1,4 @@
-let Algebra = ../Algebras/Template/package.dhall
+let Algebra = ./Algebra/package.dhall
 
 let Params = {}
 
@@ -11,6 +11,6 @@ in  Algebra.module
           source-repository-package
             type: git
             location: https://github.com/nikita-volkov/hasql-mapping
-            tag: 700db9ca5a0bebb1016d8100a707d61f68455458
+            tag: 14831e9cdea46b8b23148f4cd5f77d2a0bf81239
           ''
       )

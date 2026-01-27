@@ -1,1 +1,0 @@
-{ StatementModule = ./StatementModule/package.dhall }

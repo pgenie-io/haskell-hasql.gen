@@ -1,25 +1,14 @@
-let Algebra = ../Algebras/Template/package.dhall
-
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
+let Algebra = ./Algebra/package.dhall
 
 let DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
 
 let Params =
-      { name : Text
-      , nullable : Bool
-      , dimensionality : Natural
-      , elementIsNullable : Bool
-      }
+      { nullable : Bool, dimensionality : Natural, elementIsNullable : Bool }
 
 in  Algebra.module
       Params
       ( \(params : Params) ->
-              "(."
-          ++  params.name
-          ++  ") <\$> "
-          ++  ( if    params.nullable
+              ( if    params.nullable
                 then  "Decoders.nullable"
                 else  "Decoders.nonNullable"
               )
@@ -27,7 +16,7 @@ in  Algebra.module
           ++  DimensionalityDecoderExp.run
                 { dimensionality = params.dimensionality
                 , elementIsNullable = params.elementIsNullable
-                , elementExp = "valueDecoder"
+                , elementExp = "scalarDecoder"
                 }
           ++  ")"
       )

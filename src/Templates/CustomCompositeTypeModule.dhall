@@ -1,14 +1,6 @@
-let Algebra = ../Algebras/Template/package.dhall
+let Algebra = ./Algebra/package.dhall
 
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
-
-let DimensionalityEncoderExp = ./DimensionalityEncoderExp.dhall
-
-let DimensionalityDecoderExp = ./DimensionalityDecoderExp.dhall
-
-let FieldEncoder = ./FieldEncoder.dhall
+let Deps = ../Deps/package.dhall
 
 let Params =
       { preludeModuleName : Text
@@ -32,9 +24,9 @@ let run =
         -- |
         -- Representation of the @${params.pgTypeName}@ user-declared PostgreSQL record type.
         data ${params.typeName} = ${params.typeName}
-          { ${Lude.Extensions.Text.indent
+          { ${Deps.Lude.Extensions.Text.indent
                 4
-                ( Prelude.Text.concatSep
+                ( Deps.Prelude.Text.concatSep
                     ''
                     ,
                     ''
@@ -44,15 +36,14 @@ let run =
           deriving stock (Show, Eq, Ord)
 
         instance IsScalar ${params.typeName} where
-          valueEncoder :: Encoders.Value ${params.typeName}
-          valueEncoder =
+          scalarEncoder =
             Encoders.composite
               (Just "${params.pgSchemaName}")
               "${params.pgTypeName}"
               ( mconcat
-                  [ ${Lude.Extensions.Text.indent
+                  [ ${Deps.Lude.Extensions.Text.indent
                         12
-                        ( Prelude.Text.concatMapSep
+                        ( Deps.Prelude.Text.concatMapSep
                             ''
                             ,
                             ''
@@ -63,15 +54,14 @@ let run =
                   ]
               )
           
-          valueDecoder :: Decoders.Value ${params.typeName}
-          valueDecoder =
+          scalarDecoder =
             Decoders.composite
               (Just "${params.pgSchemaName}")
               "${params.pgTypeName}"
               ( ${params.typeName}
-                  <$> ${Lude.Extensions.Text.indent
+                  <$> ${Deps.Lude.Extensions.Text.indent
                           10
-                          ( Prelude.Text.concatMapSep
+                          ( Deps.Prelude.Text.concatMapSep
                               ''
 
                               <*> ''

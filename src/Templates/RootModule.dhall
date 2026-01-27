@@ -1,9 +1,7 @@
 -- | The API module that reexports and organizes everything to fit the UX.
-let Algebra = ../Algebras/Template/package.dhall
+let Algebra = ./Algebra/package.dhall
 
-let Prelude = ../Prelude.dhall
-
-let Lude = ../Lude.dhall
+let Deps = ../Deps/package.dhall
 
 let Params = { projectNamespace : Text, statementNames : List Text }
 
@@ -28,9 +26,9 @@ in  Algebra.module
               IsStatement,
               
               -- * Statements
-              ${Lude.Extensions.Text.indent
+              ${Deps.Lude.Extensions.Text.indent
                   4
-                  ( Prelude.Text.concatMapSep
+                  ( Deps.Prelude.Text.concatMapSep
                       ''
                       ,
                       ''
@@ -45,7 +43,7 @@ in  Algebra.module
             )
           where
 
-          ${Prelude.Text.concatMapSep
+          ${Deps.Prelude.Text.concatMapSep
               "\n"
               Text
               ( \(statementName : Text) ->

@@ -1,6 +1,8 @@
-let Prelude = ../../src/Prelude.dhall
+let Deps = ../../src/Deps/package.dhall
 
-let Sdk = ../../src/Sdk.dhall
+let Prelude = Deps.Prelude
+
+let Sdk = Deps.Sdk
 
 let Config = ../../src/Config.dhall
 
