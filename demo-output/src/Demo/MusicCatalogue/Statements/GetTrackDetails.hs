@@ -54,6 +54,7 @@ data GetTrackDetailsResultRow = GetTrackDetailsResultRow
     artistName :: Text,
     genre :: Maybe (Text)
   }
+  deriving stock (Show, Eq)
 
 
 instance Mapping.IsStatement GetTrackDetails where

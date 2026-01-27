@@ -45,6 +45,7 @@ data SearchTracksByTitleResultRow = SearchTracksByTitleResultRow
     albumTitle :: Text,
     artistName :: Text
   }
+  deriving stock (Show, Eq)
 
 
 instance Mapping.IsStatement SearchTracksByTitle where

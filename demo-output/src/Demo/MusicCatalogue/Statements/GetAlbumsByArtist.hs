@@ -41,6 +41,7 @@ data GetAlbumsByArtistResultRow = GetAlbumsByArtistResultRow
     releaseYear :: Maybe (Int32),
     albumType :: CustomTypes.AlbumType
   }
+  deriving stock (Show, Eq)
 
 
 instance Mapping.IsStatement GetAlbumsByArtist where

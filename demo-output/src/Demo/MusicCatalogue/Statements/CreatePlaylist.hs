@@ -38,6 +38,7 @@ data CreatePlaylistResultRow = CreatePlaylistResultRow
     name :: Text,
     createdAt :: LocalTime
   }
+  deriving stock (Show, Eq)
 
 
 instance Mapping.IsStatement CreatePlaylist where

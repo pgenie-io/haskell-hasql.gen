@@ -51,6 +51,7 @@ data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
     albumTitle :: Text,
     playCount :: Int32
   }
+  deriving stock (Show, Eq)
 
 
 instance Mapping.IsStatement GetTopTracksByPlayCount where

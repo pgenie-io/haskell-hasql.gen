@@ -42,6 +42,7 @@ data GetArtistsWithTrackCountResultRow = GetArtistsWithTrackCountResultRow
     trackCount :: Int32,
     albumCount :: Int32
   }
+  deriving stock (Show, Eq)
 
 
 instance Mapping.IsStatement GetArtistsWithTrackCount where

@@ -35,17 +35,19 @@ let run =
                         let rowTypeName = "${typeNameBase}ResultRow"
 
                         let rowTypeDecl =
-                              Templates.RecordDeclaration.run
-                                { name = rowTypeName
-                                , fields =
-                                    Deps.Prelude.List.map
-                                      Member.Output
-                                      Text
-                                      ( \(column : Member.Output) ->
-                                          column.fieldDeclaration
-                                      )
-                                      columns
-                                }
+                                  Templates.RecordDeclaration.run
+                                    { name = rowTypeName
+                                    , fields =
+                                        Deps.Prelude.List.map
+                                          Member.Output
+                                          Text
+                                          ( \(column : Member.Output) ->
+                                              column.fieldDeclaration
+                                          )
+                                          columns
+                                    }
+                              ++  "\n"
+                              ++  "  deriving stock (Show, Eq)"
 
                         let rowDecoderExp =
                               ''
