@@ -19,7 +19,12 @@ let run =
         module ${params.moduleName} where
 
         import ${params.preludeModuleName}
-        import Hasql.Mapping.Scalar
+        import qualified Data.Aeson as Aeson
+        import qualified Data.Vector as Vector
+        import qualified Hasql.Decoders as Decoders
+        import qualified Hasql.Encoders as Encoders
+        import qualified Hasql.Mapping as Mapping
+        import qualified Hasql.Mapping as Mapping
 
         -- |
         -- Representation of the @${params.pgTypeName}@ user-declared PostgreSQL record type.
@@ -35,7 +40,7 @@ let run =
           }
           deriving stock (Show, Eq, Ord)
 
-        instance IsScalar ${params.typeName} where
+        instance Mapping.IsScalar ${params.typeName} where
           scalarEncoder =
             Encoders.composite
               (Just "${params.pgSchemaName}")
@@ -43,12 +48,10 @@ let run =
               ( mconcat
                   [ ${Deps.Lude.Extensions.Text.indent
                         12
-                        ( Deps.Prelude.Text.concatMapSep
+                        ( Deps.Prelude.Text.concatSep
                             ''
                             ,
                             ''
-                            Text
-                            (\(field : Text) -> "Encoders.field (${field})")
                             params.fieldEncoderExps
                         )}
                   ]

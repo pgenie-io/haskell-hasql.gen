@@ -84,6 +84,7 @@ in  Algebra.module
                                               Text
                                               ( \(member : MemberGen.Output) ->
                                                   member.fieldEncoder
+                                                    "Encoders.field"
                                               )
                                               members
                                         , fieldDecoderExps =

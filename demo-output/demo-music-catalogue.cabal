@@ -16,8 +16,7 @@ library
     Demo.MusicCatalogue.Statements
     
   other-modules:
-    Demo.MusicCatalogue.Preludes.CustomType
-    Demo.MusicCatalogue.Preludes.Statement
+    Demo.MusicCatalogue.Prelude
     Demo.MusicCatalogue.CustomTypes.AlbumType
     Demo.MusicCatalogue.CustomTypes.TrackMetadata
     Demo.MusicCatalogue.Statements.GetAlbumsByArtist

@@ -32,8 +32,7 @@ in  Algebra.module
               ${params.rootNamespace}.Statements
               
             other-modules:
-              ${params.rootNamespace}.Preludes.CustomType
-              ${params.rootNamespace}.Preludes.Statement
+              ${params.rootNamespace}.Prelude
               ${Deps.Prelude.Text.concatMapSep
                   ("\n" ++ "    ")
                   Text

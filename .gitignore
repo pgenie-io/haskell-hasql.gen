@@ -20,3 +20,4 @@
 
 # Ignore noise:
 .DS_Store
+/demo-output/build.bash

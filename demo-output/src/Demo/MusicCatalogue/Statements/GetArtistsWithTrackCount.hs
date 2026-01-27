@@ -4,10 +4,10 @@ import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
-import qualified Data.ByteString as ByteString
-import qualified Data.Int as Int
-import qualified Data.Text as Text
+import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
+import qualified Hasql.Mapping as Mapping
+import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 
 -- |
 -- Parameters for the @get_artists_with_track_count@ query.
@@ -44,10 +44,10 @@ data GetArtistsWithTrackCountResultRow = GetArtistsWithTrackCountResultRow
     albumCount :: Int32
   }
 
-instance IsStatement GetArtistsWithTrackCount where
+instance Mapping.IsStatement GetArtistsWithTrackCount where
   type Result GetArtistsWithTrackCount = GetArtistsWithTrackCountResult
 
-  statement = Statement.prepared sql encoder decoder
+  statement = Statement.preparable sql encoder decoder
     where
       sql =
         "SELECT \n\
@@ -68,9 +68,9 @@ instance IsStatement GetArtistsWithTrackCount where
 
       decoder =
         Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          name <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          trackCount <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          albumCount <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          id <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          name <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          trackCount <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          albumCount <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
           pure GetArtistsWithTrackCountResultRow {..}
 

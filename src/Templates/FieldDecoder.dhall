@@ -16,7 +16,7 @@ in  Algebra.module
           ++  DimensionalityDecoderExp.run
                 { dimensionality = params.dimensionality
                 , elementIsNullable = params.elementIsNullable
-                , elementExp = "scalarDecoder"
+                , elementExp = "Mapping.scalarDecoder"
                 }
           ++  ")"
       )

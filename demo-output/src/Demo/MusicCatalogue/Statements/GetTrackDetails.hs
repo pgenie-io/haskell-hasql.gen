@@ -4,10 +4,10 @@ import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
-import qualified Data.ByteString as ByteString
-import qualified Data.Int as Int
-import qualified Data.Text as Text
+import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
+import qualified Hasql.Mapping as Mapping
+import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 
 -- |
 -- Parameters for the @get_track_details@ query.
@@ -54,10 +54,10 @@ data GetTrackDetailsResultRow = GetTrackDetailsResultRow
     genre :: Maybe (Text)
   }
 
-instance IsStatement GetTrackDetails where
+instance Mapping.IsStatement GetTrackDetails where
   type Result GetTrackDetails = GetTrackDetailsResult
 
-  statement = Statement.prepared sql encoder decoder
+  statement = Statement.preparable sql encoder decoder
     where
       sql =
         "SELECT \n\
@@ -78,19 +78,19 @@ instance IsStatement GetTrackDetails where
 
       encoder =
         mconcat
-          [ Encoders.param ((.trackId) >$< Encoders.nonNullable (scalarEncoder))
+          [ (.trackId) >$< Encoders.param (Encoders.nonNullable (Mapping.scalarEncoder))
           ]
 
       decoder =
         Decoders.singleRow do
-          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          title <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          duration <- Decoders.column (Decoders.nullable (scalarDecoder))
-          trackNumber <- Decoders.column (Decoders.nullable (scalarDecoder))
-          albumId <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          albumTitle <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          artistId <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          artistName <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          genre <- Decoders.column (Decoders.nullable (scalarDecoder))
+          id <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          title <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          duration <- Decoders.column (Decoders.nullable (Mapping.scalarDecoder))
+          trackNumber <- Decoders.column (Decoders.nullable (Mapping.scalarDecoder))
+          albumId <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          albumTitle <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          artistId <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          artistName <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          genre <- Decoders.column (Decoders.nullable (Mapping.scalarDecoder))
           pure GetTrackDetailsResultRow {..}
 

@@ -15,7 +15,7 @@ let Input = Model.Member
 let Output =
       { fieldName : Text
       , fieldDeclaration : Text
-      , fieldEncoder : Text
+      , fieldEncoder : Text -> Text
       , fieldDecoder : Text
       }
 
@@ -54,12 +54,14 @@ let run =
                     Output
                     { fieldName
                     , fieldEncoder =
-                        Templates.FieldEncoder.run
-                          { name = fieldName
-                          , nullable = input.isNullable
-                          , dimensionality
-                          , elementIsNullable
-                          }
+                        \(surroundingEncoder : Text) ->
+                          Templates.FieldEncoder.run
+                            { name = fieldName
+                            , nullable = input.isNullable
+                            , dimensionality
+                            , elementIsNullable
+                            , surroundingEncoder
+                            }
                     , fieldDecoder =
                         Templates.FieldDecoder.run
                           { nullable = input.isNullable

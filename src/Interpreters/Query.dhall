@@ -60,10 +60,10 @@ let render =
               import qualified Hasql.Statement as Statement
               import qualified Hasql.Decoders as Decoders
               import qualified Hasql.Encoders as Encoders
-              import qualified Data.ByteString as ByteString
-              import qualified Data.Int as Int
-              import qualified Data.Text as Text
+              import qualified Data.Aeson as Aeson
               import qualified Data.Vector as Vector
+              import qualified Hasql.Mapping as Mapping
+              import qualified ${projectNamespace}.CustomTypes as CustomTypes
 
               ${Templates.ParamsTypeDecl.run
                   { queryName = Deps.CodegenKit.Name.toTextInSnake input.name
@@ -82,10 +82,10 @@ let render =
 
               ${Deps.Prelude.Text.concatSep "\n\n" result.typeDecls}
 
-              instance IsStatement ${statementTypeName} where
+              instance Mapping.IsStatement ${statementTypeName} where
                 type Result ${statementTypeName} = ${statementResultTypeName}
 
-                statement = Statement.prepared sql encoder decoder
+                statement = Statement.preparable sql encoder decoder
                   where
                     sql =
                       ${Deps.Lude.Extensions.Text.indent 8 fragments.exp}
@@ -100,7 +100,7 @@ let render =
                                   ''
                                   MemberModule.Output
                                   ( \(member : MemberModule.Output) ->
-                                      "Encoders.param (${member.fieldEncoder})"
+                                      member.fieldEncoder "Encoders.param"
                                   )
                                   params
                               )}

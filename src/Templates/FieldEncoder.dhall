@@ -7,6 +7,7 @@ let Params =
       , nullable : Bool
       , dimensionality : Natural
       , elementIsNullable : Bool
+      , surroundingEncoder : Text
       }
 
 in  Algebra.module
@@ -15,6 +16,8 @@ in  Algebra.module
               "(."
           ++  params.name
           ++  ") >\$< "
+          ++  params.surroundingEncoder
+          ++  " ("
           ++  ( if    params.nullable
                 then  "Encoders.nullable"
                 else  "Encoders.nonNullable"
@@ -23,7 +26,7 @@ in  Algebra.module
           ++  DimensionalityEncoderExp.run
                 { dimensionality = params.dimensionality
                 , elementIsNullable = params.elementIsNullable
-                , elementExp = "scalarEncoder"
+                , elementExp = "Mapping.scalarEncoder"
                 }
-          ++  ")"
+          ++  "))"
       )

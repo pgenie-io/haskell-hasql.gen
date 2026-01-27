@@ -4,10 +4,10 @@ import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
-import qualified Data.ByteString as ByteString
-import qualified Data.Int as Int
-import qualified Data.Text as Text
+import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
+import qualified Hasql.Mapping as Mapping
+import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 
 -- |
 -- Parameters for the @get_top_tracks_by_play_count@ query.
@@ -51,10 +51,10 @@ data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
     playCount :: Int32
   }
 
-instance IsStatement GetTopTracksByPlayCount where
+instance Mapping.IsStatement GetTopTracksByPlayCount where
   type Result GetTopTracksByPlayCount = GetTopTracksByPlayCountResult
 
-  statement = Statement.prepared sql encoder decoder
+  statement = Statement.preparable sql encoder decoder
     where
       sql =
         "SELECT \n\
@@ -76,15 +76,15 @@ instance IsStatement GetTopTracksByPlayCount where
 
       encoder =
         mconcat
-          [ Encoders.param ((.limit) >$< Encoders.nonNullable (scalarEncoder))
+          [ (.limit) >$< Encoders.param (Encoders.nonNullable (Mapping.scalarEncoder))
           ]
 
       decoder =
         Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          title <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          artistName <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          albumTitle <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          playCount <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          id <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          title <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          artistName <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          albumTitle <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          playCount <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
           pure GetTopTracksByPlayCountResultRow {..}
 

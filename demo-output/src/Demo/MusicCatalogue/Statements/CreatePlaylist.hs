@@ -4,10 +4,10 @@ import Demo.MusicCatalogue.Prelude
 import qualified Hasql.Statement as Statement
 import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
-import qualified Data.ByteString as ByteString
-import qualified Data.Int as Int
-import qualified Data.Text as Text
+import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
+import qualified Hasql.Mapping as Mapping
+import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 
 -- |
 -- Parameters for the @create_playlist@ query.
@@ -38,10 +38,10 @@ data CreatePlaylistResultRow = CreatePlaylistResultRow
     createdAt :: LocalTime
   }
 
-instance IsStatement CreatePlaylist where
+instance Mapping.IsStatement CreatePlaylist where
   type Result CreatePlaylist = CreatePlaylistResult
 
-  statement = Statement.prepared sql encoder decoder
+  statement = Statement.preparable sql encoder decoder
     where
       sql =
         "INSERT INTO playlists (name, description, user_id, created_at)\n\
@@ -50,15 +50,15 @@ instance IsStatement CreatePlaylist where
 
       encoder =
         mconcat
-          [ Encoders.param ((.name) >$< Encoders.nonNullable (scalarEncoder)),
-            Encoders.param ((.description) >$< Encoders.nullable (scalarEncoder)),
-            Encoders.param ((.userId) >$< Encoders.nonNullable (scalarEncoder))
+          [ (.name) >$< Encoders.param (Encoders.nonNullable (Mapping.scalarEncoder)),
+            (.description) >$< Encoders.param (Encoders.nullable (Mapping.scalarEncoder)),
+            (.userId) >$< Encoders.param (Encoders.nonNullable (Mapping.scalarEncoder))
           ]
 
       decoder =
         Decoders.singleRow do
-          id <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          name <- Decoders.column (Decoders.nonNullable (scalarDecoder))
-          createdAt <- Decoders.column (Decoders.nonNullable (scalarDecoder))
+          id <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          name <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          createdAt <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
           pure CreatePlaylistResultRow {..}
 

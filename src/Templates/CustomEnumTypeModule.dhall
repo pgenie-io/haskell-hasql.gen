@@ -19,7 +19,9 @@ let run =
         module ${params.moduleName} where
 
         import ${params.preludeModuleName}
-        import Hasql.Mapping.Scalar
+        import qualified Hasql.Decoders as Decoders
+        import qualified Hasql.Encoders as Encoders
+        import qualified Hasql.Mapping as Mapping
 
         -- |
         -- Representation of the @${params.pgTypeName}@ user-declared PostgreSQL enumeration type.
@@ -40,7 +42,7 @@ let run =
                 )}
           deriving stock (Show, Eq, Ord, Enum, Bounded)
 
-        instance IsScalar ${params.typeName} where
+        instance Mapping.IsScalar ${params.typeName} where
           scalarEncoder =
             Encoders.enum
               (Just "${params.pgSchemaName}")

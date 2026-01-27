@@ -1,7 +1,9 @@
 module Demo.MusicCatalogue.CustomTypes.AlbumType where
 
 import Demo.MusicCatalogue.Prelude
-import Hasql.Mapping.Scalar
+import qualified Hasql.Decoders as Decoders
+import qualified Hasql.Encoders as Encoders
+import qualified Hasql.Mapping as Mapping
 
 -- |
 -- Representation of the @album_type@ user-declared PostgreSQL enumeration type.
@@ -20,7 +22,7 @@ data AlbumType
     SingleAlbumType
   deriving stock (Show, Eq, Ord, Enum, Bounded)
 
-instance IsScalar AlbumType where
+instance Mapping.IsScalar AlbumType where
   scalarEncoder =
     Encoders.enum
       (Just "music_catalogue")
