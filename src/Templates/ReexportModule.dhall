@@ -11,14 +11,14 @@ in  Algebra.module
                 Deps.Prelude.Text.concatMapSep
                   "\n"
                   Text
-                  (\(namespace : Text) -> "import ${namespace}")
+                  (\(module : Text) -> "import ${module}")
                   params.reexportedModules
 
           let exportsBlock =
                 Deps.Prelude.Text.concatMapSep
                   "\n"
                   Text
-                  (\(statement : Text) -> "module ${statement},")
+                  (\(module : Text) -> "module ${module},")
                   params.reexportedModules
 
           in  ''
