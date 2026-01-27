@@ -12,7 +12,7 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- |
 -- Parameters for the @get_top_tracks_by_play_count@ query.
 --
--- == SQL Template
+-- ==== SQL Template
 --
 -- > SELECT 
 -- >     t.id,
@@ -31,15 +31,14 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > ORDER BY play_count DESC
 -- > LIMIT $limit
 --
--- == Source Path
+-- ==== Source Path
 --
 -- > queries/get_top_tracks_by_play_count.sql
 --
-data GetTopTracksByPlayCount = GetTopTracksByPlayCount
+newtype GetTopTracksByPlayCount = GetTopTracksByPlayCount
   { limit :: Int32
   }
   deriving stock (Eq, Show)
-
 
 type GetTopTracksByPlayCountResult = Vector.Vector GetTopTracksByPlayCountResultRow
 

@@ -12,13 +12,13 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- |
 -- Parameters for the @create_playlist@ query.
 --
--- == SQL Template
+-- ==== SQL Template
 --
 -- > INSERT INTO playlists (name, description, user_id, created_at)
 -- > VALUES ($name, $description, $user_id, NOW())
 -- > RETURNING id, name, created_at
 --
--- == Source Path
+-- ==== Source Path
 --
 -- > queries/create_playlist.sql
 --
@@ -28,7 +28,6 @@ data CreatePlaylist = CreatePlaylist
     userId :: UUID
   }
   deriving stock (Eq, Show)
-
 
 type CreatePlaylistResult = CreatePlaylistResultRow
 

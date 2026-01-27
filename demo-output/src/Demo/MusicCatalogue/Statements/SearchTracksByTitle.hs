@@ -12,7 +12,7 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- |
 -- Parameters for the @search_tracks_by_title@ query.
 --
--- == SQL Template
+-- ==== SQL Template
 --
 -- > SELECT 
 -- >     t.id,
@@ -25,15 +25,14 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > JOIN artists ar ON a.artist_id = ar.id
 -- > WHERE t.title ILIKE '%' || $search_term || '%' ORDER BY ar.name, a.title, t.track_number
 --
--- == Source Path
+-- ==== Source Path
 --
 -- > queries/search_tracks_by_title.sql
 --
-data SearchTracksByTitle = SearchTracksByTitle
+newtype SearchTracksByTitle = SearchTracksByTitle
   { searchTerm :: Text
   }
   deriving stock (Eq, Show)
-
 
 type SearchTracksByTitleResult = Vector.Vector SearchTracksByTitleResultRow
 

@@ -12,7 +12,7 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- |
 -- Parameters for the @get_track_details@ query.
 --
--- == SQL Template
+-- ==== SQL Template
 --
 -- > SELECT 
 -- >     t.id,
@@ -30,15 +30,14 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > LEFT JOIN genres g ON t.genre_id = g.id
 -- > WHERE t.id = $track_id
 --
--- == Source Path
+-- ==== Source Path
 --
 -- > queries/get_track_details.sql
 --
-data GetTrackDetails = GetTrackDetails
+newtype GetTrackDetails = GetTrackDetails
   { trackId :: UUID
   }
   deriving stock (Eq, Show)
-
 
 type GetTrackDetailsResult = GetTrackDetailsResultRow
 

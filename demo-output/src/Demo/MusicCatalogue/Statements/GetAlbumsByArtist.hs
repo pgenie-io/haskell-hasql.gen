@@ -12,7 +12,7 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- |
 -- Parameters for the @get_albums_by_artist@ query.
 --
--- == SQL Template
+-- ==== SQL Template
 --
 -- > SELECT 
 -- >     a.id,
@@ -22,15 +22,14 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > FROM albums a
 -- > WHERE a.artist_id = $artist_id ORDER BY a.release_year DESC
 --
--- == Source Path
+-- ==== Source Path
 --
 -- > queries/get_albums_by_artist.sql
 --
-data GetAlbumsByArtist = GetAlbumsByArtist
+newtype GetAlbumsByArtist = GetAlbumsByArtist
   { artistId :: UUID
   }
   deriving stock (Eq, Show)
-
 
 type GetAlbumsByArtistResult = Vector.Vector GetAlbumsByArtistResultRow
 

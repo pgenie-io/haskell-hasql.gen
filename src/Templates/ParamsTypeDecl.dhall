@@ -2,6 +2,8 @@ let Algebra = ./Algebra/package.dhall
 
 let Deps = ../Deps/package.dhall
 
+let RecordDeclaration = ./RecordDeclaration.dhall
+
 let Params =
       { queryName : Text
       , sqlForDocs : Text
@@ -17,26 +19,18 @@ in  Algebra.module
           -- |
           -- Parameters for the @${params.queryName}@ query.
           --
-          -- == SQL Template
+          -- ==== SQL Template
           --
           -- > ${Deps.Lude.Extensions.Text.prefixEachLine
                    "-- > "
                    params.sqlForDocs}
           --
-          -- == Source Path
+          -- ==== Source Path
           --
           -- > ${params.srcPath}
           --
-          data ${params.typeName} = ${params.typeName}
-            { ${Deps.Lude.Extensions.Text.indent
-                  4
-                  ( Deps.Prelude.Text.concatSep
-                      ''
-                      ,
-                      ''
-                      params.fields
-                  )}
-            }
+          ${RecordDeclaration.run
+              { name = params.typeName, fields = params.fields }}
             deriving stock (Eq, Show)
           ''
       )

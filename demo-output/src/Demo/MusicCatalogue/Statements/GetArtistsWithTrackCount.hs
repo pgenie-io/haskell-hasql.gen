@@ -12,7 +12,7 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- |
 -- Parameters for the @get_artists_with_track_count@ query.
 --
--- == SQL Template
+-- ==== SQL Template
 --
 -- > SELECT 
 -- >     ar.id,
@@ -25,15 +25,12 @@ import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
 -- > GROUP BY ar.id, ar.name
 -- > ORDER BY track_count DESC
 --
--- == Source Path
+-- ==== Source Path
 --
 -- > queries/get_artists_with_track_count.sql
 --
 data GetArtistsWithTrackCount = GetArtistsWithTrackCount
-  { 
-  }
   deriving stock (Eq, Show)
-
 
 type GetArtistsWithTrackCountResult = Vector.Vector GetArtistsWithTrackCountResultRow
 
