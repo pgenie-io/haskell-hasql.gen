@@ -23,6 +23,8 @@ let Output =
       , statementModuleNamespace : Text
       , statementModulePath : Text
       , statementModuleContents : Text
+      , statementsModuleReexportedModule :
+          Templates.ReexportModule.ReexportedModule
       }
 
 let render =
@@ -52,6 +54,8 @@ let render =
         let projectNamespace =
               Deps.Prelude.Text.concatSep "." config.rootNamespace
 
+        let queryName = Deps.CodegenKit.Name.toTextInSnake input.name
+
         let statementModuleContents =
               ''
               module ${statementModuleNamespace} where
@@ -66,7 +70,7 @@ let render =
               import qualified ${projectNamespace}.CustomTypes as CustomTypes
 
               ${Templates.ParamsTypeDecl.run
-                  { queryName = Deps.CodegenKit.Name.toTextInSnake input.name
+                  { queryName
                   , sqlForDocs = fragments.haddock
                   , srcPath = input.srcPath
                   , typeName = statementTypeName
@@ -110,10 +114,16 @@ let render =
 
               ''
 
+        let statementsModuleReexportedModule =
+              { haddock = Some "** ${statementModuleName}"
+              , namespace = statementModuleNamespace
+              }
+
         in  { statementModuleName
             , statementModuleNamespace
             , statementModulePath
             , statementModuleContents
+            , statementsModuleReexportedModule
             }
 
 let run =

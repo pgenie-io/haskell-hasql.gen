@@ -2,7 +2,7 @@ let Algebra = ./Algebra/package.dhall
 
 let Deps = ../Deps/package.dhall
 
-let Params = Optional Text
+let Params = { isDoc : Bool, text : Optional Text }
 
 in  Algebra.module
       Params
@@ -10,12 +10,10 @@ in  Algebra.module
           merge
             { None = ""
             , Some =
-                \(unprefixedText : Text) ->
-                      "-- | "
-                  ++  Deps.Lude.Extensions.Text.prefixEachLine
-                        "-- "
-                        unprefixedText
+                \(text : Text) ->
+                      (if params.isDoc then "-- | " else "-- ")
+                  ++  Deps.Lude.Extensions.Text.prefixEachLine "-- " text
                   ++  "\n"
             }
-            params
+            params.text
       )

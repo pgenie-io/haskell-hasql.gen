@@ -74,9 +74,11 @@ let combineOutputs =
                     , reexportedModules =
                         Deps.Prelude.List.map
                           CustomTypeGen.Output
-                          Text
+                          Templates.ReexportModule.ReexportedModule
                           ( \(customType : CustomTypeGen.Output) ->
-                              customType.moduleNamespace
+                              { haddock = None Text
+                              , namespace = customType.moduleNamespace
+                              }
                           )
                           customTypes
                     }
@@ -99,9 +101,9 @@ let combineOutputs =
                     , reexportedModules =
                         Deps.Prelude.List.map
                           QueryGen.Output
-                          Text
+                          Templates.ReexportModule.ReexportedModule
                           ( \(query : QueryGen.Output) ->
-                              query.statementModuleNamespace
+                              query.statementsModuleReexportedModule
                           )
                           queries
                     }
