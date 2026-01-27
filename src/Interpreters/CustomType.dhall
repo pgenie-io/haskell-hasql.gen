@@ -28,9 +28,7 @@ in  Algebra.module
 
           let moduleNamespaceAsList =
                   config.rootNamespace
-                # [ "CustomTypes"
-                  , Deps.CodegenKit.Name.toTextInPascal input.name
-                  ]
+                # [ "Types", Deps.CodegenKit.Name.toTextInPascal input.name ]
 
           let moduleNamespace =
                 Deps.Prelude.Text.concatSep "." moduleNamespaceAsList

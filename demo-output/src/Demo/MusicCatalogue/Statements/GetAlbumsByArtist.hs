@@ -7,7 +7,7 @@ import qualified Hasql.Encoders as Encoders
 import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
 import qualified Hasql.Mapping as Mapping
-import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
+import qualified Demo.MusicCatalogue.Types as Types
 
 -- |
 -- Parameters for the @get_albums_by_artist@ query.
@@ -44,7 +44,7 @@ data GetAlbumsByArtistResultRow = GetAlbumsByArtistResultRow
     -- | Maps to @release_year@.
     releaseYear :: Maybe (Int32),
     -- | Maps to @album_type@.
-    albumType :: CustomTypes.AlbumType
+    albumType :: Types.AlbumType
   }
   deriving stock (Show, Eq)
 

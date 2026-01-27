@@ -40,8 +40,8 @@ in  Algebra.module
               ApplicativeDo, Arrows, BangPatterns, BlockArguments, ConstraintKinds, DataKinds, DefaultSignatures, DeriveAnyClass, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, DerivingStrategies, DerivingVia, DuplicateRecordFields, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, ImportQualifiedPost, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NamedFieldPuns, NoFieldSelectors, NoImplicitPrelude, NoMonomorphismRestriction, NumericUnderscores, OverloadedRecordDot, OverloadedStrings, ParallelListComp, PatternGuards, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, StrictData, TemplateHaskell, TupleSections, TypeApplications, TypeFamilies, TypeOperators, UnboxedTuples, ViewPatterns
 
             exposed-modules:
-              ${params.rootNamespace}.CustomTypes
               ${params.rootNamespace}.Statements
+              ${params.rootNamespace}.Types
               
             other-modules:
               ${params.rootNamespace}.Prelude
@@ -49,16 +49,14 @@ in  Algebra.module
                   ("\n" ++ "    ")
                   Text
                   ( \(name : Text) ->
-                      params.rootNamespace ++ ".CustomTypes." ++ name
-                  )
-                  params.customTypeNames}
-              ${Deps.Prelude.Text.concatMapSep
-                  ("\n" ++ "    ")
-                  Text
-                  ( \(name : Text) ->
                       params.rootNamespace ++ ".Statements." ++ name
                   )
                   params.statementModuleNames}
+              ${Deps.Prelude.Text.concatMapSep
+                  ("\n" ++ "    ")
+                  Text
+                  (\(name : Text) -> params.rootNamespace ++ ".Types." ++ name)
+                  params.customTypeNames}
 
             build-depends:
               aeson >=2 && <3,

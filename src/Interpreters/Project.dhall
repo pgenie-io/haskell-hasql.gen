@@ -66,11 +66,11 @@ let combineOutputs =
             : Sdk.File.Type
             = { path =
                   Templates.ModulePath.run
-                    { namespace = config.rootNamespace # [ "CustomTypes" ] }
+                    { namespace = config.rootNamespace # [ "Types" ] }
               , content =
                   Templates.ReexportModule.run
                     { haddock = None Text
-                    , namespace = rootNamespace ++ ".CustomTypes"
+                    , namespace = rootNamespace ++ ".Types"
                     , reexportedModules =
                         Deps.Prelude.List.map
                           CustomTypeGen.Output
@@ -179,7 +179,7 @@ let run =
                 (Deps.Prelude.List.unpackOptionals QueryGen.Output)
                 compiledQueries
 
-        let compiledCustomTypes
+        let compiledTypes
             : Sdk.Compiled.Type (List CustomTypeGen.Output)
             = Sdk.Compiled.traverseList
                 Deps.Sdk.Project.CustomType
@@ -195,7 +195,7 @@ let run =
                 (List Sdk.File.Type)
                 (combineOutputs config input)
                 compiledQueries
-                compiledCustomTypes
+                compiledTypes
 
         in  files
 

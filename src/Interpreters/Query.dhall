@@ -67,7 +67,7 @@ let render =
               import qualified Data.Aeson as Aeson
               import qualified Data.Vector as Vector
               import qualified Hasql.Mapping as Mapping
-              import qualified ${projectNamespace}.CustomTypes as CustomTypes
+              import qualified ${projectNamespace}.Types as Types
 
               ${Templates.ParamsTypeDecl.run
                   { queryName

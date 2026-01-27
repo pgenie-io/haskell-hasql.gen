@@ -32,8 +32,7 @@ let run =
               \(name : Model.Name) ->
                 Sdk.Compiled.ok
                   Output
-                  { sig =
-                      "CustomTypes.${Deps.CodegenKit.Name.toTextInPascal name}"
+                  { sig = "Types.${Deps.CodegenKit.Name.toTextInPascal name}"
                   , encoderExp =
                       "IsScalar.scalarEncoder @${Deps.CodegenKit.Name.toTextInCamel
                                                    name}"

@@ -7,7 +7,7 @@ import qualified Hasql.Encoders as Encoders
 import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
 import qualified Hasql.Mapping as Mapping
-import qualified Demo.MusicCatalogue.CustomTypes as CustomTypes
+import qualified Demo.MusicCatalogue.Types as Types
 
 -- |
 -- Parameters for the @get_artists_with_track_count@ query.
