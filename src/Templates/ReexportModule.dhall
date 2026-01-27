@@ -2,6 +2,8 @@ let Algebra = ./Algebra/package.dhall
 
 let Deps = ../Deps/package.dhall
 
+let Haddock = ./Haddock.dhall
+
 let Params =
       { haddock : Optional Text
       , namespace : Text
@@ -11,18 +13,7 @@ let Params =
 in  Algebra.module
       Params
       ( \(params : Params) ->
-          let haddock =
-                merge
-                  { None = ""
-                  , Some =
-                      \(unprefixedText : Text) ->
-                            "-- | "
-                        ++  Deps.Lude.Extensions.Text.prefixEachLine
-                              "-- "
-                              unprefixedText
-                        ++  "\n"
-                  }
-                  params.haddock
+          let haddock = Haddock.run params.haddock
 
           let importsBlock =
                 Deps.Prelude.Text.concatMapSep
