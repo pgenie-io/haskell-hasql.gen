@@ -66,7 +66,7 @@ in  Algebra.module
                                         { preludeModuleName
                                         , moduleName = moduleNamespace
                                         , typeName = moduleName
-                                        , pgSchemaName = input.pgSchemaName
+                                        , pgSchema = input.pgSchema
                                         , pgTypeName = input.pgName
                                         , fieldDeclarations =
                                             Deps.Prelude.List.map
@@ -111,7 +111,7 @@ in  Algebra.module
                               { preludeModuleName
                               , moduleName = moduleNamespace
                               , typeName = moduleName
-                              , pgSchemaName = input.pgSchemaName
+                              , pgSchema = input.pgSchema
                               , pgTypeName = input.pgName
                               , variants =
                                   Deps.Prelude.List.map

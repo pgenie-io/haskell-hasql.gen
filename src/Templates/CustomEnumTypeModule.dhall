@@ -8,7 +8,7 @@ let Params =
       { preludeModuleName : Text
       , moduleName : Text
       , typeName : Text
-      , pgSchemaName : Text
+      , pgSchema : Text
       , pgTypeName : Text
       , variants : List Variant
       }
@@ -45,7 +45,7 @@ let run =
         instance Mapping.IsScalar ${params.typeName} where
           scalarEncoder =
             Encoders.enum
-              (Just "${params.pgSchemaName}")
+              (Just "${params.pgSchema}")
               "${params.pgTypeName}"
               ( \case
                   ${Deps.Lude.Extensions.Text.indent
@@ -62,7 +62,7 @@ let run =
           
           scalarDecoder =
             Decoders.enum
-              (Just "${params.pgSchemaName}")
+              (Just "${params.pgSchema}")
               "${params.pgTypeName}"
               ( \case
                   ${Deps.Lude.Extensions.Text.indent
