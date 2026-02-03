@@ -15,8 +15,8 @@
 # Unignore subtrees:
 !/.github/
 !/design/
-!/src/
 !/demo-output/
+!/gen/
 
 # Ignore noise:
 .DS_Store
