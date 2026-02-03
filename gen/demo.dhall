@@ -22,27 +22,15 @@ let config
     : Gen.Config
     = {=}
 
-let compiledFiles
-    : Sdk.Compiled.Type (List Sdk.File.Type)
-    = Gen.compile config project
+let compiledFiles = Gen.compile (None Gen.Config) project
 
-let reports
-    : Text
-    = Sdk.Compiled.toReportsText (List Sdk.File.Type) compiledFiles
+let compiledFileMap =
+      Sdk.Compiled.map
+        Sdk.Files.Type
+        (Prelude.Map.Type Text Text)
+        Sdk.Files.toFileMap
+        compiledFiles
 
-let files
-    : Prelude.Map.Type Text Text
-    = merge
-        { None = [ Prelude.Map.keyText "gen-errors.yaml" reports ]
-        , Some =
-            \(files : List Sdk.File.Type) ->
-                [ Prelude.Map.keyText "gen-warnings.yaml" reports ]
-              # Prelude.List.map
-                  Sdk.File.Type
-                  (Prelude.Map.Entry Text Text)
-                  Sdk.File.toMapEntry
-                  files
-        }
-        compiledFiles.result
+let fileMap = Sdk.Compiled.toFileMap compiledFileMap
 
-in  files
+in  fileMap : Prelude.Map.Type Text Text

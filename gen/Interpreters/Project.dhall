@@ -112,7 +112,7 @@ let combineOutputs =
         let cabalFile
             : Sdk.File.Type
             = let packageName =
-                    Deps.CodegenKit.Name.concat input.owner [ input.name ]
+                    Deps.CodegenKit.Name.concat input.space [ input.name ]
 
               let packageName = Deps.CodegenKit.Name.toTextInKebab packageName
 

@@ -8,11 +8,11 @@ let Config = ./Config.dhall
 
 let ProjectInterpreter = ./Interpreters/Project.dhall
 
-in  \(config : Config) ->
+in  \(config : Optional Config) ->
     \(project : Sdk.Project.Project) ->
       let interpreterConfig =
             { rootNamespace =
-              [ CodegenKit.Name.toTextInPascal project.owner
+              [ CodegenKit.Name.toTextInPascal project.space
               , CodegenKit.Name.toTextInPascal project.name
               ]
             }

@@ -33,7 +33,7 @@ let renderExp
                   merge
                     { Sql = escapeText
                     , Var =
-                        \(var : Deps.Sdk.Project.QueryFragmentVar) ->
+                        \(var : Deps.Sdk.Project.Var) ->
                           "\$" ++ Deps.Prelude.Natural.show (var.paramIndex + 1)
                     }
                     queryFragment
@@ -48,9 +48,7 @@ let renderHaddock
         ( \(queryFragment : Deps.Sdk.Project.QueryFragment) ->
             merge
               { Sql = Prelude.Function.identity Text
-              , Var =
-                  \(var : Deps.Sdk.Project.QueryFragmentVar) ->
-                    "\$" ++ var.rawName
+              , Var = \(var : Deps.Sdk.Project.Var) -> "\$" ++ var.rawName
               }
               queryFragment
         )
