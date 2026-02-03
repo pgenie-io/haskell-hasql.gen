@@ -1,2 +1,2 @@
-https://raw.githubusercontent.com/codemine-io/codegen-kit.dhall/cd45dc8511cb31693052dc89d9b561891b5126e6/package.dhall
-  sha256:f47f7f5f0fcf7def39c61491d1a3c0431603042459e0003700d6823b8df16ac9
+https://raw.githubusercontent.com/codemine-io/codegen-kit.dhall/v0.3.0/package.dhall
+  sha256:01ff667bca13c9317863ef2add11926600b618f256573494329c6b7cb4c73990

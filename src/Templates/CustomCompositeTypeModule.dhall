@@ -6,7 +6,7 @@ let Params =
       { preludeModuleName : Text
       , moduleName : Text
       , typeName : Text
-      , pgSchemaName : Text
+      , pgSchema : Text
       , pgTypeName : Text
       , fieldDeclarations : List Text
       , fieldEncoderExps : List Text
@@ -43,7 +43,7 @@ let run =
         instance Mapping.IsScalar ${params.typeName} where
           scalarEncoder =
             Encoders.composite
-              (Just "${params.pgSchemaName}")
+              (Just "${params.pgSchema}")
               "${params.pgTypeName}"
               ( mconcat
                   [ ${Deps.Lude.Extensions.Text.indent
@@ -59,7 +59,7 @@ let run =
           
           scalarDecoder =
             Decoders.composite
-              (Just "${params.pgSchemaName}")
+              (Just "${params.pgSchema}")
               "${params.pgTypeName}"
               ( ${params.typeName}
                   <$> ${Deps.Lude.Extensions.Text.indent

@@ -14,15 +14,13 @@ let Prelude = Deps.Prelude
 
 let Sdk = Deps.Sdk
 
-let Gen = ./package.dhall
-
 let project = Sdk.Fixtures._1
 
 let config = {=}
 
 let compiledFiles
     : Sdk.Compiled.Type (List Sdk.File.Type)
-    = Gen.generate config project
+    = ./compile.dhall config project
 
 let reports
     : Text
