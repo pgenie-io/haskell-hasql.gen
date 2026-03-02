@@ -27,6 +27,45 @@ let Output =
           Templates.ReexportModule.ReexportedModule
       }
 
+let List/replicate
+    : Natural -> forall (a : Type) -> a -> List a
+    = \(n : Natural) ->
+      \(a : Type) ->
+      \(x : a) ->
+        List/build
+          a
+          ( \(list : Type) ->
+            \(cons : a -> list -> list) ->
+              Natural/fold n list (cons x)
+          )
+
+let Text/concatMap
+    : forall (a : Type) -> (a -> Text) -> List a -> Text
+    = 
+    \(a : Type) ->
+    \(f : a -> Text) ->
+    \(xs : List a) ->
+        List/fold a xs Text (\(x : a) -> \(y : Text) -> f x ++ y) ""
+
+let Text/concat
+    : List Text -> Text
+    = \(xs : List Text) ->
+        List/fold Text xs Text (\(x : Text) -> \(y : Text) -> x ++ y) ""
+
+let Text/replicate
+    : Natural -> Text -> Text
+    = \(num : Natural) -> \(text : Text) -> Text/concat (List/replicate num Text text)
+
+let Text/prefixEachLine =
+      \(prefix : Text) ->
+      \(text : Text) ->
+        Text/replace "\n" ("\n" ++ prefix) text
+
+let Text/indent =
+      \(n : Natural) ->
+      \(text : Text) ->
+        Text/prefixEachLine (Text/replicate n " ") text
+
 let render =
       \(config : Algebra.Config) ->
       \(input : Input) ->
@@ -91,12 +130,11 @@ let render =
                 statement = Statement.preparable sql encoder decoder
                   where
                     sql =
-                      ${Deps.Lude.Extensions.Text.indent 8 fragments.exp}
+                      ${Text/indent 8 fragments.exp}
 
                     encoder =
                       mconcat
-                        [ ${Lude.Extensions.Text.indent
-                              12
+                        [ ${Text/indent 12
                               ( Deps.Prelude.Text.concatMapSep
                                   ''
                                   ,
@@ -110,7 +148,7 @@ let render =
                         ]
 
                     decoder =
-                      ${Deps.Lude.Extensions.Text.indent 8 result.decoderExp}
+                      ${Text/indent 8 result.decoderExp}
 
               ''
 

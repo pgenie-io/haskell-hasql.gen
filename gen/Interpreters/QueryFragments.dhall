@@ -18,9 +18,9 @@ let escapeText
     : Text -> Text
     = Prelude.Function.composeList
         Text
-        [ Prelude.Text.replace "\\" "\\\\"
-        , Prelude.Text.replace "\"" "\\\""
-        , Prelude.Text.replace "\n" ("\\n\\" ++ "\n" ++ "\\")
+        [ Text/replace "\\" "\\\\"
+        , Text/replace "\"" "\\\""
+        , Text/replace "\n" ("\\n\\" ++ "\n" ++ "\\")
         ]
 
 let renderExp
