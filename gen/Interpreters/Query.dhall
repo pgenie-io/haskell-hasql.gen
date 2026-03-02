@@ -27,11 +27,6 @@ let Output =
           Templates.ReexportModule.ReexportedModule
       }
 
-let Text/indent =
-      \(n : Natural) ->
-      \(text : Text) ->
-        Lude.Extensions.Text.prefixEachLine (Deps.Prelude.Text.replicate n " ") text
-
 let render =
       \(config : Algebra.Config) ->
       \(input : Input) ->
@@ -96,7 +91,7 @@ let render =
                 statement = Statement.preparable sql encoder decoder
                   where
                     sql =
-                      ${Text/indent 8 fragments.exp}
+                      ${Lude.Extensions.Text.indent 8 fragments.exp}
 
                     encoder =
                       mconcat
