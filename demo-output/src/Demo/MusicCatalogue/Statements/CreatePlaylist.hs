@@ -46,7 +46,6 @@ data CreatePlaylistResultRow = CreatePlaylistResultRow
   }
   deriving stock (Show, Eq)
 
-
 instance Mapping.IsStatement CreatePlaylist where
   type Result CreatePlaylist = CreatePlaylistResult
 

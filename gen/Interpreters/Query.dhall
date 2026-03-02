@@ -84,7 +84,6 @@ let render =
                         params
                   }}
               ${result.typeDecls}
-
               instance Mapping.IsStatement ${statementTypeName} where
                 type Result ${statementTypeName} = ${statementResultTypeName}
 

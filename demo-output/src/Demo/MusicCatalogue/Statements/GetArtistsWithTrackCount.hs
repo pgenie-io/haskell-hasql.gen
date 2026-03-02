@@ -48,7 +48,6 @@ data GetArtistsWithTrackCountResultRow = GetArtistsWithTrackCountResultRow
   }
   deriving stock (Show, Eq)
 
-
 instance Mapping.IsStatement GetArtistsWithTrackCount where
   type Result GetArtistsWithTrackCount = GetArtistsWithTrackCountResult
 

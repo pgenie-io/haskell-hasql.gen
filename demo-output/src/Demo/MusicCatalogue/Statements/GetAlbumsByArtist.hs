@@ -48,7 +48,6 @@ data GetAlbumsByArtistResultRow = GetAlbumsByArtistResultRow
   }
   deriving stock (Show, Eq)
 
-
 instance Mapping.IsStatement GetAlbumsByArtist where
   type Result GetAlbumsByArtist = GetAlbumsByArtistResult
 

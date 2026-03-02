@@ -53,7 +53,6 @@ data SearchTracksByTitleResultRow = SearchTracksByTitleResultRow
   }
   deriving stock (Show, Eq)
 
-
 instance Mapping.IsStatement SearchTracksByTitle where
   type Result SearchTracksByTitle = SearchTracksByTitleResult
 

@@ -66,7 +66,6 @@ data GetTrackDetailsResultRow = GetTrackDetailsResultRow
   }
   deriving stock (Show, Eq)
 
-
 instance Mapping.IsStatement GetTrackDetails where
   type Result GetTrackDetails = GetTrackDetailsResult
 

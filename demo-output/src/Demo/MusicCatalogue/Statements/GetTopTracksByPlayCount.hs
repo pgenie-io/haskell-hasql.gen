@@ -59,7 +59,6 @@ data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
   }
   deriving stock (Show, Eq)
 
-
 instance Mapping.IsStatement GetTopTracksByPlayCount where
   type Result GetTopTracksByPlayCount = GetTopTracksByPlayCountResult
 
