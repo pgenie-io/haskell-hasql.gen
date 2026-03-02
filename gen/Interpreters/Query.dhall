@@ -27,44 +27,10 @@ let Output =
           Templates.ReexportModule.ReexportedModule
       }
 
-let List/replicate
-    : Natural -> forall (a : Type) -> a -> List a
-    = \(n : Natural) ->
-      \(a : Type) ->
-      \(x : a) ->
-        List/build
-          a
-          ( \(list : Type) ->
-            \(cons : a -> list -> list) ->
-              Natural/fold n list (cons x)
-          )
-
-let Text/concatMap
-    : forall (a : Type) -> (a -> Text) -> List a -> Text
-    = 
-    \(a : Type) ->
-    \(f : a -> Text) ->
-    \(xs : List a) ->
-        List/fold a xs Text (\(x : a) -> \(y : Text) -> f x ++ y) ""
-
-let Text/concat
-    : List Text -> Text
-    = \(xs : List Text) ->
-        List/fold Text xs Text (\(x : Text) -> \(y : Text) -> x ++ y) ""
-
-let Text/replicate
-    : Natural -> Text -> Text
-    = \(num : Natural) -> \(text : Text) -> Text/concat (List/replicate num Text text)
-
-let Text/prefixEachLine =
-      \(prefix : Text) ->
-      \(text : Text) ->
-        Text/replace "\n" ("\n" ++ prefix) text
-
 let Text/indent =
       \(n : Natural) ->
       \(text : Text) ->
-        Text/prefixEachLine (Text/replicate n " ") text
+        Lude.Extensions.Text.prefixEachLine (Deps.Prelude.Text.replicate n " ") text
 
 let render =
       \(config : Algebra.Config) ->
@@ -134,7 +100,7 @@ let render =
 
                     encoder =
                       mconcat
-                        [ ${Text/indent 12
+                        [ ${Lude.Extensions.Text.indent 12
                               ( Deps.Prelude.Text.concatMapSep
                                   ''
                                   ,
@@ -148,7 +114,7 @@ let render =
                         ]
 
                     decoder =
-                      ${Text/indent 8 result.decoderExp}
+                      ${Lude.Extensions.Text.indent 8 result.decoderExp}
 
               ''
 
