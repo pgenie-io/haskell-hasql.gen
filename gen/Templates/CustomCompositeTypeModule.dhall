@@ -11,6 +11,7 @@ let Params =
       , fieldDeclarations : List Text
       , fieldEncoderExps : List Text
       , fieldDecoderExps : List Text
+      , customTypeModules : List Text
       }
 
 let run =
@@ -24,6 +25,13 @@ let run =
         import qualified Hasql.Decoders as Decoders
         import qualified Hasql.Encoders as Encoders
         import qualified Hasql.Mapping.IsScalar as IsScalar
+        ${if    Deps.Prelude.List.null Text params.customTypeModules
+          then  ""
+          else  Deps.Prelude.Text.concatMapSep
+                  "\n"
+                  Text
+                  (\(m : Text) -> "import qualified ${m} as Types")
+                  params.customTypeModules}
 
         -- |
         -- Representation of the @${params.pgTypeName}@ user-declared PostgreSQL record type.

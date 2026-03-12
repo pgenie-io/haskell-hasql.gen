@@ -52,6 +52,32 @@ in  Algebra.module
                               (MemberGen.run config)
                               members
 
+                      let customTypeModules
+                          : List Text
+                          = Deps.Prelude.List.mapMaybe
+                              Model.Member
+                              Text
+                              ( \(member : Model.Member) ->
+                                  merge
+                                    { Primitive =
+                                        \(_ : Model.Primitive) -> None Text
+                                    , Custom =
+                                        \(name : Model.Name) ->
+                                          Some
+                                            ( Deps.Prelude.Text.concatSep
+                                                "."
+                                                (   config.rootNamespace
+                                                  # [ "Types"
+                                                    , Deps.CodegenKit.Name.toTextInPascal
+                                                        name
+                                                    ]
+                                                )
+                                            )
+                                    }
+                                    member.value.scalar
+                              )
+                              members
+
                       let compiledOutput
                           : Sdk.Compiled.Type Output
                           = Sdk.Compiled.map
@@ -68,6 +94,7 @@ in  Algebra.module
                                         , typeName = moduleName
                                         , pgSchema = input.pgSchema
                                         , pgTypeName = input.pgName
+                                        , customTypeModules
                                         , fieldDeclarations =
                                             Deps.Prelude.List.map
                                               MemberGen.Output

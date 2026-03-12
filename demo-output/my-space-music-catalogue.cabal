@@ -1,5 +1,5 @@
 cabal-version: 3.4
-name: demo-music-catalogue
+name: my-space-music-catalogue
 version: 0.1.0.0
 synopsis: Type-safe mapping to the "music_catalogue" database
 description:
@@ -23,19 +23,22 @@ library
     ApplicativeDo, Arrows, BangPatterns, BlockArguments, ConstraintKinds, DataKinds, DefaultSignatures, DeriveAnyClass, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, DerivingStrategies, DerivingVia, DuplicateRecordFields, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, ImportQualifiedPost, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NamedFieldPuns, NoFieldSelectors, NoImplicitPrelude, NoMonomorphismRestriction, NumericUnderscores, OverloadedRecordDot, OverloadedStrings, ParallelListComp, PatternGuards, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, StrictData, TemplateHaskell, TupleSections, TypeApplications, TypeFamilies, TypeOperators, UnboxedTuples, ViewPatterns
 
   exposed-modules:
-    Demo.MusicCatalogue.Statements
-    Demo.MusicCatalogue.Types
+    MySpace.MusicCatalogue.Statements
+    MySpace.MusicCatalogue.Types
     
   other-modules:
-    Demo.MusicCatalogue.Prelude
-    Demo.MusicCatalogue.Statements.GetAlbumsByArtist
-    Demo.MusicCatalogue.Statements.SearchTracksByTitle
-    Demo.MusicCatalogue.Statements.GetTrackDetails
-    Demo.MusicCatalogue.Statements.GetArtistsWithTrackCount
-    Demo.MusicCatalogue.Statements.CreatePlaylist
-    Demo.MusicCatalogue.Statements.GetTopTracksByPlayCount
-    Demo.MusicCatalogue.Types.AlbumType
-    Demo.MusicCatalogue.Types.TrackMetadata
+    MySpace.MusicCatalogue.Prelude
+    MySpace.MusicCatalogue.Statements.InsertAlbum
+    MySpace.MusicCatalogue.Statements.SelectAlbumByFormat
+    MySpace.MusicCatalogue.Statements.SelectAlbumByName
+    MySpace.MusicCatalogue.Statements.SelectAlbumWithTracks
+    MySpace.MusicCatalogue.Statements.SelectGenreByArtist
+    MySpace.MusicCatalogue.Statements.UpdateAlbumRecordingReturning
+    MySpace.MusicCatalogue.Statements.UpdateAlbumReleased
+    MySpace.MusicCatalogue.Types.AlbumFormat
+    MySpace.MusicCatalogue.Types.DiscInfo
+    MySpace.MusicCatalogue.Types.RecordingInfo
+    MySpace.MusicCatalogue.Types.TrackInfo
 
   build-depends:
     aeson >=2 && <3,

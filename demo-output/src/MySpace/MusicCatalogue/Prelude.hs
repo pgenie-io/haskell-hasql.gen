@@ -1,4 +1,4 @@
-module Demo.MusicCatalogue.Prelude
+module MySpace.MusicCatalogue.Prelude
   ( module Exports,
   )
 where
