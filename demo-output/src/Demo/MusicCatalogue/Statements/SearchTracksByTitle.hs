@@ -6,7 +6,8 @@ import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
 import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
-import qualified Hasql.Mapping as Mapping
+import qualified Hasql.Mapping.IsStatement as IsStatement
+import qualified Hasql.Mapping.IsScalar as IsScalar
 import qualified Demo.MusicCatalogue.Types as Types
 
 -- |
@@ -53,7 +54,7 @@ data SearchTracksByTitleResultRow = SearchTracksByTitleResultRow
   }
   deriving stock (Show, Eq)
 
-instance Mapping.IsStatement SearchTracksByTitle where
+instance IsStatement.IsStatement SearchTracksByTitle where
   type Result SearchTracksByTitle = SearchTracksByTitleResult
 
   statement = Statement.preparable sql encoder decoder
@@ -72,15 +73,15 @@ instance Mapping.IsStatement SearchTracksByTitle where
 
       encoder =
         mconcat
-          [ (.searchTerm) >$< Encoders.param (Encoders.nonNullable (Mapping.scalarEncoder))
+          [ (.searchTerm) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
           ]
 
       decoder =
         Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          title <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          duration <- Decoders.column (Decoders.nullable (Mapping.scalarDecoder))
-          albumTitle <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          artistName <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          title <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          duration <- Decoders.column (Decoders.nullable (IsScalar.decoder))
+          albumTitle <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          artistName <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
           pure SearchTracksByTitleResultRow {..}
 

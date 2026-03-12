@@ -139,11 +139,7 @@ let combineOutputs =
 
               in  { path, content }
 
-        in      [ cabalFile
-                , preludeFile
-                , customTypesFile
-                , statementsFile
-                ]
+        in      [ cabalFile, preludeFile, customTypesFile, statementsFile ]
               # customTypeFiles
               # statementFiles
             : List Sdk.File.Type

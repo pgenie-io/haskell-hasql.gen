@@ -6,7 +6,8 @@ import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
 import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
-import qualified Hasql.Mapping as Mapping
+import qualified Hasql.Mapping.IsStatement as IsStatement
+import qualified Hasql.Mapping.IsScalar as IsScalar
 import qualified Demo.MusicCatalogue.Types as Types
 
 -- |
@@ -46,7 +47,7 @@ data CreatePlaylistResultRow = CreatePlaylistResultRow
   }
   deriving stock (Show, Eq)
 
-instance Mapping.IsStatement CreatePlaylist where
+instance IsStatement.IsStatement CreatePlaylist where
   type Result CreatePlaylist = CreatePlaylistResult
 
   statement = Statement.preparable sql encoder decoder
@@ -58,15 +59,15 @@ instance Mapping.IsStatement CreatePlaylist where
 
       encoder =
         mconcat
-          [ (.name) >$< Encoders.param (Encoders.nonNullable (Mapping.scalarEncoder)),
-            (.description) >$< Encoders.param (Encoders.nullable (Mapping.scalarEncoder)),
-            (.userId) >$< Encoders.param (Encoders.nonNullable (Mapping.scalarEncoder))
+          [ (.name) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder)),
+            (.description) >$< Encoders.param (Encoders.nullable (IsScalar.encoder)),
+            (.userId) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
           ]
 
       decoder =
         Decoders.singleRow do
-          id <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          name <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          createdAt <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          name <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          createdAt <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
           pure CreatePlaylistResultRow {..}
 

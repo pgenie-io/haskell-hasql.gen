@@ -26,7 +26,7 @@ in  Algebra.module
           ++  DimensionalityEncoderExp.run
                 { dimensionality = params.dimensionality
                 , elementIsNullable = params.elementIsNullable
-                , elementExp = "Mapping.scalarEncoder"
+                , elementExp = "IsScalar.encoder"
                 }
           ++  "))"
       )

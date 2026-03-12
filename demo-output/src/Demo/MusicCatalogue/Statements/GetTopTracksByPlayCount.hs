@@ -6,7 +6,8 @@ import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
 import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
-import qualified Hasql.Mapping as Mapping
+import qualified Hasql.Mapping.IsStatement as IsStatement
+import qualified Hasql.Mapping.IsScalar as IsScalar
 import qualified Demo.MusicCatalogue.Types as Types
 
 -- |
@@ -59,7 +60,7 @@ data GetTopTracksByPlayCountResultRow = GetTopTracksByPlayCountResultRow
   }
   deriving stock (Show, Eq)
 
-instance Mapping.IsStatement GetTopTracksByPlayCount where
+instance IsStatement.IsStatement GetTopTracksByPlayCount where
   type Result GetTopTracksByPlayCount = GetTopTracksByPlayCountResult
 
   statement = Statement.preparable sql encoder decoder
@@ -84,15 +85,15 @@ instance Mapping.IsStatement GetTopTracksByPlayCount where
 
       encoder =
         mconcat
-          [ (.limit) >$< Encoders.param (Encoders.nonNullable (Mapping.scalarEncoder))
+          [ (.limit) >$< Encoders.param (Encoders.nonNullable (IsScalar.encoder))
           ]
 
       decoder =
         Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          title <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          artistName <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          albumTitle <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          playCount <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          title <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          artistName <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          albumTitle <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          playCount <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
           pure GetTopTracksByPlayCountResultRow {..}
 

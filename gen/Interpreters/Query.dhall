@@ -66,7 +66,8 @@ let render =
               import qualified Hasql.Encoders as Encoders
               import qualified Data.Aeson as Aeson
               import qualified Data.Vector as Vector
-              import qualified Hasql.Mapping as Mapping
+              import qualified Hasql.Mapping.IsStatement as IsStatement
+              import qualified Hasql.Mapping.IsScalar as IsScalar
               import qualified ${projectNamespace}.Types as Types
 
               ${Templates.ParamsTypeDecl.run
@@ -84,7 +85,7 @@ let render =
                         params
                   }}
               ${result.typeDecls}
-              instance Mapping.IsStatement ${statementTypeName} where
+              instance IsStatement.IsStatement ${statementTypeName} where
                 type Result ${statementTypeName} = ${statementResultTypeName}
 
                 statement = Statement.preparable sql encoder decoder

@@ -6,7 +6,8 @@ import qualified Hasql.Decoders as Decoders
 import qualified Hasql.Encoders as Encoders
 import qualified Data.Aeson as Aeson
 import qualified Data.Vector as Vector
-import qualified Hasql.Mapping as Mapping
+import qualified Hasql.Mapping.IsStatement as IsStatement
+import qualified Hasql.Mapping.IsScalar as IsScalar
 import qualified Demo.MusicCatalogue.Types as Types
 
 -- |
@@ -48,7 +49,7 @@ data GetArtistsWithTrackCountResultRow = GetArtistsWithTrackCountResultRow
   }
   deriving stock (Show, Eq)
 
-instance Mapping.IsStatement GetArtistsWithTrackCount where
+instance IsStatement.IsStatement GetArtistsWithTrackCount where
   type Result GetArtistsWithTrackCount = GetArtistsWithTrackCountResult
 
   statement = Statement.preparable sql encoder decoder
@@ -72,9 +73,9 @@ instance Mapping.IsStatement GetArtistsWithTrackCount where
 
       decoder =
         Decoders.rowVector do
-          id <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          name <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          trackCount <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
-          albumCount <- Decoders.column (Decoders.nonNullable (Mapping.scalarDecoder))
+          id <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          name <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          trackCount <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
+          albumCount <- Decoders.column (Decoders.nonNullable (IsScalar.decoder))
           pure GetArtistsWithTrackCountResultRow {..}
 

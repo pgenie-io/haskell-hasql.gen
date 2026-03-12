@@ -34,11 +34,11 @@ let run =
                   Output
                   { sig = "Types.${Deps.CodegenKit.Name.toTextInPascal name}"
                   , encoderExp =
-                      "IsScalar.scalarEncoder @${Deps.CodegenKit.Name.toTextInCamel
-                                                   name}"
+                      "IsScalar.encoder @${Deps.CodegenKit.Name.toTextInCamel
+                                             name}"
                   , decoderExp =
-                      "IsScalar.scalarDecoder @${Deps.CodegenKit.Name.toTextInCamel
-                                                   name}"
+                      "IsScalar.decoder @${Deps.CodegenKit.Name.toTextInCamel
+                                             name}"
                   }
           }
           input
