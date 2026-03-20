@@ -20,6 +20,7 @@ jobs:
         uses: nikita-volkov/dhall-resolve.github-action@v1
         with:
           file: gen/Gen.dhall
+          cse: true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -29,7 +30,7 @@ jobs:
           body: |
             ## Dhall Frozen Package Release
 
-            This release contains the frozen Dhall package with all remote imports resolved.
+            This release contains the frozen Dhall package with all remote imports resolved and compacted via CSE.
 
             **Commit**: ${{ github.sha }}
             **Workflow Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
