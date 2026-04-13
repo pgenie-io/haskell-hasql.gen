@@ -1,4 +1,4 @@
-# haskell-hasql.gen
+# haskell.gen
 
 A [pGenie](https://github.com/pgenie-io/pgenie) plugin that generates type-safe Haskell bindings for PostgreSQL using the [Hasql](https://hackage.haskell.org/package/hasql) library.
 
@@ -29,7 +29,7 @@ name: music_catalogue
 version: 1.0.0
 artifacts:
   # Here
-  hasql: https://raw.githubusercontent.com/pgenie-io/haskell-hasql.gen/v0.2.0/gen/Gen.dhall
+  hasql: https://raw.githubusercontent.com/pgenie-io/haskell.gen/v0.2.1/gen/Gen.dhall
 ```
 
 Run the code generator:
